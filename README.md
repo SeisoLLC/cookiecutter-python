@@ -1,5 +1,5 @@
-# Seiso's cookiecutter template
-This is Seiso's cookiecuter template for creating new repositories
+# Seiso's python project template
+This is Seiso's cookiecuter template for creating new python repositories
 
 ## Getting Started
 ```bash
@@ -9,7 +9,7 @@ python3 -m pipx ensurepath
 pipx install pipenv
 
 # Initialize your project
-pipx run cookiecutter gh:seisollc/cookiecutter-seiso
+pipx run cookiecutter gh:seisollc/cookiecutter-python
 
 # Enter the project directory
 cd $(ls -td * | head -1)
