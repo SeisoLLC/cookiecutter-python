@@ -1,0 +1,12 @@
+{
+  "full_name": "Jon Zeolla",
+  "email": "Jon.Zeolla@SeisoLLC.com",
+  "github_username": "jonzeolla",
+  "codeowner": "{{ cookiecutter.github_username }}",
+  "project_name": "TODO",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "project_short_description": "TODO",
+  "dockerhub": "y",
+  "versioning": ["SemVer", "CalVer"],
+  "license": ["MIT", "BSD-3", "Not open source"]
+}

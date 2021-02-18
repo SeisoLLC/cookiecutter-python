@@ -1,0 +1,5 @@
+# Repository owner
+* @{{ cookiecutter.codeowner }}
+
+# GitHub automation oversight
+.github/* @SeisoLLC/eyes

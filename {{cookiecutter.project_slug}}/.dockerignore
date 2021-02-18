@@ -1,0 +1,7 @@
+# Ignore everything
+**
+
+# Except the bare minimum
+!Pipfile
+!Pipfile.lock
+!{{ cookiecutter.project_slug }}
