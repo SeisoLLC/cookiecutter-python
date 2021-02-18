@@ -33,7 +33,7 @@ jobs:
           release_name: Release ${{ "{{ github.ref }}" }}
           draft: false
           prerelease: false
-{% if cookiecutter.dockerhub == 'y' -%}
+{%- if cookiecutter.dockerhub == 'y' %}
       - name: Build the Docker image
         run: pipenv run invoke build
       - name: Login to Docker Hub

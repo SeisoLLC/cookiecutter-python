@@ -3,13 +3,14 @@
 Task execution tool & library
 """
 
-from pathlib import Path
-import sys
 import json
-from logging import getLogger, basicConfig
+import sys
+from logging import basicConfig, getLogger
+from pathlib import Path
+
+import docker
 import git
 from invoke import task
-import docker
 
 LOG_FORMAT = json.dumps(
     {
@@ -35,7 +36,7 @@ IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 TAGS = [IMAGE + ":latest", IMAGE + ":" + VERSION]
 
 
-## Tasks
+# Tasks
 @task
 def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
