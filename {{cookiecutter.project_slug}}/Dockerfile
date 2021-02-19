@@ -8,7 +8,6 @@ ENV PIP_NO_CACHE_DIR=1
 ARG VERSION
 ARG COMMIT_HASH
 
-LABEL org.opencontainers.image.authors="{{ cookiecutter.full_name }}"
 LABEL org.opencontainers.image.title="{{ cookiecutter.project_name }}"
 LABEL org.opencontainers.image.description="{{ cookiecutter.project_short_description }}"
 LABEL org.opencontainers.image.version="${VERSION}"
