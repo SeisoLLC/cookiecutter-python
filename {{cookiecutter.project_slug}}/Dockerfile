@@ -23,7 +23,10 @@ LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 RUN apt-get update \
  && apt-get install -y --no-install-recommends pipenv \
                                                python3 \
-                                               python3-pip
+                                               python3-pip \
+ && apt-get clean autoclean \
+ && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists/*
 
 
 FROM base AS builder
