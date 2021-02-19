@@ -36,13 +36,13 @@ RUN PIPENV_VENV_IN_PROJECT=true pipenv install --deploy --ignore-pipfile
 
 FROM base AS final
 
-# Setup the runtime
-RUN useradd --create-home appuser
-WORKDIR /home/appuser
-USER appuser
-COPY --from=builder /.venv .venv
-ENV PATH="${HOME}/.venv/bin:${PATH}"
+WORKDIR /usr/src/app
 
-# Setup the application
-COPY . ./
+RUN useradd --create-home appuser
+USER appuser
+
+COPY --from=builder /.venv .venv
+ENV PATH="/usr/src/app/.venv/bin:${PATH}"
+
+COPY ./{{ cookiecutter.project_slug }} ./
 ENTRYPOINT ["python3", "-c", "print('TODO: Setup the {{ cookiecutter.project_name }} entrypoint')"]
