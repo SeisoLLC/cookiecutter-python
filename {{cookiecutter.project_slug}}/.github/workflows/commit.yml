@@ -17,7 +17,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v2
       - name: Run the goat
-        uses: seisollc/goat@v0.3.0
+        uses: seisollc/goat@main
       - name: Setup python
         uses: actions/setup-python@v2
         with:

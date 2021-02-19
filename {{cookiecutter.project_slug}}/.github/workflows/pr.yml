@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ "{{ github.event.pull_request.head.sha }}" }}
       - name: Run the goat
-        uses: seisollc/goat@v0.3.0
+        uses: seisollc/goat@main
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ "{{ matrix.python-version }}" }}
