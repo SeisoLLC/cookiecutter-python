@@ -34,18 +34,43 @@ REPO = git.Repo(CWD)
 COMMIT_HASH = REPO.head.object.hexsha
 CLIENT = docker.from_env()
 IMAGE = "seiso/{{ cookiecutter.project_slug }}"
-TAGS = [IMAGE + ":latest", IMAGE + ":" + __version__]
+TAGS = ["latest", __version__]
+IMAGES = []
+for tag in TAGS:
+    IMAGES.append(IMAGE + ":" + tag)
 
 
 # Tasks
-@task(pre=[test])
+@task
+def build(c, version):  # pylint: disable=unused-argument
+    """Build {{ cookiecutter.project_name }}"""
+    # TODO: Allow build of any version?  Check git tags, if not there, and not latest, fail.
+    buildargs = {"VERSION": __version__, "COMMIT_HASH": COMMIT_HASH}
+
+    # pylint: disable=redefined-outer-name
+    for image in IMAGES:
+        LOG.info("Building %s...", image)
+        CLIENT.images.build(
+            path=str(CWD), target="final", rm=True, tag=image, buildargs=buildargs
+        )
+
+
+@task(pre=[build])
+def test(c):  # pylint: disable=unused-argument
+    """Test {{ cookiecutter.project_name }}"""
+    print("TODO: Implement tests")
+
+
 # TODO: This is WIP.  Need to find a way to automatically differentaite major
 # minor patch for semver; commits? How to enforce?
+# TODO: Also, consider that we do not want to push v tags to docker hub or use
+# them when building (already true)
+@task(pre=[test])
 {%- if cookiecutter.versioning == 'SemVer' %}
 def release(c, type):  # pylint: disable=unused-argument
-{% elif cookiecutter.versioning == 'CalVer' %}
+{%- elif cookiecutter.versioning == 'CalVer' %}
 def release(c):  # pylint: disable=unused-argument
-{% endif %}
+{%- endif %}
     """Make a new release of {{ cookiecutter.project_name }}"""
 {%- if cookiecutter.versioning == 'SemVer' %}
     if type not in ["major", "minor", "patch"]:
@@ -81,26 +106,8 @@ def release(c):  # pylint: disable=unused-argument
     bump_version(new_version, level_bump)
 {% endif %}
     print('TODO: We\'ve bumped the version, but now what to do a release?')
-
-
-@task
-def build(c):  # pylint: disable=unused-argument
-    """Build {{ cookiecutter.project_name }}"""
-    buildargs = {"VERSION": __version__, "COMMIT_HASH": COMMIT_HASH}
-
-    # pylint: disable=redefined-outer-name
-    for tag in TAGS:
-        LOG.info("Building %s...", tag)
-        CLIENT.images.build(
-            path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
-        )
-
-
-@task(pre=[build])
-def test(c):  # pylint: disable=unused-argument
-    """Test {{ cookiecutter.project_name }}"""
-    print("TODO: Implement tests")
 {%- if cookiecutter.dockerhub == 'y' %}
+
 
 @task(pre=[build])
 def publish(c, tag):  # pylint: disable=unused-argument

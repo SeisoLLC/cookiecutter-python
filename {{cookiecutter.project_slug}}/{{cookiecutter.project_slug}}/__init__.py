@@ -2,11 +2,11 @@
 {{ cookiecutter.project_name }} init
 """
 __maintainer__ = "Seiso"
-{% if cookiecutter.licensing == 'Not open source' -%}
+{% if cookiecutter.license == 'Not open source' -%}
 __copyright__ = "(c) {% now 'local', '%Y' %} Seiso, LLC"
-{% elif cookiecutter.licensing == 'MIT' -%}
+{% elif cookiecutter.license == 'MIT' -%}
 __license__ = "MIT"
-{% elif cookiecutter.licensing == 'BSD-3' -%}
+{% elif cookiecutter.license == 'BSD-3' -%}
 __license__ = "BSD-3-Clause"
 {% endif -%}
 __project_name__ = "{{ cookiecutter.project_slug }}"
