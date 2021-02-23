@@ -3,10 +3,11 @@
 Task execution tool & library
 """
 
-from {{ cookiecutter.project_slug }} import __version__
 import json
-import re
 import os
+{%- if cookiecutter.versioning == 'CalVer' %}
+import re
+{%- endif %}
 import sys
 from logging import basicConfig, getLogger
 from pathlib import Path
@@ -19,8 +20,9 @@ import git
 from invoke import task
 from semantic_release.cli import bump_version
 {% if cookiecutter.versioning == 'SemVer' %}
-from semantic_release.history import get_new_version, get_current_version
+from semantic_release.history import get_current_version, get_new_version
 {% endif %}
+from {{ cookiecutter.project_slug }} import __version__
 
 LOG_FORMAT = json.dumps(
     {
@@ -59,7 +61,7 @@ def build(c):  # pylint: disable=unused-argument
     else:
         buildargs = {
             "VERSION": __version__ + "-" + commit_hash_short,
-            "COMMIT_HASH": commit_hash
+            "COMMIT_HASH": commit_hash,
         }
 
     # pylint: disable=redefined-outer-name
@@ -73,7 +75,7 @@ def build(c):  # pylint: disable=unused-argument
 @task(pre=[build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
-    print("TODO: Implement project-specific tests or replace this line, keeping pass below")
+    print("TODO: Implement project tests or replace this line, keeping pass below")
     pass
 
 
@@ -124,7 +126,10 @@ def release(c):  # pylint: disable=unused-argument
     bump_version(new_version, level_bump)
 {% endif %}
     # If the prior commit is tagged as stable, align it with HEAD
-    if "stable" in REPO.tags and REPO.tags["stable"].object.hexsha == REPO.commit('HEAD^').hexsha:
+    if (
+        "stable" in REPO.tags
+        and REPO.tags["stable"].object.hexsha == REPO.commit('HEAD^').hexsha
+    ):
         tag = "stable"
         REPO.create_tag(tag, message=f"{tag} release", force=True)
         REPO.remotes.origin.push(tag, force=True)
@@ -148,3 +153,4 @@ def publish(c, tag):  # pylint: disable=unused-argument
     CLIENT.images.push(repository=repository)
     LOG.info("Done publishing the %s Docker image", repository)
 {%- endif -%}
+
