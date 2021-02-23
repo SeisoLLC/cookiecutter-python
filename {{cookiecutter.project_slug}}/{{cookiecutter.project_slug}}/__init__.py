@@ -10,7 +10,7 @@ __license__ = "MIT"
 __license__ = "BSD-3-Clause"
 {% endif -%}
 __project_name__ = "{{ cookiecutter.project_slug }}"
-{% if cookiecutter.versioning == 'SemVer' -%}
+{% if cookiecutter.versioning == 'SemVer-ish' -%}
 __version__ = "0.0.0"
 {% elif cookiecutter.versioning == 'CalVer' -%}
 __version__ = "{% now 'local', '%Y.%m-00' %}"

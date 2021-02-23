@@ -4,6 +4,6 @@
   "project_short_description": "TODO",
   "project_owner_github_username": "jonzeolla",
   "dockerhub": "y",
-  "versioning": ["SemVer", "CalVer"],
+  "versioning": ["SemVer-ish", "CalVer"],
   "license": ["MIT", "BSD-3", "Not open source"]
 }

@@ -18,7 +18,7 @@ import docker
 import git
 from invoke import task
 from semantic_release.cli import bump_version
-{%- if cookiecutter.versioning == 'SemVer' %}
+{%- if cookiecutter.versioning == 'SemVer-ish' %}
 from semantic_release.history import get_current_version, get_new_version
 {%- endif %}
 from {{ cookiecutter.project_slug }} import __version__
@@ -55,7 +55,7 @@ def build(c):  # pylint: disable=unused-argument
         buildargs = {"VERSION": __version__, "COMMIT_HASH": commit_hash}
     else:
         buildargs = {
-            "VERSION": __version__ + "+" + commit_hash_short,
+            "VERSION": __version__ + "-" + commit_hash_short,
             "COMMIT_HASH": commit_hash,
         }
 
@@ -75,7 +75,7 @@ def test(c):  # pylint: disable=unused-argument
 
 
 @task(pre=[test])
-{%- if cookiecutter.versioning == 'SemVer' %}
+{%- if cookiecutter.versioning == 'SemVer-ish' %}
 def release(c, type="minor"):  # pylint: disable=unused-argument
 {%- elif cookiecutter.versioning == 'CalVer' %}
 def release(c):  # pylint: disable=unused-argument
@@ -88,7 +88,7 @@ def release(c):  # pylint: disable=unused-argument
         LOG.error("Not on the main branch, refusing to release")
         sys.exit(1)
 
-{%- if cookiecutter.versioning == 'SemVer' %}
+{%- if cookiecutter.versioning == 'SemVer-ish' %}
     if type not in ["major", "minor", "patch"]:
         LOG.error("Please provide a release type of major, minor, or patch")
         sys.exit(1)
@@ -101,7 +101,7 @@ def release(c):  # pylint: disable=unused-argument
 
     # Our CalVer pattern which works until year 2200, up to 100 releases a
     # month (purposefully excludes builds)
-    pattern = re.compile("v2[0-1][0-9]{2}\.(0[0-9]|1[0-2])-[0-9]{2}")
+    pattern = re.compile("v2[0-1][0-9]{2}\.(0[0-9]|1[0-2])_[0-9]{2}")
 
     # Identify and set the increment
     for tag in reversed(REPO.tags):
@@ -111,12 +111,12 @@ def release(c):  # pylint: disable=unused-argument
     else:
         latest_release = None
 
-    if latest_release and date_info == latest_release.split("-")[0]:
-        increment = str(int(latest_release.split("-")[-1]) + 1).zfill(2)
+    if latest_release and date_info == latest_release.split("_")[0]:
+        increment = str(int(latest_release.split("_")[-1]) + 1).zfill(2)
     else:
         increment = "01"
 
-    new_version = date_info + "-" + increment
+    new_version = date_info + "_" + increment
     level_bump = None
 
     bump_version(new_version, level_bump)
