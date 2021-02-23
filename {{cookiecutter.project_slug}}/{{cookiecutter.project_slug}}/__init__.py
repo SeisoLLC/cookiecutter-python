@@ -13,5 +13,5 @@ __project_name__ = "{{ cookiecutter.project_slug }}"
 {% if cookiecutter.versioning == 'SemVer-ish' -%}
 __version__ = "0.0.0"
 {% elif cookiecutter.versioning == 'CalVer' -%}
-__version__ = "{% now 'local', '%Y.%m-00' %}"
+__version__ = "{% now 'local', '%Y.%m_00' %}"
 {% endif -%}
