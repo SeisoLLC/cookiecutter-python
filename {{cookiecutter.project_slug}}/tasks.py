@@ -75,8 +75,7 @@ def build(c):  # pylint: disable=unused-argument
 @task(pre=[build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
-    print("TODO: Implement project tests or replace this line, keeping pass below")
-    pass
+    LOG.warning("TODO: Implement project tests")
 
 
 @task(pre=[test])
