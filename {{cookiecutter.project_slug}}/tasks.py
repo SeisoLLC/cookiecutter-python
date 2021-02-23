@@ -19,9 +19,9 @@ import docker
 import git
 from invoke import task
 from semantic_release.cli import bump_version
-{% if cookiecutter.versioning == 'SemVer' %}
+{%- if cookiecutter.versioning == 'SemVer' %}
 from semantic_release.history import get_current_version, get_new_version
-{% endif %}
+{%- endif %}
 from {{ cookiecutter.project_slug }} import __version__
 
 LOG_FORMAT = json.dumps(
@@ -128,7 +128,7 @@ def release(c):  # pylint: disable=unused-argument
     # If the prior commit is tagged as stable, align it with HEAD
     if (
         "stable" in REPO.tags
-        and REPO.tags["stable"].object.hexsha == REPO.commit('HEAD^').hexsha
+        and REPO.tags["stable"].object.hexsha == REPO.commit("HEAD^").hexsha
     ):
         tag = "stable"
         REPO.create_tag(tag, message=f"{tag} release", force=True)
@@ -152,5 +152,4 @@ def publish(c, tag):  # pylint: disable=unused-argument
     LOG.info("Pushing %s to docker hub...", repository)
     CLIENT.images.push(repository=repository)
     LOG.info("Done publishing the %s Docker image", repository)
-{%- endif -%}
-
+{%- endif %}
