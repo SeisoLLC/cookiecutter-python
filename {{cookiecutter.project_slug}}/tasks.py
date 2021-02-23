@@ -5,6 +5,7 @@ Task execution tool & library
 
 from {{ cookiecutter.project_slug }} import __version__
 import json
+import os
 import sys
 from logging import basicConfig, getLogger
 from pathlib import Path
@@ -15,8 +16,10 @@ from datetime import datetime
 import docker
 import git
 from invoke import task
-from semantic_release.cli import bump_version, changelog
+from semantic_release.cli import bump_version
+{% if cookiecutter.versioning == 'SemVer' %}
 from semantic_release.history import get_new_version, get_current_version
+{% endif %}
 
 LOG_FORMAT = json.dumps(
     {
@@ -31,7 +34,6 @@ LOG = getLogger("{{ cookiecutter.project_slug }}")
 
 CWD = Path(".").absolute()
 REPO = git.Repo(CWD)
-COMMIT_HASH = REPO.head.object.hexsha
 CLIENT = docker.from_env()
 IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 TAGS = ["latest", __version__]
@@ -42,10 +44,22 @@ for tag in TAGS:
 
 # Tasks
 @task
-def build(c, version):  # pylint: disable=unused-argument
+def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
-    # TODO: Allow build of any version?  Check git tags, if not there, and not latest, fail.
-    buildargs = {"VERSION": __version__, "COMMIT_HASH": COMMIT_HASH}
+    version_string = "v" + __version__
+    commit_hash = REPO.head.object.hexsha
+    commit_hash_short = commit_hash[:7]
+
+    if (
+        version_string in REPO.tags
+        and REPO.tags[version_string].object.hexsha == commit_hash
+    ):
+        buildargs = {"VERSION": __version__, "COMMIT_HASH": commit_hash}
+    else:
+        buildargs = {
+            "VERSION": __version__ + "-" + commit_hash_short,
+            "COMMIT_HASH": commit_hash
+        }
 
     # pylint: disable=redefined-outer-name
     for image in IMAGES:
@@ -58,20 +72,23 @@ def build(c, version):  # pylint: disable=unused-argument
 @task(pre=[build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
-    print("TODO: Implement tests")
+    print("TODO: Implement project-specific tests or replace this line, keeping pass below")
+    pass
 
 
-# TODO: This is WIP.  Need to find a way to automatically differentaite major
-# minor patch for semver; commits? How to enforce?
-# TODO: Also, consider that we do not want to push v tags to docker hub or use
-# them when building (already true)
 @task(pre=[test])
 {%- if cookiecutter.versioning == 'SemVer' %}
-def release(c, type):  # pylint: disable=unused-argument
+def release(c, type="minor"):  # pylint: disable=unused-argument
 {%- elif cookiecutter.versioning == 'CalVer' %}
 def release(c):  # pylint: disable=unused-argument
 {%- endif %}
     """Make a new release of {{ cookiecutter.project_name }}"""
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        tag = "stable"
+        REPO.create_tag(tag, message=f"{tag} release", force=True)
+        REPO.remotes.origin.push(tag, force=True)
+        return None
+
 {%- if cookiecutter.versioning == 'SemVer' %}
     if type not in ["major", "minor", "patch"]:
         LOG.error("Please provide a release type of major, minor, or patch")
@@ -105,8 +122,7 @@ def release(c):  # pylint: disable=unused-argument
 
     bump_version(new_version, level_bump)
 {% endif %}
-    print('TODO: We\'ve bumped the version, but now what to do a release?')
-{%- if cookiecutter.dockerhub == 'y' %}
+    # TODO: If stable is HEAD^, move it to HEAD
 
 
 @task(pre=[build])
@@ -115,6 +131,7 @@ def publish(c, tag):  # pylint: disable=unused-argument
     if tag not in ["latest", "version"]:
         LOG.error("Please provide a tag of either latest or version")
         sys.exit(1)
+{%- if cookiecutter.dockerhub == 'y' %}
     elif tag == "version":
 {%- if cookiecutter.versioning == 'SemVer' %}
         tag = "v" + __version__

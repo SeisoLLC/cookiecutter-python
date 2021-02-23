@@ -28,7 +28,7 @@ jobs:
           pipenv install --python ${{ "{{ matrix.python-version }}" }} --dev
       - name: Run the tests
         run: pipenv run invoke test
-{% if cookiecutter.dockerhub == 'y' -%}
+{%- if cookiecutter.dockerhub == 'y' %}
   push:
     name: Push the Docker images
     runs-on: Ubuntu-20.04
