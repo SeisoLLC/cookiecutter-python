@@ -3,11 +3,12 @@ name: "Publish a release"
 on:
   push:
     tags:
-{% if cookiecutter.versioning == "SemVer" %}
+{%- if cookiecutter.versioning == "SemVer" %}
       - 'v*.*.*'
-{% elif cookiecutter.versioning == "CalVer" %}
+{%- elif cookiecutter.versioning == "CalVer" %}
       - 'v2[0-1][0-9]{2}\.(0[0-9]|1[0-2])-[0-9]{2}'
-{% endif %}
+{%- endif %}
+
 jobs:
   publish:
     name: Publish versioned artifacts
@@ -20,7 +21,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: 3.9
       - name: Setup the dependencies
         run: |
           python -m pip install --upgrade pipenv

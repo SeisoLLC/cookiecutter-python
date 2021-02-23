@@ -87,7 +87,7 @@ def release(c):  # pylint: disable=unused-argument
     if REPO.head.is_detached:
         LOG.error("In detached HEAD state, refusing to release")
         sys.exit(1)
-    elif REPO.active_branch.name != 'main':
+    elif REPO.active_branch.name != "main":
         LOG.error("Not on the main branch, refusing to release")
         sys.exit(1)
 
@@ -104,7 +104,7 @@ def release(c):  # pylint: disable=unused-argument
 
     # Our CalVer pattern which works until year 2200, up to 100 releases a
     # month
-    pattern = re.compile('2[0-1][0-9]{2}\.(0[0-9]|1[0-2])-[0-9]{2}')
+    pattern = re.compile("2[0-1][0-9]{2}\.(0[0-9]|1[0-2])-[0-9]{2}")
 
     # Identify and set the increment
     for tag in reversed(REPO.tags):
@@ -114,10 +114,10 @@ def release(c):  # pylint: disable=unused-argument
     else:
         latest_release = None
 
-    if latest_release and date_info == latest_release.split('-')[0]:
-        increment = str(int(latest_release.split('-')[-1]) + 1).zfill(2)
+    if latest_release and date_info == latest_release.split("-")[0]:
+        increment = str(int(latest_release.split("-")[-1]) + 1).zfill(2)
     else:
-        increment = '01'
+        increment = "01"
 
     new_version = date_info + "-" + increment
     level_bump = None
