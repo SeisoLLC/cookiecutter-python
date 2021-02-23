@@ -76,7 +76,7 @@ def test(c):  # pylint: disable=unused-argument
 
 @task(pre=[test])
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
-def release(c, type="minor"):  # pylint: disable=unused-argument
+def release(c, release_type="minor"):  # pylint: disable=unused-argument
 {%- elif cookiecutter.versioning == 'CalVer' %}
 def release(c):  # pylint: disable=unused-argument
 {%- endif %}
@@ -89,19 +89,20 @@ def release(c):  # pylint: disable=unused-argument
         sys.exit(1)
 
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
-    if type not in ["major", "minor", "patch"]:
+
+    if release_type not in ["major", "minor", "patch"]:
         LOG.error("Please provide a release type of major, minor, or patch")
         sys.exit(1)
 
-    new_version = get_new_version(get_current_version(), type)
-    bump_version(new_version, type)
+    new_version = get_new_version(get_current_version(), release_type)
+    bump_version(new_version, release_type)
 {%- elif cookiecutter.versioning == 'CalVer' %}
     # Get the current date info
     date_info = datetime.now().strftime("%Y.%m")
 
     # Our CalVer pattern which works until year 2200, up to 100 releases a
     # month (purposefully excludes builds)
-    pattern = re.compile("v2[0-1][0-9]{2}\.(0[0-9]|1[0-2])_[0-9]{2}")
+    pattern = re.compile(r"v2[0-1][0-9]{2}.(0[0-9]|1[0-2])_[0-9]{2}")
 
     # Identify and set the increment
     for tag in reversed(REPO.tags):
