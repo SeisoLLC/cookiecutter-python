@@ -122,7 +122,11 @@ def release(c):  # pylint: disable=unused-argument
 
     bump_version(new_version, level_bump)
 {% endif %}
-    # TODO: If stable is HEAD^, move it to HEAD
+    # If the prior commit is tagged as stable, align it with HEAD
+    if "stable" in REPO.tags and REPO.tags["stable"].object.hexsha == REPO.commit('HEAD^').hexsha:
+        tag = "stable"
+        REPO.create_tag(tag, message=f"{tag} release", force=True)
+        REPO.remotes.origin.push(tag, force=True)
 
 
 @task(pre=[build])
