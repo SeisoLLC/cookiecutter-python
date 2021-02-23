@@ -4,7 +4,6 @@ Task execution tool & library
 """
 
 import json
-import os
 {%- if cookiecutter.versioning == 'CalVer' %}
 import re
 {%- endif %}
@@ -85,11 +84,12 @@ def release(c, type="minor"):  # pylint: disable=unused-argument
 def release(c):  # pylint: disable=unused-argument
 {%- endif %}
     """Make a new release of {{ cookiecutter.project_name }}"""
-    if os.environ.get("GITHUB_ACTIONS") != "true":
-        tag = "stable"
-        REPO.create_tag(tag, message=f"{tag} release", force=True)
-        REPO.remotes.origin.push(tag, force=True)
-        return None
+    if REPO.head.is_detached:
+        LOG.error("In detached HEAD state, refusing to release")
+        sys.exit(1)
+    elif REPO.active_branch.name != 'main':
+        LOG.error("Not on the main branch, refusing to release")
+        sys.exit(1)
 
 {%- if cookiecutter.versioning == 'SemVer' %}
     if type not in ["major", "minor", "patch"]:
@@ -98,7 +98,7 @@ def release(c):  # pylint: disable=unused-argument
 
     new_version = get_new_version(get_current_version(), type)
     bump_version(new_version, type)
-{% elif cookiecutter.versioning == 'CalVer' %}
+{%- elif cookiecutter.versioning == 'CalVer' %}
     # Get the current date info
     date_info = datetime.now().strftime("%Y.%m")
 
@@ -123,32 +123,24 @@ def release(c):  # pylint: disable=unused-argument
     level_bump = None
 
     bump_version(new_version, level_bump)
-{% endif %}
-    # If the prior commit is tagged as stable, align it with HEAD
-    if (
-        "stable" in REPO.tags
-        and REPO.tags["stable"].object.hexsha == REPO.commit("HEAD^").hexsha
-    ):
-        tag = "stable"
-        REPO.create_tag(tag, message=f"{tag} release", force=True)
-        REPO.remotes.origin.push(tag, force=True)
+{%- endif %}
+    REPO.remotes.origin.push("v" + new_version)
 
 
-@task(pre=[build])
+@task
 def publish(c, tag):  # pylint: disable=unused-argument
     """Publish {{ cookiecutter.project_name }}"""
-    if tag not in ["latest", "version"]:
-        LOG.error("Please provide a tag of either latest or version")
+    if tag not in ["latest", "release"]:
+        LOG.error("Please provide a tag of either latest or release")
         sys.exit(1)
-{%- if cookiecutter.dockerhub == 'y' %}
-    elif tag == "version":
-{%- if cookiecutter.versioning == 'SemVer' %}
+    elif tag == "release":
         tag = "v" + __version__
-{% elif cookiecutter.versioning == 'CalVer' %}
-        tag = __version__
-{% endif %}
+
+{%- if cookiecutter.dockerhub == 'y' %}
     repository = IMAGE + ":" + tag
     LOG.info("Pushing %s to docker hub...", repository)
     CLIENT.images.push(repository=repository)
     LOG.info("Done publishing the %s Docker image", repository)
+{%- else %}
+    LOG.warning("TODO: Where should I publish to?")
 {%- endif %}

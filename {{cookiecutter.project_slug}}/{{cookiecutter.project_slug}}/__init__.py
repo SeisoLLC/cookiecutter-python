@@ -11,7 +11,7 @@ __license__ = "BSD-3-Clause"
 {% endif -%}
 __project_name__ = "{{ cookiecutter.project_slug }}"
 {% if cookiecutter.versioning == 'SemVer' -%}
-__version__ = "0.1.0"
+__version__ = "0.0.0"
 {% elif cookiecutter.versioning == 'CalVer' -%}
-__version__ = "{% now 'local', '%Y.%m-01' %}"
+__version__ = "{% now 'local', '%Y.%m-00' %}"
 {% endif -%}

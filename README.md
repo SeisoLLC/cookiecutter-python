@@ -27,9 +27,12 @@ git add -A
 git commit -m "Initial commit"
 pipenv run invoke test
 
-# Ship it! (Replace TODO with the repo name)
+# Setup a release
 git remote add origin git@github.com:SeisoLLC/TODO.git
 git push origin main
+pipenv run invoke release
+
+# TODO: What now? Bootstrap by pushing latest and version? Nothing? My brain is broken.
 ```
 
 ## FAQs
