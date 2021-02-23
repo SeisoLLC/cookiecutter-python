@@ -38,10 +38,6 @@ CWD = Path(".").absolute()
 REPO = git.Repo(CWD)
 CLIENT = docker.from_env()
 IMAGE = "seiso/{{ cookiecutter.project_slug }}"
-TAGS = ["latest", __version__]
-IMAGES = []
-for tag in TAGS:
-    IMAGES.append(IMAGE + ":" + tag)
 
 
 # Tasks
@@ -49,12 +45,12 @@ for tag in TAGS:
 def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
     version_string = "v" + __version__
-    commit_hash = REPO.head.object.hexsha
+    commit_hash = REPO.head.commit.hexsha
     commit_hash_short = commit_hash[:7]
 
     if (
         version_string in REPO.tags
-        and REPO.tags[version_string].object.hexsha == commit_hash
+        and REPO.tags[version_string].commit.hexsha == commit_hash
     ):
         buildargs = {"VERSION": __version__, "COMMIT_HASH": commit_hash}
     else:
@@ -63,11 +59,12 @@ def build(c):  # pylint: disable=unused-argument
             "COMMIT_HASH": commit_hash,
         }
 
-    # pylint: disable=redefined-outer-name
-    for image in IMAGES:
-        LOG.info("Building %s...", image)
+    # Build and Tag
+    for tag in ["latest", buildargs["VERSION"]]:
+        tag = IMAGE + ":" + tag
+        LOG.info("Building %s...", tag)
         CLIENT.images.build(
-            path=str(CWD), target="final", rm=True, tag=image, buildargs=buildargs
+            path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
         )
 
 
