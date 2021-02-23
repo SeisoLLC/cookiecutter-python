@@ -5,6 +5,7 @@ Task execution tool & library
 
 from {{ cookiecutter.project_slug }} import __version__
 import json
+import re
 import os
 import sys
 from logging import basicConfig, getLogger
@@ -106,8 +107,8 @@ def release(c):  # pylint: disable=unused-argument
 
     # Identify and set the increment
     for tag in reversed(REPO.tags):
-        if pattern.fullmatch(tag):
-            latest_release = tag
+        if pattern.fullmatch(tag.name):
+            latest_release = tag.name
             break
     else:
         latest_release = None

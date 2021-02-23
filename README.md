@@ -18,18 +18,16 @@ cd $(ls -td * | head -1)
 grep -r TODO *
 
 # Add your code and tests
+pipenv install --dev
 ...
 
-# Commit and push your work
+# Commit and test your work
 git init --initial-branch=main
 git add -A
 git commit -m "Initial commit"
-
-# Do some final testing
-pipenv install --dev
 pipenv run invoke test
 
-# Ship it!
+# Ship it! (Replace TODO with the repo name)
 git remote add origin git@github.com:SeisoLLC/TODO.git
 git push origin main
 ```
