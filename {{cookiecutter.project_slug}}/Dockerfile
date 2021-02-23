@@ -19,6 +19,7 @@ LABEL org.opencontainers.image.revision="${COMMIT_HASH}"
 LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 {%- endif %}
 
+# hadolint ignore=DL3008
 RUN apt-get update \
  && apt-get install -y --no-install-recommends pipenv \
                                                python3 \

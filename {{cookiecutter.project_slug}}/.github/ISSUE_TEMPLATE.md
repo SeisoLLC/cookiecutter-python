@@ -10,5 +10,5 @@
 ## Your environment
 
 
-## Logs, errors, etc.
+## Logs and error messages
 
