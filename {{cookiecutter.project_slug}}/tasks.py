@@ -8,11 +8,11 @@ import json
 import re
 {%- endif %}
 import sys
-from logging import basicConfig, getLogger
-from pathlib import Path
 {%- if cookiecutter.versioning == 'CalVer' %}
 from datetime import datetime
 {%- endif %}
+from logging import basicConfig, getLogger
+from pathlib import Path
 
 import docker
 import git
