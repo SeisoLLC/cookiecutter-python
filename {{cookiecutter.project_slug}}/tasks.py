@@ -55,7 +55,7 @@ def build(c):  # pylint: disable=unused-argument
         buildargs = {"VERSION": __version__, "COMMIT_HASH": commit_hash}
     else:
         buildargs = {
-            "VERSION": __version__ + "-" + commit_hash_short,
+            "VERSION": __version__ + "+" + commit_hash_short,
             "COMMIT_HASH": commit_hash,
         }
 
@@ -100,8 +100,8 @@ def release(c):  # pylint: disable=unused-argument
     date_info = datetime.now().strftime("%Y.%m")
 
     # Our CalVer pattern which works until year 2200, up to 100 releases a
-    # month
-    pattern = re.compile("2[0-1][0-9]{2}\.(0[0-9]|1[0-2])-[0-9]{2}")
+    # month (purposefully excludes builds)
+    pattern = re.compile("v2[0-1][0-9]{2}\.(0[0-9]|1[0-2])-[0-9]{2}")
 
     # Identify and set the increment
     for tag in reversed(REPO.tags):
