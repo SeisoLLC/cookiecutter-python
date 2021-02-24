@@ -17,6 +17,7 @@ from pathlib import Path
 import docker
 import git
 from invoke import task
+# TODO: Replace all of this with a bumpver or nothing
 from semantic_release.cli import bump_version
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
 from semantic_release.history import get_current_version, get_new_version
@@ -90,13 +91,15 @@ def release(c):  # pylint: disable=unused-argument
 
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
 
+    # TODO: Replace all of this with a simple bumpver
     if release_type not in ["major", "minor", "patch"]:
         LOG.error("Please provide a release type of major, minor, or patch")
         sys.exit(1)
 
-    new_version = get_new_version(get_current_version(), release_type)
-    bump_version(new_version, release_type)
+    argument = "--" + release_type
+    bumpver update + argument
 {%- elif cookiecutter.versioning == 'CalVer' %}
+    # TODO: Replace all of this with a simple bumpver
     # Get the current date info
     date_info = datetime.now().strftime("%Y.%m")
 
@@ -122,7 +125,6 @@ def release(c):  # pylint: disable=unused-argument
 
     bump_version(new_version, level_bump)
 {%- endif %}
-    REPO.remotes.origin.push("v" + new_version)
 
 
 @task

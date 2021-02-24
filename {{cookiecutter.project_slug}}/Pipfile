@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+bumpver = "*"
 docker = "*"
 gitpython = "*"
 invoke = "*"
-python-semantic-release = "*"

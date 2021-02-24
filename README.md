@@ -28,7 +28,7 @@ git commit -m "Initial commit"
 pipenv run invoke test
 
 # Setup a release
-git remote add origin git@github.com:SeisoLLC/TODO.git
+git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
 git push origin main
 pipenv run invoke release
 
