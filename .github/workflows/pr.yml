@@ -1,0 +1,19 @@
+---
+name: "PR"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test
+    runs-on: Ubuntu-20.04
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Run the goat
+        uses: seisollc/goat@main
