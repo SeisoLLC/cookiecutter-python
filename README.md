@@ -32,13 +32,13 @@ git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
 git push origin $(git branch --show-current)
 
 ###############################
-# SemVer
-pipenv run invoke release minor
+# CalVer
+pipenv run invoke release
 ###############################
 # or
 ###############################
-# CalVer
-pipenv run invoke release
+# SemVer
+pipenv run invoke release minor
 ###############################
 
 # Ship it!
