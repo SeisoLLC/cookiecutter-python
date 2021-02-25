@@ -98,7 +98,7 @@ def release(c):  # pylint: disable=unused-argument
 
     # Our CalVer pattern which works until year 2200, up to 100 releases a
     # month (purposefully excludes builds)
-    pattern = re.compile(r"v2[0-1][0-9]{2}.(0[0-9]|1[0-2])_[0-9]{2}")
+    pattern = re.compile(r"v2[0-1][0-9]{2}.(0[0-9]|1[0-2]).[0-9]{2}")
 
     # Identify and set the increment
     for tag in reversed(REPO.tags):
