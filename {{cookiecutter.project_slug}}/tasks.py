@@ -81,10 +81,6 @@ def release(c):  # pylint: disable=unused-argument
     if REPO.head.is_detached:
         LOG.error("In detached HEAD state, refusing to release")
         sys.exit(1)
-    elif REPO.active_branch.name != "main":
-        LOG.error("Not on the main branch, refusing to release")
-        sys.exit(1)
-
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
 
     if release_type not in ["major", "minor", "patch"]:
@@ -93,6 +89,7 @@ def release(c):  # pylint: disable=unused-argument
 
     bumpversion([release_type])
 {%- elif cookiecutter.versioning == 'CalVer' %}
+
     # Get the current date info
     date_info = datetime.now().strftime("%Y.%m")
 
