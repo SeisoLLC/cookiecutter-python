@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test the project
+    name: Test
     runs-on: Ubuntu-20.04
     strategy:
       matrix:
@@ -31,8 +31,8 @@ jobs:
       - name: Run the tests
         run: pipenv run invoke test
 {%- if cookiecutter.dockerhub == 'y' %}
-  push:
-    name: Push the Docker image
+  distribute:
+    name: Distribute
     runs-on: Ubuntu-20.04
     needs: test
     steps:

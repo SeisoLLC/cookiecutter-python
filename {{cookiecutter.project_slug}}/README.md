@@ -19,13 +19,12 @@ docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %}
 
 ## Creating a release
 ```bash
-git checkout -b release-branch
 {%- if cookiecutter.versioning == "SemVer-ish" %}
 pipenv run invoke release minor # or major, or patch
 {%- elif cookiecutter.versioning == "CalVer" %}
 pipenv run invoke release
 {%- endif %}
 
-# Push it!
+# Push it!  (Subject to branch policies)
 git push --atomic origin $(git branch --show-current) $(git describe --tags)
 ```

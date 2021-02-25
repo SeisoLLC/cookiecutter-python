@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test the project
+    name: Test
     runs-on: Ubuntu-20.04
     strategy:
       matrix:
