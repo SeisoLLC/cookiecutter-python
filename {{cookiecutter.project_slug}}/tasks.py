@@ -16,8 +16,8 @@ from pathlib import Path
 
 import docker
 import git
-from invoke import task
 from bumpversion.cli import main as bumpversion
+from invoke import task
 from {{ cookiecutter.project_slug }} import __version__
 
 LOG_FORMAT = json.dumps(
