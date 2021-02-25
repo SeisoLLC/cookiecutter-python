@@ -19,6 +19,7 @@ docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %}
 
 ## Creating a release
 ```bash
+# Create the release
 {%- if cookiecutter.versioning == "SemVer-ish" %}
 pipenv run invoke release minor # or major, or patch
 {%- elif cookiecutter.versioning == "CalVer" %}
