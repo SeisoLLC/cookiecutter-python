@@ -17,7 +17,7 @@ from pathlib import Path
 import docker
 import git
 from invoke import task
-from bump2version import bump_version
+from bumpversion.cli import main as bumpversion
 from {{ cookiecutter.project_slug }} import __version__
 
 LOG_FORMAT = json.dumps(
@@ -87,15 +87,12 @@ def release(c):  # pylint: disable=unused-argument
 
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
 
-    # TODO: Replace all of this with a simple bumpver
     if release_type not in ["major", "minor", "patch"]:
         LOG.error("Please provide a release type of major, minor, or patch")
         sys.exit(1)
 
-    argument = "--" + release_type
-    bumpver update + argument
+    bumpversion([release_type])
 {%- elif cookiecutter.versioning == 'CalVer' %}
-    # TODO: Replace all of this with a simple bumpver
     # Get the current date info
     date_info = datetime.now().strftime("%Y.%m")
 
@@ -117,9 +114,8 @@ def release(c):  # pylint: disable=unused-argument
         increment = "01"
 
     new_version = date_info + "_" + increment
-    level_bump = None
 
-    bump_version(new_version, level_bump)
+    bumpversion(["--new-version", new_version, "unusedpart"])
 {%- endif %}
 
 
