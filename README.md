@@ -47,6 +47,11 @@ git push --atomic origin $(git branch --show-current) $(git describe --tags)
 # Finally, setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...)
 ```
 
+## Updating the dependencies
+```bash
+pipenv update
+```
+
 ## FAQs
 Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?  
 A: You customized the `project_slug` when answering the `cookiecutter` questions and included a capital letter. Don't do that!  

@@ -29,3 +29,8 @@ pipenv run invoke release
 # Push it!  (Subject to branch policies)
 git push --atomic origin $(git branch --show-current) $(git describe --tags)
 ```
+
+## Updating the dependencies
+```bash
+pipenv update
+```
