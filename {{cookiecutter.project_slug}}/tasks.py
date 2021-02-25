@@ -17,11 +17,7 @@ from pathlib import Path
 import docker
 import git
 from invoke import task
-# TODO: Replace all of this with a bumpver or nothing
-from semantic_release.cli import bump_version
-{%- if cookiecutter.versioning == 'SemVer-ish' %}
-from semantic_release.history import get_current_version, get_new_version
-{%- endif %}
+from bump2version import bump_version
 from {{ cookiecutter.project_slug }} import __version__
 
 LOG_FORMAT = json.dumps(
