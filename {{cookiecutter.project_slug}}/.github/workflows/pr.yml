@@ -1,9 +1,11 @@
 ---
 name: "PR"
+
 on:
   pull_request:
     branches:
       - main
+
 jobs:
   test:
     name: Test the project

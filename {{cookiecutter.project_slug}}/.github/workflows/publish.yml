@@ -1,17 +1,15 @@
 ---
 name: "Publish a release"
+
 on:
   push:
     tags:
       # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
 {%- if cookiecutter.versioning == "SemVer-ish" %}
       - 'v[0-9]+.[0-9]+.[0-9]+'
-      - 'v[0-9]+.[0-9]+.[0-9]+-[0-9a-f]{5,10}'
 {%- elif cookiecutter.versioning == "CalVer" %}
-      - 'v2[0-1][0-9]{2}.0[0-9]_[0-9]{2}'
-      - 'v2[0-1][0-9]{2}.1[0-2]_[0-9]{2}'
-      - 'v2[0-1][0-9]{2}.0[0-9]_[0-9]{2}-[0-9a-f]{5,10}'
-      - 'v2[0-1][0-9]{2}.1[0-2]_[0-9]{2}-[0-9a-f]{5,10}'
+      - 'v2[0-1][0-9]{2}.0[0-9].[0-9]{2}'
+      - 'v2[0-1][0-9]{2}.1[0-2].[0-9]{2}'
 {%- endif %}
 
 jobs:

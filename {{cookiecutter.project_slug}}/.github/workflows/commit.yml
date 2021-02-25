@@ -1,9 +1,11 @@
 ---
 name: "Commit"
+
 on:
   push:
     branches:
       - main
+
 jobs:
   test:
     name: Test the project

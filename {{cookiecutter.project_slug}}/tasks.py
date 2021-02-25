@@ -73,7 +73,7 @@ def test(c):  # pylint: disable=unused-argument
 
 @task(pre=[test])
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
-def release(c, release_type="minor"):  # pylint: disable=unused-argument
+def release(c, release_type):  # pylint: disable=unused-argument
 {%- elif cookiecutter.versioning == 'CalVer' %}
 def release(c):  # pylint: disable=unused-argument
 {%- endif %}
@@ -108,12 +108,12 @@ def release(c):  # pylint: disable=unused-argument
     else:
         latest_release = None
 
-    if latest_release and date_info == latest_release.split("_")[0]:
-        increment = str(int(latest_release.split("_")[-1]) + 1).zfill(2)
+    if latest_release and date_info == latest_release[:7]:
+        increment = str(int(latest_release[8:]) + 1).zfill(2)
     else:
         increment = "01"
 
-    new_version = date_info + "_" + increment
+    new_version = date_info + "." + increment
 
     bumpversion(["--new-version", new_version, "unusedpart"])
 {%- endif %}
