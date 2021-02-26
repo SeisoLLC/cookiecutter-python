@@ -62,7 +62,6 @@ def lint(c):  # pylint: disable=unused-argument
     decoded_response = container.logs().decode("utf-8")
     response["logs"] = decoded_response.strip().replace("\n", "  ")
     container.remove()
-    print(response["StatusCode"])
     if not response["StatusCode"] == 0:
         LOG.error(
             "Received a non-zero status code from docker (%s); additional details: %s",
