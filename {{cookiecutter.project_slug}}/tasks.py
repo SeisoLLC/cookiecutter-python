@@ -70,7 +70,7 @@ def lint(c):  # pylint: disable=unused-argument
         )
         sys.exit(response["StatusCode"])
 
-    LOG.info("Linting complete!", image)
+    LOG.info("Linting completed successfully, no issues detected")
 
 
 @task(pre=[lint])
