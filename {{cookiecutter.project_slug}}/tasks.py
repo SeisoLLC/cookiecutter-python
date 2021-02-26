@@ -39,6 +39,27 @@ IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 
 # Tasks
 @task
+def lint(c):  # pylint: disable=unused-argument
+    """Lint {{ cookiecutter.project_name }}"""
+    image = "seiso/goat:latest"
+    environment = {"RUN_LOCAL": True}
+    working_dir = "/tmp/lint/"
+    volumes = {working_dir: {"bind": working_dir, "mode": "ro"}}
+
+    LOG.info("Pulling %s...", image)
+    CLIENT.images.pull(image)
+    LOG.info("Running %s...", image)
+    CLIENT.containers.run(
+        auto_remove=True,
+        environment=environment,
+        image=image,
+        volumes=volumes,
+        working_dir=working_dir,
+    )
+    LOG.info("Linting complete!", image)
+
+
+@task(pre=[lint])
 def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
     version_string = "v" + __version__
