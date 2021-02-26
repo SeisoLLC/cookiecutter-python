@@ -49,13 +49,28 @@ def lint(c):  # pylint: disable=unused-argument
     LOG.info("Pulling %s...", image)
     CLIENT.images.pull(image)
     LOG.info("Running %s...", image)
-    CLIENT.containers.run(
-        auto_remove=True,
+    container = CLIENT.containers.run(
+        auto_remove=False,
+        detach=True,
         environment=environment,
         image=image,
         volumes=volumes,
         working_dir=working_dir,
     )
+
+    response = container.wait(condition="not-running")
+    decoded_response = container.logs().decode("utf-8")
+    response["logs"] = decoded_response.strip().replace("\n", "  ")
+    container.remove()
+    print(response["StatusCode"])
+    if not response["StatusCode"] == 0:
+        LOG.error(
+            "Received a non-zero status code from docker (%s); additional details: %s",
+            response["StatusCode"],
+            response["logs"],
+        )
+        sys.exit(response["StatusCode"])
+
     LOG.info("Linting complete!", image)
 
 
