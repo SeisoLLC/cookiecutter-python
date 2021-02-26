@@ -44,7 +44,7 @@ def lint(c):  # pylint: disable=unused-argument
     image = "seiso/goat:latest"
     environment = {"RUN_LOCAL": True}
     working_dir = "/tmp/lint/"
-    volumes = {working_dir: {"bind": working_dir, "mode": "ro"}}
+    volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
 
     LOG.info("Pulling %s...", image)
     CLIENT.images.pull(image)
