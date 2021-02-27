@@ -13,8 +13,9 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - 3.8
-          - 3.9
+{%- for python_version in cookiecutter.python_versions %}
+          - {{ python_version }}
+{%- endfor %}
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
@@ -41,7 +42,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: {{ cookiecutter.python_versions[0] }}
       - name: Install the dependencies
         run: |
           python -m pip install --upgrade pipenv
