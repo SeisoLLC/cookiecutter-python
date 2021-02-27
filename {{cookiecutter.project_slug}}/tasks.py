@@ -39,6 +39,41 @@ IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 
 # Tasks
 @task
+def lint(c):  # pylint: disable=unused-argument
+    """Lint {{ cookiecutter.project_name }}"""
+    image = "seiso/goat:latest"
+    environment = {"RUN_LOCAL": True}
+    working_dir = "/tmp/lint/"
+    volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
+
+    LOG.info("Pulling %s...", image)
+    CLIENT.images.pull(image)
+    LOG.info("Running %s...", image)
+    container = CLIENT.containers.run(
+        auto_remove=False,
+        detach=True,
+        environment=environment,
+        image=image,
+        volumes=volumes,
+        working_dir=working_dir,
+    )
+
+    response = container.wait(condition="not-running")
+    decoded_response = container.logs().decode("utf-8")
+    response["logs"] = decoded_response.strip().replace("\n", "  ")
+    container.remove()
+    if not response["StatusCode"] == 0:
+        LOG.error(
+            "Received a non-zero status code from docker (%s); additional details: %s",
+            response["StatusCode"],
+            response["logs"],
+        )
+        sys.exit(response["StatusCode"])
+
+    LOG.info("Linting completed successfully, no issues detected")
+
+
+@task(pre=[lint])
 def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
     version_string = "v" + __version__
