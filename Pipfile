@@ -7,6 +7,5 @@ name = "pypi"
 
 [dev-packages]
 bumpversion = "*"
-docker = "*"
 gitpython = "*"
 invoke = "*"
