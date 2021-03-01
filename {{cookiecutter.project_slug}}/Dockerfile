@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 AS base
+FROM {{ cookiecutter.docker_base }} AS base
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
