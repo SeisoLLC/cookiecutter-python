@@ -43,7 +43,7 @@ def lint(c):  # pylint: disable=unused-argument
     """Lint {{ cookiecutter.project_name }}"""
     image = "seiso/goat:latest"
     environment = {"RUN_LOCAL": True}
-    working_dir = "/tmp/lint/"
+    working_dir = "/goat/"
     volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
 
     LOG.info("Pulling %s...", image)
