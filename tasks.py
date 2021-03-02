@@ -13,6 +13,7 @@ from pathlib import Path
 import git
 from bumpversion.cli import main as bumpversion
 from invoke import task
+import pytest
 
 LOG_FORMAT = json.dumps(
     {
@@ -33,7 +34,7 @@ REPO = git.Repo(CWD)
 @task
 def test(c):  # pylint: disable=unused-argument
     """Test cookiecutter-python"""
-    LOG.warning("TODO: Implement tests")
+    pytest.main(["-x", "tests"])
 
 
 @task(pre=[test])
