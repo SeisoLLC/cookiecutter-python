@@ -5,25 +5,12 @@ Test cookiecutter-python
 
 import itertools
 import json
-from logging import basicConfig, getLogger
 from pathlib import Path
 import random
 import string
 import sys
 
 import jinja2
-
-
-LOG_FORMAT = json.dumps(
-    {
-        "timestamp": "%(asctime)s",
-        "namespace": "%(name)s",
-        "loglevel": "%(levelname)s",
-        "message": "%(message)s",
-    }
-)
-basicConfig(level="INFO", format=LOG_FORMAT)
-LOG = getLogger("cookiecutter-python.testing")
 
 
 def test_bake_project(cookies):
