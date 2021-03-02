@@ -29,7 +29,7 @@ def test_all_the_options(cookies):
     Test baking a cookiecutter-python with all of the possible options
     """
     all_the_options = []
-    config_file = Path('./cookiecutter.json')
+    config_file = Path("./cookiecutter.json")
     with open(config_file, "r") as file_object:
         config = json.load(file_object)
 
@@ -46,7 +46,7 @@ def test_all_the_options(cookies):
 
             # Add a 32 character pseudorandom string to the options list
             characters = string.ascii_letters + string.digits + "-" + "-"
-            options.append(''.join(random.choice(characters) for i in range(32)))
+            options.append("".join(random.choice(characters) for i in range(32)))
         elif isinstance(value, list):
             # Set the options list to all of the predefined possibilities
             options = value
