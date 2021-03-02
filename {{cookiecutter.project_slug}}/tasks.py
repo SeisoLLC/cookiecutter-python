@@ -41,7 +41,7 @@ IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 @task
 def lint(c):  # pylint: disable=unused-argument
     """Lint {{ cookiecutter.project_name }}"""
-    if REPO.untracked_files or REPO.is_dirty():
+    if REPO.is_dirty(untracked_files=True):
         LOG.error("Linting requires a clean git directory to function properly")
         sys.exit(1)
 
