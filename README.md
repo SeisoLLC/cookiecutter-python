@@ -8,8 +8,11 @@ python3 -m pip install pipx
 python3 -m pipx ensurepath
 pipx install pipenv
 
-# Initialize your project
+# Initialize your project either with HTTP or SSH
+# Uses HTTP
 pipx run cookiecutter gh:seisollc/cookiecutter-python
+# Uses SSH
+pipx run cookiecutter git+ssh://git@github.com/seisollc/cookiecutter-python.git
 
 # Enter the project directory
 cd $(ls -td * | head -1)
