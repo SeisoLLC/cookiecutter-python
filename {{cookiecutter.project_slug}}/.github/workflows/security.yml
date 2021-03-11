@@ -2,6 +2,7 @@
 name: "Security"
 
 on:
+{%- if cookiecutter.public == 'yes' %}
   push:
     branches:
       - main
@@ -10,6 +11,9 @@ on:
       - main
   schedule:
     - cron: '{{ range(0, 59) | random }} {{ range(2, 4) | random }} * * *'
+{%- elif cookiecutter.public == 'no' %}
+  - workflow_dispatch
+{%- endif %}
 
 jobs:
   analyze:

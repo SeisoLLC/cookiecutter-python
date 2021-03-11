@@ -164,7 +164,7 @@ def publish(c, tag):  # pylint: disable=unused-argument
     elif tag == "release":
         tag = "v" + __version__
 
-{%- if cookiecutter.dockerhub == 'y' %}
+{%- if cookiecutter.dockerhub == 'yes' %}
     repository = IMAGE + ":" + tag
     LOG.info("Pushing %s to docker hub...", repository)
     CLIENT.images.push(repository=repository)
