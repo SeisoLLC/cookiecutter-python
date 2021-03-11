@@ -20,7 +20,7 @@ jobs:
           - {{ python_version }}
 {%- endfor %}
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Run the goat
         uses: seisollc/goat@main
@@ -41,7 +41,7 @@ jobs:
     runs-on: Ubuntu-20.04
     needs: test
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Setup python
         uses: actions/setup-python@v2
