@@ -43,6 +43,7 @@ def lint(c):  # pylint: disable=unused-argument
     """Lint {{ cookiecutter.project_name }}"""
     if REPO.untracked_files or REPO.is_dirty():
         LOG.error("Linting requires a clean git directory to function properly")
+        sys.exit(1)
 
     image = "seiso/goat:latest"
     environment = {"RUN_LOCAL": True}
