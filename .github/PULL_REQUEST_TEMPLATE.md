@@ -6,7 +6,10 @@
 
 Thank you for submitting a contribution to cookiecutter-python
 
-In order to streamline the review of your contribution we ask that you review and comply with the below requirements:
+In order to streamline the review of your contribution we ask that you review
+and comply with the below requirements:
 
 - [ ] Rebase your branch against the latest commit of the target branch
-- [ ] If there is an issue associated with your Pull Request, align your PR title with [this documentation](https://help.github.com/en/articles/closing-issues-using-keywords)
+- [ ] If there is an issue associated with your Pull Request, align your PR
+  title with [this
+  documentation](https://help.github.com/en/articles/closing-issues-using-keywords)
