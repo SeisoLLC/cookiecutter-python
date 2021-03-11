@@ -21,7 +21,6 @@ jobs:
 {%- for python_version in cookiecutter.python_versions %}
           - {{ python_version }}
 {%- endfor %}
-    strategy:
       fail-fast: false
     steps:
       - name: Checkout the repository
