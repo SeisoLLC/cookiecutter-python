@@ -53,7 +53,7 @@ def lint(c):  # pylint: disable=unused-argument
             environment[element] = os.environ.get(element)
 
     image = "seiso/goat:latest"
-    environment = {"RUN_LOCAL": True}
+    environment["RUN_LOCAL"] = True
     working_dir = "/goat/"
     volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
 
