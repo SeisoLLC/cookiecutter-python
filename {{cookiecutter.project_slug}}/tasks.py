@@ -41,9 +41,16 @@ IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 @task
 def lint(c):  # pylint: disable=unused-argument
     """Lint {{ cookiecutter.project_name }}"""
+    environment = {}
+
     if REPO.is_dirty(untracked_files=True):
         LOG.error("Linting requires a clean git directory to function properly")
         sys.exit(1)
+
+    # Pass in all of the host environment variables starting with INPUT_
+    for element in dict(os.environ):
+        if element.startswith("INPUT_"):
+            environment[element] = os.environ.get(element)
 
     image = "seiso/goat:latest"
     environment = {"RUN_LOCAL": True}
