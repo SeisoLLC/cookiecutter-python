@@ -10,7 +10,6 @@ bumpversion = "*"
 docker = "*"
 gitpython = "*"
 invoke = "*"
-pipenv = "*"
 
 [requires]
 python_version = "{{ cookiecutter.python_versions[0] }}"
