@@ -24,7 +24,7 @@ jobs:
         uses: seisollc/goat@main
         with:
           # Exclude anything that contains {{ and }} in the file name
-          exclude: .*{{.*}}.*
+          exclude: .*\{\{.*\}\}.*
       - name: Setup python
         uses: actions/setup-python@v2
         with:
