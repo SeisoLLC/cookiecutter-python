@@ -1,11 +1,11 @@
 # Seiso's python project template
 
-This is Seiso's cookiecuter template for creating new python repositories
+This is Seiso's cookiecutter template for creating new python repositories
 
 ## Getting Started
 
 ```bash
-# Install the prereqs
+# Install the prerequisites
 python3 -m pip install pipx
 python3 -m pipx ensurepath
 pipx install pipenv

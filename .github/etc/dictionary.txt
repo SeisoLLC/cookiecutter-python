@@ -1,0 +1,4 @@
+cookiecutter
+dependabot
+ensurepath
+pipx
