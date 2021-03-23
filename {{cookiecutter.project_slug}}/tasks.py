@@ -4,6 +4,7 @@ Task execution tool & library
 """
 
 import json
+import os
 {%- if cookiecutter.versioning == 'CalVer' %}
 import re
 {%- endif %}
