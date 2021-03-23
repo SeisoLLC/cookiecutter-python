@@ -22,8 +22,9 @@ LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 # hadolint ignore=DL3008
 RUN apt-get update \
  && apt-get install -y --no-install-recommends pipenv \
-                                               python3 \
+                                               python{{ cookiecutter.python_versions[0] }} \
                                                python3-pip \
+ && ln -sf /usr/bin/python{{ cookiecutter.python_versions[0] }} /usr/bin/python3 \
  && apt-get clean autoclean \
  && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
@@ -32,7 +33,9 @@ RUN apt-get update \
 FROM base AS builder
 
 COPY Pipfile Pipfile.lock ./
-RUN PIPENV_VENV_IN_PROJECT=true pipenv install --deploy --ignore-pipfile
+RUN PIP_IGNORE_INSTALLED=1 \
+    PIPENV_VENV_IN_PROJECT=true \
+    pipenv install --deploy --ignore-pipfile
 
 
 FROM base AS final

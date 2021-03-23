@@ -7,7 +7,9 @@ name = "pypi"
 
 [dev-packages]
 bumpversion = "*"
+docker = "*"
 gitpython = "*"
 invoke = "*"
 pytest = "*"
 pytest-cookies = "*"
+pyyaml = "*"

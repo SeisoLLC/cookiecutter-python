@@ -1,7 +1,9 @@
 # {{ cookiecutter.project_name }}
+
 Welcome to {{ cookiecutter.project_name }}
 
 ## Getting Started
+
 ```bash
 # Install the dependencies
 pipenv install --dev
@@ -18,17 +20,21 @@ docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %}
 ```
 
 ## Development Notes
+
 ### Linting locally
+
 ```bash
 pipenv run invoke lint
 ```
 
 ### Updating the dependencies
+
 ```bash
 pipenv update
 ```
 
 ### Creating a release
+
 ```bash
 # Create the release
 {%- if cookiecutter.versioning == "SemVer-ish" %}

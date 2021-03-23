@@ -11,9 +11,9 @@ from logging import basicConfig, getLogger
 from pathlib import Path
 
 import git
+import pytest
 from bumpversion.cli import main as bumpversion
 from invoke import task
-import pytest
 
 LOG_FORMAT = json.dumps(
     {
@@ -34,7 +34,7 @@ REPO = git.Repo(CWD)
 @task
 def test(c):  # pylint: disable=unused-argument
     """Test cookiecutter-python"""
-    pytest.main(["-x", "tests"])
+    sys.exit(pytest.main(["-x", "tests"]))
 
 
 @task(pre=[test])

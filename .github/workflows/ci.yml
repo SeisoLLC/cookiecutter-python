@@ -1,7 +1,10 @@
 ---
-name: "PR"
+name: "CI"
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -15,14 +18,18 @@ jobs:
         python-version:
           - 3.9
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repository
         uses: actions/checkout@v2
+      - name: Run the goat
+        uses: seisollc/goat@main
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-python@v2
+          # Exclude anything that contains {{ and }} in the file name
+          exclude: .*\{\{.*\}\}.*
+      - name: Setup python
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+      - name: Install the dependencies
         run: |
           python -m pip install --upgrade pipenv
           pipenv install --python ${{ matrix.python-version }} --dev
