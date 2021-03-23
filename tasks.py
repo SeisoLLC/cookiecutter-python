@@ -11,9 +11,9 @@ from logging import basicConfig, getLogger
 from pathlib import Path
 
 import git
+import pytest
 from bumpversion.cli import main as bumpversion
 from invoke import task
-import pytest
 
 LOG_FORMAT = json.dumps(
     {

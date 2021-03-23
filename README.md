@@ -1,7 +1,9 @@
 # Seiso's python project template
+
 This is Seiso's cookiecuter template for creating new python repositories
 
 ## Getting Started
+
 ```bash
 # Install the prereqs
 python3 -m pip install pipx
@@ -51,13 +53,22 @@ git push --atomic origin $(git branch --show-current) $(git describe --tags)
 ```
 
 ## Updating the dependencies
+
 ```bash
 pipenv update
 ```
 
 ## FAQs
-Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?  
-A: You customized the `project_slug` when answering the `cookiecutter` questions and included a capital letter. Don't do that!  
+
+Q: Why am I getting `invalid reference format: repository name must be
+lowercase` when I try to build my docker container?  
+A: You customized the `project_slug` when answering the `cookiecutter`
+questions and included a capital letter. Don't do that!
 
 Q: What does `SemVer-ish` mean?  
-A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in their tags (which are used by Semver to indicate builds). As a workaround, we use `-`s instead (only for local builds, not official releases), which is not compliant with the official SemVer spec, but is easily human understandable. In order to keep the docker image tags in line with git tags, both use this SemVer-like notation.  
+A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in
+their tags (which are used by Semver to indicate builds). As a workaround, we
+use `-`s instead (only for local builds, not official releases), which is not
+compliant with the official SemVer spec, but is easily human understandable. In
+order to keep the docker image tags in line with git tags, both use this
+SemVer-like notation.

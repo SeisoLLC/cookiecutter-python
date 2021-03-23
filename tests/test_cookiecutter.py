@@ -3,22 +3,20 @@
 Test cookiecutter-python
 """
 
-import contextlib
-import copy
 import itertools
 import json
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
+from pathlib import Path
 from typing import Union
-import yaml
 
 import docker
 import git
-from jinja2 import Template
 import pytest
+import yaml
+from jinja2 import Template
 
 
 def get_config() -> dict:
@@ -132,13 +130,20 @@ def test_default_project(cookies):
         pytest.fail("Something went wrong with the project's git repo setup")
 
     try:
-        subprocess.run(["pipenv", "install", "--dev"], capture_output=True, check=True, cwd=project)
+        subprocess.run(
+            ["pipenv", "install", "--dev"], capture_output=True, check=True, cwd=project
+        )
         repo.git.add(all=True)
         repo.index.commit(
             "Add Pipfile.lock",
             committer=git.Actor("cookiecutter-python tests", "automation@seisollc.com"),
         )
-        subprocess.run(["pipenv", "run", "invoke", "test"], capture_output=True, check=True, cwd=project)
+        subprocess.run(
+            ["pipenv", "run", "invoke", "test"],
+            capture_output=True,
+            check=True,
+            cwd=project,
+        )
     except subprocess.CalledProcessError as error:
         pytest.fail(error.stderr.decode("utf-8"))
 

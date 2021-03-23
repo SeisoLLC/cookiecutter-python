@@ -18,8 +18,13 @@ jobs:
         python-version:
           - 3.9
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repository
         uses: actions/checkout@v2
+      - name: Run the goat
+        uses: seisollc/goat@main
+        with:
+          # Exclude anything that starts with {{
+          exclude: ^\{\{
       - name: Setup python
         uses: actions/setup-python@v2
         with:
