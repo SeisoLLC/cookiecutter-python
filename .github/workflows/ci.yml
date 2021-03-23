@@ -23,8 +23,8 @@ jobs:
       - name: Run the goat
         uses: seisollc/goat@main
         with:
-          # Exclude anything that starts with {{
-          exclude: ^\{\{
+          # Exclude anything that contains {{ and }} in the file name
+          exclude: .*{{.*}}.*
       - name: Setup python
         uses: actions/setup-python@v2
         with:
