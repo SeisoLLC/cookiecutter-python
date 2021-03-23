@@ -34,7 +34,7 @@ REPO = git.Repo(CWD)
 @task
 def test(c):  # pylint: disable=unused-argument
     """Test cookiecutter-python"""
-    pytest.main(["-x", "tests"])
+    sys.exit(pytest.main(["-x", "tests"]))
 
 
 @task(pre=[test])
