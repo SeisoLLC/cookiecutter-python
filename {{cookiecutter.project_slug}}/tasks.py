@@ -76,7 +76,7 @@ def lint(c):  # pylint: disable=unused-argument
     LOG.info("Linting completed successfully")
 
 
-@task(pre=[lint])
+@task
 def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
     version_string = "v" + __version__
@@ -103,7 +103,7 @@ def build(c):  # pylint: disable=unused-argument
         )
 
 
-@task(pre=[build])
+@task(pre=[lint, build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
     LOG.warning("TODO: Implement project tests")
