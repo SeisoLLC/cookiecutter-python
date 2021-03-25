@@ -13,9 +13,9 @@ pipenv run invoke build
 
 # Run the docker image
 {%- if cookiecutter.versioning == "SemVer-ish" %}
-docker run seiso/{{ cookiecutter.project_slug }}:0.0.0
+docker run seiso/{{ cookiecutter.project_slug }}:0.0.0 --help
 {%- elif cookiecutter.versioning == "CalVer" %}
-docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %}
+docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %} --help
 {%- endif %}
 ```
 
