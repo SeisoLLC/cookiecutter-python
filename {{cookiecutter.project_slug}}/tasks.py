@@ -3,7 +3,6 @@
 Task execution tool & library
 """
 
-import json
 import os
 {%- if cookiecutter.versioning == 'CalVer' %}
 import re
@@ -19,18 +18,10 @@ import docker
 import git
 from bumpversion.cli import main as bumpversion
 from invoke import task
-from {{ cookiecutter.project_slug }} import __version__
+from {{ cookiecutter.project_slug }} import __version__, constants
 
-LOG_FORMAT = json.dumps(
-    {
-        "timestamp": "%(asctime)s",
-        "namespace": "%(name)s",
-        "loglevel": "%(levelname)s",
-        "message": "%(message)s",
-    }
-)
-basicConfig(level="INFO", format=LOG_FORMAT)
-LOG = getLogger("{{ cookiecutter.project_slug }}")
+basicConfig(level="INFO", format=constants.LOG_FORMAT)
+LOG = getLogger("{{ cookiecutter.project_slug }}.invoke")
 
 CWD = Path(".").absolute()
 REPO = git.Repo(CWD)
