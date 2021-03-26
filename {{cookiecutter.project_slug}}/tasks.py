@@ -16,6 +16,7 @@ from pathlib import Path
 
 import docker
 import git
+import pytest
 from bumpversion.cli import main as bumpversion
 from invoke import task
 from {{ cookiecutter.project_slug }} import __version__, constants
@@ -81,7 +82,7 @@ def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
     version_string = "v" + __version__
     commit_hash = REPO.head.commit.hexsha
-    commit_hash_short = commit_hash[:7]
+    commit_hash_short = REPO.git.rev_parse(commit_hash, short=True)
 
     if (
         version_string in REPO.tags
@@ -106,7 +107,7 @@ def build(c):  # pylint: disable=unused-argument
 @task(pre=[lint, build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
-    LOG.warning("TODO: Implement project tests")
+    sys.exit(pytest.main(["-x", "tests"]))
 
 
 @task(pre=[test])
