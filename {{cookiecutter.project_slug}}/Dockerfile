@@ -46,7 +46,7 @@ WORKDIR /usr/src/app
 RUN useradd --create-home appuser
 USER appuser
 
-COPY --from=builder /.venv .venv
+COPY --from=builder /tmp/.venv .venv
 ENV PATH="/usr/src/app/.venv/bin:${PATH}"
 
 COPY ./{{ cookiecutter.project_slug }} ./
