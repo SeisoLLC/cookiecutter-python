@@ -107,7 +107,7 @@ def build(c):  # pylint: disable=unused-argument
 @task(pre=[lint, build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
-    sys.exit(pytest.main(["-x", "tests"]))
+    sys.exit(pytest.main(["--cov={{ cookiecutter.project_slug }}", "tests"]))
 
 
 @task(pre=[test])
