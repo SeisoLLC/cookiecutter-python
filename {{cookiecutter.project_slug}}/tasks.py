@@ -7,6 +7,7 @@ import os
 {%- if cookiecutter.versioning == 'CalVer' %}
 import re
 {%- endif %}
+import subprocess
 import sys
 {%- if cookiecutter.versioning == 'CalVer' %}
 from datetime import datetime
@@ -16,7 +17,6 @@ from pathlib import Path
 
 import docker
 import git
-import pytest
 from bumpversion.cli import main as bumpversion
 from invoke import task
 from {{ cookiecutter.project_slug }} import __version__, constants
