@@ -107,7 +107,11 @@ def build(c):  # pylint: disable=unused-argument
 @task(pre=[lint, build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
-    sys.exit(pytest.main(["--cov={{ cookiecutter.project_slug }}", "tests"]))
+    try:
+        subprocess.run(["pipenv", "run", "pytest", "--cov={{ cookiecutter.project_slug }}", "tests"]))
+    except subprocess.CalledProcessError:
+        LOG.error("Testing failed")
+        sys.exit(1)
 
 
 @task(pre=[test])
