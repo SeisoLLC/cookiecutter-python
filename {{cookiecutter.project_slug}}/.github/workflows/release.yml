@@ -17,7 +17,7 @@ jobs:
     name: Distribute
     runs-on: Ubuntu-20.04
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Setup python
         uses: actions/setup-python@v2
@@ -36,7 +36,7 @@ jobs:
           name: ${{ "{{ github.ref }}" }} release
           draft: false
           prerelease: false
-{%- if cookiecutter.dockerhub == 'y' %}
+{%- if cookiecutter.dockerhub == 'yes' %}
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:

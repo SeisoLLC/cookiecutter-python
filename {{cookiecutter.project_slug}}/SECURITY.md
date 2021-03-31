@@ -5,9 +5,9 @@ seriously, and appreciate all efforts that disclose concerns responsibly.
 
 If you believe you've found a security bug in our project, please contact us at
 [security@SeisoLLC.com](mailto:security@SeisoLLC.com) and include the words
-"{{ cookiecutter.project_name }} vulnerability" in the subject line. If you
-believe you've found a security bug in a third-party project used by
-{{ cookiecutter.project_name }}, please report it to those those maintainers.
+"{{ cookiecutter.project_name }} vulnerability" in the subject line. If you believe
+you've found a security bug in a third-party project used by {{ cookiecutter.project_name }},
+please report it to those those maintainers.
 
 Your email will be acknowledged within one business day, and you'll receive a
 more detailed response to your email as soon as possible indicating the next
