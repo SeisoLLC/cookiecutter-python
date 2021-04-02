@@ -14,6 +14,7 @@ def test_get_args_config(mocker):
     mocker.patch(
         "argparse.ArgumentParser.parse_args",
         return_value=argparse.Namespace(loglevel=30),
+        autospec=True
     )
 
     # Validate the return type
@@ -25,6 +26,7 @@ def test_setup_logging(mocker):
     mocker.patch(
         "argparse.ArgumentParser.parse_args",
         return_value=argparse.Namespace(loglevel=30),
+        autospec=True
     )
 
     # Validate the return type
