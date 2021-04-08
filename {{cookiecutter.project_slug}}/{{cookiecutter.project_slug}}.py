@@ -7,4 +7,4 @@ from {{ cookiecutter.project_slug }} import config
 
 if __name__ == "__main__":
     log = config.setup_logging()
-    log.warning("TODO: Implement business logic")
+    raise NotImplementedError()

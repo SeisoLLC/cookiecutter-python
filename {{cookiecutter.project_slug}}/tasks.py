@@ -174,5 +174,5 @@ def publish(c, tag):  # pylint: disable=unused-argument
     CLIENT.images.push(repository=repository)
     LOG.info("Done publishing the %s Docker image", repository)
 {%- else %}
-    LOG.warning("TODO: Where should I publish to?")
+    raise NotImplementedError()
 {%- endif %}

@@ -19,8 +19,8 @@ pipx run cookiecutter git+ssh://git@github.com/seisollc/cookiecutter-python.git
 # Enter the project directory
 cd $(ls -td * | head -1)
 
-# Check for any remaining TODOs and address them
-grep -r TODO *
+# Check for `NotImplementedError`s and address them
+grep -r NotImplementedError *
 
 # Add your code and tests
 pipenv install --dev
