@@ -123,8 +123,8 @@ def test(c):  # pylint: disable=unused-argument
 @task
 def reformat(c):  # pylint: disable=unused-argument
     """Reformat {{ cookiecutter.project_name }}"""
-    command = "**/*.py"
     entrypoint = "isort"
+    command = "."
     image = "seiso/goat:latest"
     working_dir = "/goat/"
     volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
@@ -132,8 +132,6 @@ def reformat(c):  # pylint: disable=unused-argument
     LOG.info("Pulling %s...", image)
     CLIENT.images.pull(image)
     LOG.info("Reformatting the project...")
-    # TODO: Not working because of isort config path issue; perhaps host
-    # related or {s in subfolders? Otherwise, everything else working
     container = CLIENT.containers.run(
         auto_remove=False,
         command=command,
