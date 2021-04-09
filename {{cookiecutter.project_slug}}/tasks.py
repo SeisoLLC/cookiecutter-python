@@ -25,7 +25,10 @@ basicConfig(level="INFO", format=constants.LOG_FORMAT)
 LOG = getLogger("{{ cookiecutter.project_slug }}.invoke")
 
 CWD = Path(".").absolute()
-REPO = git.Repo(CWD)
+try:
+    REPO = git.Repo(CWD)
+except git.exc.InvalidGitRepositoryError:
+    REPO = None
 CLIENT = docker.from_env()
 IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 
@@ -123,8 +126,7 @@ def test(c):  # pylint: disable=unused-argument
 @task
 def reformat(c):  # pylint: disable=unused-argument
     """Reformat {{ cookiecutter.project_name }}"""
-    entrypoint = "isort"
-    command = "."
+    entrypoint_and_command = [("isort", "."), ("black", ".")]
     image = "seiso/goat:latest"
     working_dir = "/goat/"
     volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
@@ -132,16 +134,17 @@ def reformat(c):  # pylint: disable=unused-argument
     LOG.info("Pulling %s...", image)
     CLIENT.images.pull(image)
     LOG.info("Reformatting the project...")
-    container = CLIENT.containers.run(
-        auto_remove=False,
-        command=command,
-        detach=True,
-        entrypoint=entrypoint,
-        image=image,
-        volumes=volumes,
-        working_dir=working_dir,
-    )
-    process_container(container=container)
+    for entrypoint, command in entrypoint_and_command:
+        container = CLIENT.containers.run(
+            auto_remove=False,
+            command=command,
+            detach=True,
+            entrypoint=entrypoint,
+            image=image,
+            volumes=volumes,
+            working_dir=working_dir,
+        )
+        process_container(container=container)
 
 
 @task(pre=[test])
