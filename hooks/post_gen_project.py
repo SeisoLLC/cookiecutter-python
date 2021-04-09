@@ -16,7 +16,7 @@ if os.environ.get("GITHUB_ACTIONS") == "true":
         check=True,
     )
     subprocess.run(
-        ["git", " config", "--global", "user.email", "automation@seisollc.com"],
+        ["git", "config", "--global", "user.email", "automation@seisollc.com"],
         capture_output=True,
         check=True,
     )
