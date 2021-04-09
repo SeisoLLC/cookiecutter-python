@@ -30,6 +30,23 @@ CLIENT = docker.from_env()
 IMAGE = "seiso/{{ cookiecutter.project_slug }}"
 
 
+def process_container(*, container: docker.models.containers.Container) -> None:
+    """Process a provided container"""
+    response = container.wait(condition="not-running")
+    decoded_response = container.logs().decode("utf-8")
+    response["logs"] = decoded_response.strip().replace("\n", "  ")
+    container.remove()
+    if not response["StatusCode"] == 0:
+        LOG.error(
+            "Received a non-zero status code from docker (%s); additional details: %s",
+            response["StatusCode"],
+            response["logs"],
+        )
+        sys.exit(response["StatusCode"])
+    else:
+        LOG.info("%s", response["logs"])
+
+
 # Tasks
 @task
 def lint(c):  # pylint: disable=unused-argument
@@ -61,18 +78,7 @@ def lint(c):  # pylint: disable=unused-argument
         volumes=volumes,
         working_dir=working_dir,
     )
-
-    response = container.wait(condition="not-running")
-    decoded_response = container.logs().decode("utf-8")
-    response["logs"] = decoded_response.strip().replace("\n", "  ")
-    container.remove()
-    if not response["StatusCode"] == 0:
-        LOG.error(
-            "Received a non-zero status code from docker (%s); additional details: %s",
-            response["StatusCode"],
-            response["logs"],
-        )
-        sys.exit(response["StatusCode"])
+    process_container(container=container)
 
     LOG.info("Linting completed successfully")
 
@@ -112,6 +118,32 @@ def test(c):  # pylint: disable=unused-argument
     except subprocess.CalledProcessError:
         LOG.error("Testing failed")
         sys.exit(1)
+
+
+@task
+def reformat(c):  # pylint: disable=unused-argument
+    """Reformat {{ cookiecutter.project_name }}"""
+    command = "**/*.py"
+    entrypoint = "isort"
+    image = "seiso/goat:latest"
+    working_dir = "/goat/"
+    volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
+
+    LOG.info("Pulling %s...", image)
+    CLIENT.images.pull(image)
+    LOG.info("Reformatting the project...")
+    # TODO: Not working because of isort config path issue; perhaps host
+    # related or {s in subfolders? Otherwise, everything else working
+    container = CLIENT.containers.run(
+        auto_remove=False,
+        command=command,
+        detach=True,
+        entrypoint=entrypoint,
+        image=image,
+        volumes=volumes,
+        working_dir=working_dir,
+    )
+    process_container(container=container)
 
 
 @task(pre=[test])
