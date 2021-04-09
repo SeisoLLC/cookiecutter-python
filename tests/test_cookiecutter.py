@@ -73,20 +73,25 @@ def _fixture_id(ctx):
 
 
 def build_files_list(root_dir):
-    """Build a list containing absolute paths to the generated files."""
+    """
+    Build a list containing absolute paths to the generated files, ignoring
+    files under .git/
+    """
     root_path = Path(root_dir)
-    return [str(file.absolute()) for file in root_path.glob("**/*") if file.is_file()]
+    files = [str(file.absolute()) for file in root_path.glob("**/*") if file.is_file()]
+    file_filter = lambda f: ".git/" not in f
+    return list(filter(file_filter, files))
 
 
-def check_paths(paths):
-    """Method to check all paths have correct substitutions."""
+def check_files(files):
+    """Method to check all files have correct substitutions."""
     # Assert that no match is found in any of the files
     pattern = r"{{(\s?cookiecutter)[.](.*?)}}"
     re_obj = re.compile(pattern)
-    for path in paths:
-        for line in open(path, "r"):
+    for file in files:
+        for line in open(file, "r"):
             match = re_obj.search(line)
-            assert match is None, f"cookiecutter variable not replaced in {path}"
+            assert match is None, f"cookiecutter variable not replaced in {file}"
 
 
 @pytest.mark.parametrize(
@@ -105,9 +110,9 @@ def test_supported_options(cookies, context_override):
     assert result.project.basename == context_override["project_slug"]
     assert result.project.isdir()
 
-    paths = build_files_list(str(result.project))
-    assert paths
-    check_paths(paths)
+    files = build_files_list(str(result.project))
+    assert files
+    check_files(files)
 
 
 def test_default_project(cookies):
