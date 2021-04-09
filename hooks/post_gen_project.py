@@ -3,8 +3,8 @@
 Post-project generation hook
 """
 
-import subprocess
 import os
+import subprocess
 
 subprocess.run(
     ["git", "init", "--initial-branch=main"], capture_output=True, check=True
