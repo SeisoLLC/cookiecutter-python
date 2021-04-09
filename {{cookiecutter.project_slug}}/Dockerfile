@@ -15,9 +15,7 @@ LABEL org.opencontainers.image.vendor="Seiso"
 LABEL org.opencontainers.image.url="https://seisollc.com"
 LABEL org.opencontainers.image.source="https://github.com/SeisoLLC/{{ cookiecutter.project_slug }}"
 LABEL org.opencontainers.image.revision="${COMMIT_HASH}"
-{%- if cookiecutter.license != 'Not open source' %}
 LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
-{%- endif %}
 
 # hadolint ignore=DL3008
 RUN apt-get update \

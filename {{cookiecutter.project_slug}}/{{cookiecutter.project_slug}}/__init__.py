@@ -2,7 +2,7 @@
 {{ cookiecutter.project_name }} init
 """
 __maintainer__ = "Seiso"
-{% if cookiecutter.license == 'Not open source' -%}
+{% if cookiecutter.license == 'NONE' -%}
 __copyright__ = "(c) {% now 'local', '%Y' %} Seiso, LLC"
 {% elif cookiecutter.license == 'MIT' -%}
 __license__ = "MIT"
