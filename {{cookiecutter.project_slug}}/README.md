@@ -4,6 +4,11 @@ Welcome to {{ cookiecutter.project_name }}
 
 ## Getting Started
 
+First, you need to ensure you have `docker`, `git`, `pipenv`, and `python3`
+installed locally, and the `docker` daemon is running.
+
+Then, you can setup your local environment via:
+
 ```bash
 # Install the dependencies
 pipenv install --dev
