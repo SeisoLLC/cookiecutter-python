@@ -79,8 +79,7 @@ def build_files_list(root_dir):
     """
     root_path = Path(root_dir)
     files = [str(file.absolute()) for file in root_path.glob("**/*") if file.is_file()]
-    file_filter = lambda f: ".git/" not in f
-    return list(filter(file_filter, files))
+    return list(filter(lambda f: ".git/" not in f, files))
 
 
 def check_files(files):
