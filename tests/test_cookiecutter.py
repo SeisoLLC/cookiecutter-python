@@ -119,12 +119,12 @@ def test_default_project(cookies):
     """
     Test a default cookiecutter-python project thoroughly
     """
-    result = cookies.bake()
-    project = Path(result.project)
-
     # Allow the post generation hooks to run, which include git init activities
     if os.environ.get("GITHUB_ACTIONS") == "true":
         os.environ["RUN_POST_HOOK"] = "true"
+
+    result = cookies.bake()
+    project = Path(result.project)
 
     repo = git.Repo(project)
     if repo.is_dirty(untracked_files=True):
