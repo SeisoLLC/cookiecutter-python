@@ -6,6 +6,7 @@ Test cookiecutter-python
 import copy
 import itertools
 import json
+import os
 import re
 import subprocess
 import sys
@@ -121,18 +122,15 @@ def test_default_project(cookies):
     result = cookies.bake()
     project = Path(result.project)
 
-    # Run project tests
-    try:
-        subprocess.run(
-            ["pipenv", "install", "--dev"], capture_output=True, check=True, cwd=project
-        )
-        repo = git.Repo.init(project)
-        repo.git.add(all=True)
-        repo.index.commit(
-            "Initial commit",
-            committer=git.Actor("cookiecutter-python tests", "automation@seisollc.com"),
-        )
+    # Allow the post generation hooks to run, which include git init activities
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        os.environ["RUN_POST_HOOK"] = "true"
 
+    repo = git.Repo(project)
+    if repo.is_dirty(untracked_files=True):
+        pytest.fail("Something went wrong with the project's post-generation hook")
+
+    try:
         subprocess.run(
             ["pipenv", "run", "invoke", "test"],
             capture_output=True,

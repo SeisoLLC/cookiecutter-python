@@ -5,6 +5,14 @@ Post-project generation hook
 
 import os
 import subprocess
+import sys
+
+if (
+    os.environ.get("GITHUB_ACTIONS") == "true"
+    and os.environ.get("RUN_POST_HOOK") != "true"
+):
+    sys.exit(0)
+
 
 subprocess.run(
     ["git", "init", "--initial-branch=main"], capture_output=True, check=True
