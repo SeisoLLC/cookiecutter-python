@@ -3,11 +3,11 @@
 Task execution tool & library
 """
 
-import json
 import os
 {%- if cookiecutter.versioning == 'CalVer' %}
 import re
 {%- endif %}
+import subprocess
 import sys
 {%- if cookiecutter.versioning == 'CalVer' %}
 from datetime import datetime
@@ -19,18 +19,10 @@ import docker
 import git
 from bumpversion.cli import main as bumpversion
 from invoke import task
-from {{ cookiecutter.project_slug }} import __version__
+from {{ cookiecutter.project_slug }} import __version__, constants
 
-LOG_FORMAT = json.dumps(
-    {
-        "timestamp": "%(asctime)s",
-        "namespace": "%(name)s",
-        "loglevel": "%(levelname)s",
-        "message": "%(message)s",
-    }
-)
-basicConfig(level="INFO", format=LOG_FORMAT)
-LOG = getLogger("{{ cookiecutter.project_slug }}")
+basicConfig(level="INFO", format=constants.LOG_FORMAT)
+LOG = getLogger("{{ cookiecutter.project_slug }}.invoke")
 
 CWD = Path(".").absolute()
 REPO = git.Repo(CWD)
@@ -85,12 +77,12 @@ def lint(c):  # pylint: disable=unused-argument
     LOG.info("Linting completed successfully")
 
 
-@task(pre=[lint])
+@task
 def build(c):  # pylint: disable=unused-argument
     """Build {{ cookiecutter.project_name }}"""
     version_string = "v" + __version__
     commit_hash = REPO.head.commit.hexsha
-    commit_hash_short = commit_hash[:7]
+    commit_hash_short = REPO.git.rev_parse(commit_hash, short=True)
 
     if (
         version_string in REPO.tags
@@ -112,10 +104,14 @@ def build(c):  # pylint: disable=unused-argument
         )
 
 
-@task(pre=[build])
+@task(pre=[lint, build])
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
-    LOG.warning("TODO: Implement project tests")
+    try:
+        subprocess.run(["pipenv", "run", "pytest", "--cov={{ cookiecutter.project_slug }}", "tests"])
+    except subprocess.CalledProcessError:
+        LOG.error("Testing failed")
+        sys.exit(1)
 
 
 @task(pre=[test])
@@ -178,5 +174,5 @@ def publish(c, tag):  # pylint: disable=unused-argument
     CLIENT.images.push(repository=repository)
     LOG.info("Done publishing the %s Docker image", repository)
 {%- else %}
-    LOG.warning("TODO: Where should I publish to?")
+    raise NotImplementedError()
 {%- endif %}

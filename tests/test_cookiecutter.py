@@ -118,25 +118,17 @@ def test_default_project(cookies):
     project = Path(result.project)
 
     # Run project tests
-    repo = git.Repo.init(project)
-    repo.git.add(all=True)
-    repo.index.commit(
-        "Initial commit",
-        committer=git.Actor("cookiecutter-python tests", "automation@seisollc.com"),
-    )
-
-    if repo.is_dirty(untracked_files=True):
-        pytest.fail("Something went wrong with the project's git repo setup")
-
     try:
         subprocess.run(
             ["pipenv", "install", "--dev"], capture_output=True, check=True, cwd=project
         )
+        repo = git.Repo.init(project)
         repo.git.add(all=True)
         repo.index.commit(
-            "Add Pipfile.lock",
+            "Initial commit",
             committer=git.Actor("cookiecutter-python tests", "automation@seisollc.com"),
         )
+
         subprocess.run(
             ["pipenv", "run", "invoke", "test"],
             capture_output=True,

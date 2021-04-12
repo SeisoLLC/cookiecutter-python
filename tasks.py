@@ -5,13 +5,13 @@ Task execution tool & library
 
 import json
 import re
+import subprocess
 import sys
 from datetime import datetime
 from logging import basicConfig, getLogger
 from pathlib import Path
 
 import git
-import pytest
 from bumpversion.cli import main as bumpversion
 from invoke import task
 
@@ -34,7 +34,11 @@ REPO = git.Repo(CWD)
 @task
 def test(c):  # pylint: disable=unused-argument
     """Test cookiecutter-python"""
-    sys.exit(pytest.main(["-x", "tests"]))
+    try:
+        subprocess.run(["pipenv", "run", "pytest", "tests"])
+    except subprocess.CalledProcessError:
+        LOG.error("Testing failed")
+        sys.exit(1)
 
 
 @task(pre=[test])
