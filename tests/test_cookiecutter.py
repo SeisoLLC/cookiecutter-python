@@ -130,10 +130,6 @@ def test_reformatting_hook(cookies):
         result = cookies.bake()
         project = Path(result.project)
 
-        repo = git.Repo(project)
-        if repo.is_dirty(untracked_files=True):
-            pytest.fail("Something went wrong with the project's post-generation hook")
-
         try:
             subprocess.run(
                 ["pipenv", "run", "invoke", "lint"],
