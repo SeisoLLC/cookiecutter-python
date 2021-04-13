@@ -115,6 +115,36 @@ def test_supported_options(cookies, context_override):
     check_files(files)
 
 
+def test_reformatting_hook(cookies):
+    """
+    Test the post-generation reformatting hook of cookiecutter-python
+    """
+    # Allow the post generation hooks to run, which include git init activities
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        os.environ["RUN_POST_HOOK"] = "true"
+
+    # If both work, reformatting is expected (but not definitively proven) to
+    # be working
+    for project_slug in ["AAAAAAAAAA", "ZZZZZZZZZZ"]:
+        context["project_slug"] = project_slug
+        result = cookies.bake()
+        project = Path(result.project)
+
+        repo = git.Repo(project)
+        if repo.is_dirty(untracked_files=True):
+            pytest.fail("Something went wrong with the project's post-generation hook")
+
+        try:
+            subprocess.run(
+                ["pipenv", "run", "invoke", "lint"],
+                capture_output=True,
+                check=True,
+                cwd=project,
+            )
+        except subprocess.CalledProcessError as error:
+            pytest.fail(error.stderr.decode("utf-8"))
+
+
 def test_default_project(cookies):
     """
     Test a default cookiecutter-python project thoroughly
