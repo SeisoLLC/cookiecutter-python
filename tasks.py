@@ -35,7 +35,9 @@ REPO = git.Repo(CWD)
 def test(c):  # pylint: disable=unused-argument
     """Test cookiecutter-python"""
     try:
-        subprocess.run(["pipenv", "run", "pytest", "tests"], capture_output=True, check=True)
+        subprocess.run(
+            ["pipenv", "run", "pytest", "tests"], capture_output=True, check=True
+        )
     except subprocess.CalledProcessError:
         LOG.error("Testing failed")
         sys.exit(1)
