@@ -27,7 +27,7 @@ LOG = getLogger("{{ cookiecutter.project_slug }}.invoke")
 CWD = Path(".").absolute()
 try:
     REPO = git.Repo(CWD)
-except git.exc.InvalidGitRepositoryError:
+except git.InvalidGitRepositoryError:
     REPO = None
 CLIENT = docker.from_env()
 IMAGE = "seiso/{{ cookiecutter.project_slug }}"
@@ -117,7 +117,7 @@ def build(c):  # pylint: disable=unused-argument
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
     try:
-        subprocess.run(["pipenv", "run", "pytest", "--cov={{ cookiecutter.project_slug }}", "tests"], check=True)
+        subprocess.run(["pipenv", "run", "pytest", "--cov={{ cookiecutter.project_slug }}", "tests"], capture_output=True, check=True)
     except subprocess.CalledProcessError:
         LOG.error("Testing failed")
         sys.exit(1)
