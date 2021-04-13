@@ -126,7 +126,10 @@ def test(c):  # pylint: disable=unused-argument
 @task
 def reformat(c):  # pylint: disable=unused-argument
     """Reformat {{ cookiecutter.project_name }}"""
-    entrypoint_and_command = [("isort", "."), ("black", ".")]
+    entrypoint_and_command = [
+        ("isort", ". --settings-file /action/lib/.automation/.isort.cfg"),
+        ("black", "."),
+    ]
     image = "seiso/goat:latest"
     working_dir = "/goat/"
     volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
