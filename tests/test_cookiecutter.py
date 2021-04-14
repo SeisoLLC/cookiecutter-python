@@ -138,7 +138,9 @@ def test_reformatting_hook(cookies, context):
                 cwd=project,
             )
         except subprocess.CalledProcessError as error:
-            pytest.fail(error.stderr.decode("utf-8"))
+            pytest.fail(
+                f"stdout: {error.stdout.decode('utf-8')}, stderr: {error.stderr.decode('utf-8')}"
+            )
 
 
 def test_default_project(cookies):

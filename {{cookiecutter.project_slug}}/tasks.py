@@ -117,9 +117,21 @@ def build(c):  # pylint: disable=unused-argument
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
     try:
-        subprocess.run(["pipenv", "run", "pytest", "--cov={{ cookiecutter.project_slug }}", "tests"], capture_output=True, check=True)
-    except subprocess.CalledProcessError:
-        LOG.error("Testing failed")
+        subprocess.run(
+            [
+                "pipenv",
+                "run",
+                "pytest",
+                "--cov={{ cookiecutter.project_slug }}",
+                "tests",
+            ],
+            capture_output=True,
+            check=True,
+        )
+    except subprocess.CalledProcessError as error:
+        LOG.error(
+            "Testing failed with stdout of {error.stdout.decode('utf-8')} and stderr of {error.stderr.decode('utf-8')}"
+        )
         sys.exit(1)
 
 
