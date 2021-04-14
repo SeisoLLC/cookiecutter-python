@@ -115,7 +115,7 @@ def test_supported_options(cookies, context_override):
     check_files(files)
 
 
-def test_reformatting_hook(cookies):
+def test_reformatting_hook(cookies, context):
     """
     Test the post-generation reformatting hook of cookiecutter-python
     """
@@ -126,8 +126,6 @@ def test_reformatting_hook(cookies):
     # If both work, reformatting is expected (but not definitively proven) to
     # be working
     for project_slug in ["AAAAAAAAAA", "ZZZZZZZZZZ"]:
-        print(context)
-        print(type(context)
         context["project_slug"] = project_slug
         result = cookies.bake()
         project = Path(result.project)
