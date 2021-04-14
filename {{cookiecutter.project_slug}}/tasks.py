@@ -148,18 +148,18 @@ def reformat(c):  # pylint: disable=unused-argument
 
     LOG.info("Pulling %s...", image)
     CLIENT.images.pull(image)
-#     LOG.info("Reformatting the project...")
-#     for entrypoint, command in entrypoint_and_command:
-#         container = CLIENT.containers.run(
-#             auto_remove=False,
-#             command=command,
-#             detach=True,
-#             entrypoint=entrypoint,
-#             image=image,
-#             volumes=volumes,
-#             working_dir=working_dir,
-#         )
-#         process_container(container=container)
+    LOG.info("Reformatting the project...")
+    for entrypoint, command in entrypoint_and_command:
+        container = CLIENT.containers.run(
+            auto_remove=False,
+            command=command,
+            detach=True,
+            entrypoint=entrypoint,
+            image=image,
+            volumes=volumes,
+            working_dir=working_dir,
+        )
+        process_container(container=container)
 
 
 @task(pre=[test])
