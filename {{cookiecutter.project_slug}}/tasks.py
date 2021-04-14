@@ -130,7 +130,7 @@ def test(c):  # pylint: disable=unused-argument
         )
     except subprocess.CalledProcessError as error:
         LOG.error(
-            "Testing failed with stdout of {error.stdout.decode('utf-8')} and stderr of {error.stderr.decode('utf-8')}"
+            f"Testing failed with stdout of {error.stdout.decode('utf-8')} and stderr of {error.stderr.decode('utf-8')}"
         )
         sys.exit(1)
 
