@@ -44,9 +44,9 @@ try:
             check=True,
         )
     subprocess.run(["pipenv", "install", "--dev"], capture_output=True, check=True)
-#     subprocess.run(
-#         ["pipenv", "run", "invoke", "reformat"], capture_output=True, check=True
-#     )
+    subprocess.run(
+        ["pipenv", "run", "invoke", "reformat"], capture_output=True, check=True
+    )
     subprocess.run(["git", "add", "-A"], capture_output=True, check=True)
     subprocess.run(
         [
