@@ -39,7 +39,7 @@ def test(c):  # pylint: disable=unused-argument
             ["pipenv", "run", "pytest", "tests"], capture_output=True, check=True
         )
     except subprocess.CalledProcessError as error:
-        LOG.error(f"Testing failed with the error {error.stderr.decode('utf-8')}")
+        LOG.error(f"Testing failed with the error {error.stdout.decode('utf-8')}")
         sys.exit(1)
 
 
