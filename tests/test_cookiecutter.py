@@ -125,7 +125,7 @@ def test_reformatting_hook(cookies, context):
 
     # If both work, reformatting is expected (but not definitively proven) to
     # be working
-    for project_slug in ["AAAAAAAAAA", "ZZZZZZZZZZ"]:
+    for project_slug in ["aaaaaaaaaa", "zzzzzzzzzz"]:
         context["project_slug"] = project_slug
         result = cookies.bake(extra_context=context)
         project = Path(result.project)
