@@ -6,6 +6,7 @@ Test cookiecutter-python
 import copy
 import itertools
 import json
+import os
 import re
 import subprocess
 import sys
@@ -73,20 +74,24 @@ def _fixture_id(ctx):
 
 
 def build_files_list(root_dir):
-    """Build a list containing absolute paths to the generated files."""
+    """
+    Build a list containing absolute paths to the generated files, ignoring
+    files under .git/
+    """
     root_path = Path(root_dir)
-    return [str(file.absolute()) for file in root_path.glob("**/*") if file.is_file()]
+    files = [str(file.absolute()) for file in root_path.glob("**/*") if file.is_file()]
+    return list(filter(lambda f: ".git/" not in f, files))
 
 
-def check_paths(paths):
-    """Method to check all paths have correct substitutions."""
+def check_files(files):
+    """Method to check all files have correct substitutions."""
     # Assert that no match is found in any of the files
     pattern = r"{{(\s?cookiecutter)[.](.*?)}}"
     re_obj = re.compile(pattern)
-    for path in paths:
-        for line in open(path, "r"):
+    for file in files:
+        for line in open(file, "r"):
             match = re_obj.search(line)
-            assert match is None, f"cookiecutter variable not replaced in {path}"
+            assert match is None, f"cookiecutter variable not replaced in {file}"
 
 
 @pytest.mark.parametrize(
@@ -105,30 +110,55 @@ def test_supported_options(cookies, context_override):
     assert result.project.basename == context_override["project_slug"]
     assert result.project.isdir()
 
-    paths = build_files_list(str(result.project))
-    assert paths
-    check_paths(paths)
+    files = build_files_list(str(result.project))
+    assert files
+    check_files(files)
+
+
+def test_reformatting_hook(cookies, context):
+    """
+    Test the post-generation reformatting hook of cookiecutter-python
+    """
+    # Allow the post generation hooks to run, which include git init activities
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        os.environ["RUN_POST_HOOK"] = "true"
+
+    # If both work, reformatting is expected (but not definitively proven) to
+    # be working
+    for project_slug in ["aaaaaaaaaa", "zzzzzzzzzz"]:
+        context["project_slug"] = project_slug
+        result = cookies.bake(extra_context=context)
+        project = Path(result.project)
+
+        try:
+            subprocess.run(
+                ["pipenv", "run", "invoke", "lint"],
+                capture_output=True,
+                check=True,
+                cwd=project,
+            )
+        except subprocess.CalledProcessError as error:
+            pytest.fail(
+                f"stdout: {error.stdout.decode('utf-8')}, stderr: {error.stderr.decode('utf-8')}"
+            )
 
 
 def test_default_project(cookies):
     """
     Test a default cookiecutter-python project thoroughly
     """
+    # Allow the post generation hooks to run, which include git init activities
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        os.environ["RUN_POST_HOOK"] = "true"
+
     result = cookies.bake()
     project = Path(result.project)
 
-    # Run project tests
-    try:
-        subprocess.run(
-            ["pipenv", "install", "--dev"], capture_output=True, check=True, cwd=project
-        )
-        repo = git.Repo.init(project)
-        repo.git.add(all=True)
-        repo.index.commit(
-            "Initial commit",
-            committer=git.Actor("cookiecutter-python tests", "automation@seisollc.com"),
-        )
+    repo = git.Repo(project)
+    if repo.is_dirty(untracked_files=True):
+        pytest.fail("Something went wrong with the project's post-generation hook")
 
+    try:
         subprocess.run(
             ["pipenv", "run", "invoke", "test"],
             capture_output=True,

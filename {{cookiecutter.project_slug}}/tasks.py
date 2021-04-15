@@ -25,9 +25,29 @@ basicConfig(level="INFO", format=constants.LOG_FORMAT)
 LOG = getLogger("{{ cookiecutter.project_slug }}.invoke")
 
 CWD = Path(".").absolute()
-REPO = git.Repo(CWD)
+try:
+    REPO = git.Repo(CWD)
+except git.InvalidGitRepositoryError:
+    REPO = None
 CLIENT = docker.from_env()
 IMAGE = "seiso/{{ cookiecutter.project_slug }}"
+
+
+def process_container(*, container: docker.models.containers.Container) -> None:
+    """Process a provided container"""
+    response = container.wait(condition="not-running")
+    decoded_response = container.logs().decode("utf-8")
+    response["logs"] = decoded_response.strip().replace("\n", "  ")
+    container.remove()
+    if not response["StatusCode"] == 0:
+        LOG.error(
+            "Received a non-zero status code from docker (%s); additional details: %s",
+            response["StatusCode"],
+            response["logs"],
+        )
+        sys.exit(response["StatusCode"])
+    else:
+        LOG.info("%s", response["logs"])
 
 
 # Tasks
@@ -61,18 +81,7 @@ def lint(c):  # pylint: disable=unused-argument
         volumes=volumes,
         working_dir=working_dir,
     )
-
-    response = container.wait(condition="not-running")
-    decoded_response = container.logs().decode("utf-8")
-    response["logs"] = decoded_response.strip().replace("\n", "  ")
-    container.remove()
-    if not response["StatusCode"] == 0:
-        LOG.error(
-            "Received a non-zero status code from docker (%s); additional details: %s",
-            response["StatusCode"],
-            response["logs"],
-        )
-        sys.exit(response["StatusCode"])
+    process_container(container=container)
 
     LOG.info("Linting completed successfully")
 
@@ -108,10 +117,49 @@ def build(c):  # pylint: disable=unused-argument
 def test(c):  # pylint: disable=unused-argument
     """Test {{ cookiecutter.project_name }}"""
     try:
-        subprocess.run(["pipenv", "run", "pytest", "--cov={{ cookiecutter.project_slug }}", "tests"])
-    except subprocess.CalledProcessError:
-        LOG.error("Testing failed")
+        subprocess.run(
+            [
+                "pipenv",
+                "run",
+                "pytest",
+                "--cov={{ cookiecutter.project_slug }}",
+                "tests",
+            ],
+            capture_output=True,
+            check=True,
+        )
+    except subprocess.CalledProcessError as error:
+        LOG.error(
+            f"Testing failed with stdout of {error.stdout.decode('utf-8')} and stderr of {error.stderr.decode('utf-8')}"
+        )
         sys.exit(1)
+
+
+@task
+def reformat(c):  # pylint: disable=unused-argument
+    """Reformat {{ cookiecutter.project_name }}"""
+    entrypoint_and_command = [
+        ("isort", ". --settings-file /action/lib/.automation/.isort.cfg"),
+        ("black", "."),
+    ]
+    image = "seiso/goat:latest"
+    working_dir = "/goat/"
+    volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
+
+    LOG.info("Pulling %s...", image)
+    CLIENT.images.pull(image)
+    LOG.info("Reformatting the project...")
+    for entrypoint, command in entrypoint_and_command:
+        container = CLIENT.containers.run(
+            auto_remove=False,
+            command=command,
+            detach=True,
+            entrypoint=entrypoint,
+            image=image,
+            volumes=volumes,
+            working_dir=working_dir,
+        )
+        process_container(container=container)
 
 
 @task(pre=[test])
