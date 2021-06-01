@@ -52,7 +52,7 @@ def process_container(*, container: docker.models.containers.Container) -> None:
 
 # Tasks
 @task
-def lint(c):  # pylint: disable=unused-argument
+def lint(_c):
     """Lint {{ cookiecutter.project_name }}"""
     environment = {}
 
@@ -87,7 +87,7 @@ def lint(c):  # pylint: disable=unused-argument
 
 
 @task
-def build(c):  # pylint: disable=unused-argument
+def build(_c):
     """Build {{ cookiecutter.project_name }}"""
     version_string = "v" + __version__
     commit_hash = REPO.head.commit.hexsha
@@ -114,7 +114,7 @@ def build(c):  # pylint: disable=unused-argument
 
 
 @task(pre=[lint, build])
-def test(c):  # pylint: disable=unused-argument
+def test(_c):
     """Test {{ cookiecutter.project_name }}"""
     try:
         subprocess.run(
@@ -136,7 +136,7 @@ def test(c):  # pylint: disable=unused-argument
 
 
 @task
-def reformat(c):  # pylint: disable=unused-argument
+def reformat(_c):
     """Reformat {{ cookiecutter.project_name }}"""
     entrypoint_and_command = [
         ("isort", ". --settings-file /action/lib/.automation/.isort.cfg"),
@@ -164,9 +164,9 @@ def reformat(c):  # pylint: disable=unused-argument
 
 @task(pre=[test])
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
-def release(c, release_type):  # pylint: disable=unused-argument
+def release(_c, release_type):
 {%- elif cookiecutter.versioning == 'CalVer' %}
-def release(c):  # pylint: disable=unused-argument
+def release(_c):
 {%- endif %}
     """Make a new release of {{ cookiecutter.project_name }}"""
     if REPO.head.is_detached:
@@ -208,7 +208,7 @@ def release(c):  # pylint: disable=unused-argument
 
 
 @task
-def publish(c, tag):  # pylint: disable=unused-argument
+def publish(_c, tag):
     """Publish {{ cookiecutter.project_name }}"""
     if tag not in ["latest", "release"]:
         LOG.error("Please provide a tag of either latest or release")
