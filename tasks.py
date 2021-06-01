@@ -32,7 +32,7 @@ REPO = git.Repo(CWD)
 
 # Tasks
 @task
-def test(c):  # pylint: disable=unused-argument
+def test(_c):
     """Test cookiecutter-python"""
     try:
         subprocess.run(
@@ -46,7 +46,7 @@ def test(c):  # pylint: disable=unused-argument
 
 
 @task(pre=[test])
-def release(c):  # pylint: disable=unused-argument
+def release(_c):
     """Make a new release of cookiecutter-python"""
     if REPO.head.is_detached:
         LOG.error("In detached HEAD state, refusing to release")
