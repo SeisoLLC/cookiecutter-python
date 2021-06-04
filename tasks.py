@@ -36,7 +36,9 @@ def test(c):  # pylint: disable=unused-argument
     """Test cookiecutter-python"""
     try:
         subprocess.run(
-            ["pipenv", "run", "pytest", "tests"], capture_output=True, check=True
+            ["pipenv", "run", "pytest", "--keep-baked-projects", "tests"],
+            capture_output=True,
+            check=True,
         )
     except subprocess.CalledProcessError as error:
         LOG.error(
