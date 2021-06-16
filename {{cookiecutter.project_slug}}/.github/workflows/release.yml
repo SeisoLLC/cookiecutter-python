@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+      - name: Retrieve the tag
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Setup python
         uses: actions/setup-python@v2
         with:
@@ -33,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ "{{ secrets.GITHUB_TOKEN }}" }}
         with:
           files: LICENSE
-          name: ${{ "{{ github.ref }}" }} release
+          name: ${{ "{{ env.TAG }}" }} release
           draft: false
           prerelease: false
 {%- if cookiecutter.dockerhub == 'yes' %}
