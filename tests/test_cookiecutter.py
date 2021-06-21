@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Union
+from typing import Dict, Union
 
 import git
 import pytest
@@ -29,7 +29,7 @@ def get_config() -> dict:
 
 def render_config(*, config: dict) -> dict:
     """Render the provided config"""
-    rendered_config: dict[str, Union[str, list]] = {}
+    rendered_config: Dict[str, Union[str, list]] = {}
     for key, value in config.items():
         if isinstance(value, str):
             # Sanitize by removing the "cookiecutter." prefix

@@ -8,6 +8,7 @@ name = "pypi"
 [dev-packages]
 bumpversion = "*"
 docker = "*"
+six = "*"
 gitpython = "*"
 invoke = "*"
 pytest = "*"
