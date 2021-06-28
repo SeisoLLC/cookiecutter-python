@@ -5,4 +5,4 @@
 !Pipfile
 !Pipfile.lock
 !{{ cookiecutter.project_slug }}
-!{{ cookiecutter.project_slug }}.py
+!main.py
