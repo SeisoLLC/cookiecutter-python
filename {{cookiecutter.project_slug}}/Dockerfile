@@ -48,5 +48,5 @@ COPY --from=builder /tmp/.venv .venv
 ENV PATH="/usr/src/app/.venv/bin:${PATH}"
 
 COPY ./{{ cookiecutter.project_slug }} ./{{ cookiecutter.project_slug }}/
-COPY ./{{ cookiecutter.project_slug }}.py ./
-ENTRYPOINT ["/usr/src/app/{{ cookiecutter.project_slug }}.py"]
+COPY ./main.py ./
+ENTRYPOINT ["/usr/src/app/main.py"]
