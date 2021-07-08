@@ -41,7 +41,9 @@ FROM base AS final
 
 WORKDIR /usr/src/app
 
-RUN useradd --create-home appuser
+# appuser creation
+RUN groupadd --gid 53150 -r appuser \
+ && useradd -r -g appuser -s "$(which bash)" --create-home --uid 53150 appuser
 USER appuser
 
 COPY --from=builder /tmp/.venv .venv

@@ -114,9 +114,20 @@ def build(_c, debug=False):
     for tag in ["latest", buildargs["VERSION"]]:
         tag = IMAGE + ":" + tag
         LOG.info("Building %s...", tag)
-        CLIENT.images.build(
-            path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
-        )
+        try:
+            CLIENT.images.build(
+                path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
+            )
+        except docker.errors.BuildError as build_err:
+            LOG.exception("Failed to build target %s, retrieving and logging the more detailed build error...", target)
+            iterator = iter(build_err.build_log)
+            finished = False
+            while not finished:
+                try:
+                    item = next(iterator)
+                    LOG.error("%s", item)
+                except StopIteration:
+                    finished = True
 
 
 @task(pre=[lint, build])
