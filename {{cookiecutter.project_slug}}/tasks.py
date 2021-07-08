@@ -119,7 +119,7 @@ def build(_c, debug=False):
                 path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
             )
         except docker.errors.BuildError as build_err:
-            LOG.exception("Failed to build target %s, retrieving and logging the more detailed build error...", target)
+            LOG.exception("Failed to build, retrieving and logging the more detailed build error...")
             iterator = iter(build_err.build_log)
             finished = False
             while not finished:
