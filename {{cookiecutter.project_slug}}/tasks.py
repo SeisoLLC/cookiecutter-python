@@ -128,6 +128,7 @@ def build(_c, debug=False):
                     LOG.error("%s", item)
                 except StopIteration:
                     finished = True
+            sys.exit(1)
 
 
 @task(pre=[lint, build])
