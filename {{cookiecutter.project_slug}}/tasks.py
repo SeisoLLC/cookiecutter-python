@@ -3,6 +3,7 @@
 Task execution tool & library
 """
 
+import ast
 import os
 {%- if cookiecutter.versioning == 'CalVer' %}
 import re
@@ -125,7 +126,7 @@ def build(_c, debug=False):
             while not finished:
                 try:
                     item = next(iterator)
-                    LOG.error("%s", item)
+                    LOG.error("%s", ast.literal_eval(item)["stream"])
                 except StopIteration:
                     finished = True
             sys.exit(1)
