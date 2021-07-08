@@ -24,6 +24,15 @@ docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %} -
 {%- endif %}
 ```
 
+## Troubleshooting
+
+If you're troubleshooting the results of any of the invoke tasks, you can add
+`--debug` to enable debug logging, for instance:
+
+```bash
+pipenv run invoke build --debug
+```
+
 ## Development Notes
 
 ### Linting locally
