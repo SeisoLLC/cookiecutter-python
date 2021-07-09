@@ -50,6 +50,24 @@ def process_container(*, container: docker.models.containers.Container) -> None:
         LOG.info("%s", response["logs"])
 
 
+def log_build_log(*, build_err: docker.errors.BuildError) -> None:
+    """Log the docker build log"""
+    iterator = iter(build_err.build_log)
+    finished = False
+    while not finished:
+        try:
+            item = next(iterator)
+            if "stream" in item:
+                if item["stream"] != "\n":
+                    LOG.error("%s", item["stream"].strip())
+            elif "errorDetail" in item:
+                LOG.error("%s", item["errorDetail"])
+            else:
+                LOG.error("%s", item)
+        except StopIteration:
+            finished = True
+
+
 # Tasks
 @task
 def lint(_c, debug=False):
@@ -120,14 +138,7 @@ def build(_c, debug=False):
             )
         except docker.errors.BuildError as build_err:
             LOG.exception("Failed to build, retrieving and logging the more detailed build error...")
-            iterator = iter(build_err.build_log)
-            finished = False
-            while not finished:
-                try:
-                    item = next(iterator)
-                    LOG.error("%s", item)
-                except StopIteration:
-                    finished = True
+            log_build_log(build_err=build_err)
             sys.exit(1)
 
 
