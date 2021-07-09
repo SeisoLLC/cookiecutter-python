@@ -52,8 +52,11 @@ def process_container(*, container: docker.models.containers.Container) -> None:
 
 # Tasks
 @task
-def lint(_c):
+def lint(_c, debug=False):
     """Lint {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     environment = {}
 
     if REPO.is_dirty(untracked_files=True):
@@ -87,8 +90,11 @@ def lint(_c):
 
 
 @task
-def build(_c):
+def build(_c, debug=False):
     """Build {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     version_string = "v" + __version__
     commit_hash = REPO.head.commit.hexsha
     commit_hash_short = REPO.git.rev_parse(commit_hash, short=True)
@@ -108,14 +114,29 @@ def build(_c):
     for tag in ["latest", buildargs["VERSION"]]:
         tag = IMAGE + ":" + tag
         LOG.info("Building %s...", tag)
-        CLIENT.images.build(
-            path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
-        )
+        try:
+            CLIENT.images.build(
+                path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
+            )
+        except docker.errors.BuildError as build_err:
+            LOG.exception("Failed to build, retrieving and logging the more detailed build error...")
+            iterator = iter(build_err.build_log)
+            finished = False
+            while not finished:
+                try:
+                    item = next(iterator)
+                    LOG.error("%s", item)
+                except StopIteration:
+                    finished = True
+            sys.exit(1)
 
 
 @task(pre=[lint, build])
-def test(_c):
+def test(_c, debug=False):
     """Test {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     try:
         subprocess.run(
             [
@@ -136,8 +157,11 @@ def test(_c):
 
 
 @task
-def reformat(_c):
+def reformat(_c, debug=False):
     """Reformat {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     entrypoint_and_command = [
         ("isort", ". --settings-file /action/lib/.automation/.isort.cfg"),
         ("black", "."),
@@ -164,11 +188,14 @@ def reformat(_c):
 
 @task(pre=[test])
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
-def release(_c, release_type):
+def release(_c, release_type, debug=False):
 {%- elif cookiecutter.versioning == 'CalVer' %}
-def release(_c):
+def release(_c, debug=False):
 {%- endif %}
     """Make a new release of {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     if REPO.head.is_detached:
         LOG.error("In detached HEAD state, refusing to release")
         sys.exit(1)
@@ -208,8 +235,11 @@ def release(_c):
 
 
 @task
-def publish(_c, tag):
+def publish(_c, tag, debug=False):
     """Publish {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     if tag not in ["latest", "release"]:
         LOG.error("Please provide a tag of either latest or release")
         sys.exit(1)

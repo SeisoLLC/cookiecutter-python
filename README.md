@@ -52,6 +52,15 @@ git push --atomic origin $(git branch --show-current) $(git describe --tags)
 # Finally, setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...)
 ```
 
+## Troubleshooting
+
+If you're troubleshooting the results of any of the invoke tasks, you can add
+`--debug` to enable debug logging, for instance:
+
+```bash
+pipenv run invoke build --debug
+```
+
 ## Updating the dependencies
 
 ```bash

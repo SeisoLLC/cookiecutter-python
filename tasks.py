@@ -32,8 +32,11 @@ REPO = git.Repo(CWD)
 
 # Tasks
 @task
-def test(_c):
+def test(_c, debug=False):
     """Test cookiecutter-python"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     try:
         subprocess.run(
             ["pipenv", "run", "pytest", "--keep-baked-projects", "tests"],
@@ -48,8 +51,11 @@ def test(_c):
 
 
 @task(pre=[test])
-def release(_c):
+def release(_c, debug=False):
     """Make a new release of cookiecutter-python"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
     if REPO.head.is_detached:
         LOG.error("In detached HEAD state, refusing to release")
         sys.exit(1)
