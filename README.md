@@ -27,9 +27,8 @@ pipenv install --dev
 # ...
 
 # Commit and test your work
-git init --initial-branch=main
 git add -A
-git commit -m "Initial commit"
+git commit -m "Initial content"
 pipenv run invoke test
 
 # Make your first release
