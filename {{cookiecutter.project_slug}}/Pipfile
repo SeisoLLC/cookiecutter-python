@@ -13,7 +13,6 @@ invoke = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-mock = "*"
-six = "*"
 
 [requires]
 python_version = "{{ cookiecutter.python_versions[0] }}"
