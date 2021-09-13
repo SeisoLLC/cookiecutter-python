@@ -23,6 +23,7 @@ jobs:
         with:
           # Exclude anything that contains {{ and }} in the file name
           exclude: .*\{\{.*\}\}.*
+          disable_mypy: true
       - name: Setup python
         uses: actions/setup-python@v2
         with:
