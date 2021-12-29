@@ -4,8 +4,7 @@ Welcome to {{ cookiecutter.project_name }}
 
 ## Getting Started
 
-First, you need to ensure you have `docker`, `git`, `pipenv`, and `python3`
-installed locally, and the `docker` daemon is running.
+First, you need to ensure you have `docker`, `git`, `pipenv`, and `python3` installed locally, and the `docker` daemon is running.
 
 Then, you can setup your local environment via:
 
@@ -26,8 +25,7 @@ docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %} -
 
 ## Troubleshooting
 
-If you're troubleshooting the results of any of the invoke tasks, you can add
-`--debug` to enable debug logging, for instance:
+If you're troubleshooting the results of any of the invoke tasks, you can add `--debug` to enable debug logging, for instance:
 
 ```bash
 pipenv run invoke build --debug
@@ -44,7 +42,7 @@ pipenv run invoke lint
 ### Updating the dependencies
 
 ```bash
-pipenv update
+pipenv run invoke update
 ```
 
 ### Creating a release

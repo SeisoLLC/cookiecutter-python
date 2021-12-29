@@ -197,6 +197,29 @@ def reformat(_c, debug=False):
         process_container(container=container)
 
 
+@task
+def update(_c, debug=False):
+    """Update the core components of {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
+    # Update the CI dependencies
+    image = "python:{{ cookiecutter.python_versions[0] }}"
+    working_dir = "/usr/src/app/"
+    volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
+    CLIENT.images.pull(repository=image)
+    command = '/bin/bash -c "python3 -m pip install --upgrade pipenv &>/dev/null && pipenv update"'
+    container = CLIENT.containers.run(
+        auto_remove=False,
+        command=command,
+        detach=True,
+        image=image,
+        volumes=volumes,
+        working_dir=working_dir,
+    )
+    process_container(container=container)
+
+
 @task(pre=[test])
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
 def release(_c, release_type, debug=False):

@@ -11,6 +11,7 @@ from datetime import datetime
 from logging import basicConfig, getLogger
 from pathlib import Path
 
+import docker
 import git
 from bumpversion.cli import main as bumpversion
 from invoke import task
@@ -28,6 +29,24 @@ LOG = getLogger("cookiecutter-python")
 
 CWD = Path(".").absolute()
 REPO = git.Repo(CWD)
+CLIENT = docker.from_env()
+
+
+def process_container(*, container: docker.models.containers.Container) -> None:
+    """Process a provided container"""
+    response = container.wait(condition="not-running")
+    decoded_response = container.logs().decode("utf-8")
+    response["logs"] = decoded_response.strip().replace("\n", "  ")
+    container.remove()
+    if not response["StatusCode"] == 0:
+        LOG.error(
+            "Received a non-zero status code from docker (%s); additional details: %s",
+            response["StatusCode"],
+            response["logs"],
+        )
+        sys.exit(response["StatusCode"])
+    else:
+        LOG.info("%s", response["logs"])
 
 
 # Tasks
@@ -83,3 +102,26 @@ def release(_c, debug=False):
     new_version = date_info + "." + increment
 
     bumpversion(["--new-version", new_version, "unusedpart"])
+
+
+@task
+def update(_c, debug=False):
+    """Update the core components of cookiecutter-python"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
+    # Update the CI dependencies
+    image = "python:3.9"
+    working_dir = "/usr/src/app/"
+    volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
+    CLIENT.images.pull(repository=image)
+    command = '/bin/bash -c "python3 -m pip install --upgrade pipenv &>/dev/null && pipenv update"'
+    container = CLIENT.containers.run(
+        auto_remove=False,
+        command=command,
+        detach=True,
+        image=image,
+        volumes=volumes,
+        working_dir=working_dir,
+    )
+    process_container(container=container)
