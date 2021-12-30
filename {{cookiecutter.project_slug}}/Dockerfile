@@ -21,10 +21,10 @@ LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 RUN apt-get update \
  && apt-get install -y --no-install-recommends software-properties-common \
  && add-apt-repository ppa:deadsnakes/ppa \
- && apt-get install -y --no-install-recommends pipenv \
-                                               python3-pip \
+ && apt-get install -y --no-install-recommends python3-pip \
                                                python{{ cookiecutter.python_versions[0] }} \
  && ln -sf /usr/bin/python{{ cookiecutter.python_versions[0] }} /usr/bin/python3 \
+ && pip3 install pipenv \
  && apt-get clean autoclean \
  && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
