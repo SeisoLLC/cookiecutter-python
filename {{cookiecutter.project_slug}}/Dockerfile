@@ -19,7 +19,7 @@ LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 
 # hadolint ignore=DL3008
 RUN apt-get update \
- && apt-get install software-properties-common -y \
+ && apt-get install -y --no-install-recommends software-properties-common \
  && add-apt-repository ppa:deadsnakes/ppa \
  && apt-get install -y --no-install-recommends pipenv \
                                                pyenv \
