@@ -17,7 +17,7 @@ LABEL org.opencontainers.image.source="https://github.com/SeisoLLC/{{ cookiecutt
 LABEL org.opencontainers.image.revision="${COMMIT_HASH}"
 LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 
-# hadolint ignore=DL3008
+# hadolint ignore=DL3008,DL3013
 RUN apt-get update \
  && apt-get install -y --no-install-recommends software-properties-common \
  && add-apt-repository ppa:deadsnakes/ppa \
