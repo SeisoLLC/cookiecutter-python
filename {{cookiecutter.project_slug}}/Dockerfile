@@ -17,12 +17,15 @@ LABEL org.opencontainers.image.source="https://github.com/SeisoLLC/{{ cookiecutt
 LABEL org.opencontainers.image.revision="${COMMIT_HASH}"
 LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 
-# hadolint ignore=DL3008
+# hadolint ignore=DL3008,DL3013
 RUN apt-get update \
- && apt-get install -y --no-install-recommends pipenv \
-                                               python{{ cookiecutter.python_versions[0] }} \
-                                               python3-pip \
+ && apt-get install -y --no-install-recommends software-properties-common \
+ && add-apt-repository ppa:deadsnakes/ppa \
+ && apt-get install -y --no-install-recommends python{{ cookiecutter.python_versions[0] }} \
+                                               python{{ cookiecutter.python_versions[0] }}-venv \
  && ln -sf /usr/bin/python{{ cookiecutter.python_versions[0] }} /usr/bin/python3 \
+ && python3 -m ensurepip --upgrade \
+ && pip3 install pipenv \
  && apt-get clean autoclean \
  && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*

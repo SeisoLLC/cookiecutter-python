@@ -23,7 +23,7 @@ jobs:
       matrix:
         python-version:
 {%- for python_version in cookiecutter.python_versions %}
-          - {{ python_version }}
+          - "{{ python_version }}"
 {%- endfor %}
       fail-fast: false
     steps:

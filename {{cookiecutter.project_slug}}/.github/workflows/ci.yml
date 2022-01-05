@@ -17,7 +17,7 @@ jobs:
       matrix:
         python-version:
 {%- for python_version in cookiecutter.python_versions %}
-          - {{ python_version }}
+          - "{{ python_version }}"
 {%- endfor %}
     steps:
       - name: Checkout the repository
