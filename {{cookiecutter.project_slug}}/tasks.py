@@ -142,7 +142,7 @@ def build(_c, debug=False):
             sys.exit(1)
 
 
-@task(pre=[lint, build])
+@task
 def test(_c, debug=False):
     """Test {{ cookiecutter.project_name }}"""
     if debug:
@@ -220,7 +220,7 @@ def update(_c, debug=False):
     process_container(container=container)
 
 
-@task(pre=[test])
+@task
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
 def release(_c, release_type, debug=False):
 {%- elif cookiecutter.versioning == 'CalVer' %}
