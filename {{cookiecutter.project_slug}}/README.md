@@ -12,10 +12,10 @@ Then, you can setup your local environment via:
 # Install the dependencies
 pipenv install --dev
 
-# Build the docker image
+# Build the image
 pipenv run invoke build
 
-# Run the docker image
+# Run the image
 {%- if cookiecutter.versioning == "SemVer-ish" %}
 docker run seiso/{{ cookiecutter.project_slug }}:0.0.0 --help
 {%- elif cookiecutter.versioning == "CalVer" %}

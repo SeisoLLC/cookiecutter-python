@@ -70,6 +70,6 @@ jobs:
         with:
           username: ${{ "{{ secrets.DOCKERHUB_USERNAME }}" }}
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
-      - name: Publish the latest docker image to Docker Hub
+      - name: Publish the latest image to Docker Hub
         run: pipenv run invoke publish latest
 {%- endif -%}

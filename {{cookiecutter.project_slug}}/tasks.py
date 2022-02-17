@@ -284,7 +284,7 @@ def publish(_c, tag, debug=False):
     repository = IMAGE + ":" + tag
     LOG.info("Pushing %s to docker hub...", repository)
     CLIENT.images.push(repository=repository)
-    LOG.info("Done publishing the %s Docker image", repository)
+    LOG.info("Done publishing the %s image", repository)
 {%- else %}
     raise NotImplementedError()
 {%- endif %}
