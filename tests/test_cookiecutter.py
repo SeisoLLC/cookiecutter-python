@@ -174,7 +174,7 @@ def test_default_project(cookies):
             try:
                 github_config = yaml.safe_load(file)
                 compliant = False
-                for action_step in github_config["jobs"]["test"]["steps"]:
+                for action_step in github_config["jobs"]["lint"]["steps"]:
                     if action_step.get("uses") == "seisollc/goat@main":
                         compliant = True
                 assert compliant

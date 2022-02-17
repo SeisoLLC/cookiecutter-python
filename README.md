@@ -29,21 +29,12 @@ pipenv install --dev
 # Commit and test your work
 git add -A
 git commit -m "Initial content"
-pipenv run invoke test
+pipenv run invoke build test
 
 # Make your first release
 git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
 git push origin $(git branch --show-current)
-
-###############################
-# CalVer
-pipenv run invoke release
-###############################
-# or
-###############################
-# SemVer
-pipenv run invoke release minor
-###############################
+if grep -q CalVer setup.cfg; then pipenv run invoke release; else pipenv run invoke release minor; fi
 
 # Ship it!
 git push --atomic origin $(git branch --show-current) $(git describe --tags)
@@ -73,4 +64,4 @@ A: You customized the `project_slug` when answering the `cookiecutter` questions
 Q: What does `SemVer-ish` mean?  
 A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in their tags (which are used by Semver to indicate builds). As a workaround,
 we use `-`s instead (only for local builds, not official releases), which is not compliant with the official SemVer spec, but is easily human
-understandable. In order to keep the docker image tags in line with git tags, both use this SemVer-like notation.
+understandable. In order to keep the image tags in line with git tags, both use this SemVer-like notation.

@@ -142,7 +142,7 @@ def build(_c, debug=False):
             sys.exit(1)
 
 
-@task(pre=[lint, build])
+@task
 def test(_c, debug=False):
     """Test {{ cookiecutter.project_name }}"""
     if debug:
@@ -220,7 +220,7 @@ def update(_c, debug=False):
     process_container(container=container)
 
 
-@task(pre=[test])
+@task
 {%- if cookiecutter.versioning == 'SemVer-ish' %}
 def release(_c, release_type, debug=False):
 {%- elif cookiecutter.versioning == 'CalVer' %}
@@ -284,7 +284,7 @@ def publish(_c, tag, debug=False):
     repository = IMAGE + ":" + tag
     LOG.info("Pushing %s to docker hub...", repository)
     CLIENT.images.push(repository=repository)
-    LOG.info("Done publishing the %s Docker image", repository)
+    LOG.info("Done publishing the %s image", repository)
 {%- else %}
     raise NotImplementedError()
 {%- endif %}
