@@ -99,7 +99,7 @@ def release(_c, debug=False):
     else:
         increment = "01"
 
-    new_version = date_info + "." + increment
+    new_version = f"{date_info}.{increment}"
 
     bumpversion(["--new-version", new_version, "unusedpart"])
 
