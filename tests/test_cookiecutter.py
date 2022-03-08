@@ -160,7 +160,7 @@ def test_default_project(cookies):
 
     try:
         subprocess.run(
-            ["pipenv", "run", "invoke", "test"],
+            ["pipenv", "run", "invoke", "lint", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
