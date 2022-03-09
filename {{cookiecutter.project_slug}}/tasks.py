@@ -113,7 +113,7 @@ def build(_c, debug=False):
     if debug:
         getLogger().setLevel("DEBUG")
 
-    version_string = "v" + __version__
+    version_string = f"v{__version__}"
     commit_hash = REPO.head.commit.hexsha
     commit_hash_short = REPO.git.rev_parse(commit_hash, short=True)
 
@@ -124,13 +124,13 @@ def build(_c, debug=False):
         buildargs = {"VERSION": __version__, "COMMIT_HASH": commit_hash}
     else:
         buildargs = {
-            "VERSION": __version__ + "-" + commit_hash_short,
+            "VERSION": f"{__version__}-{commit_hash_short}",
             "COMMIT_HASH": commit_hash,
         }
 
     # Build and Tag
     for tag in ["latest", buildargs["VERSION"]]:
-        tag = IMAGE + ":" + tag
+        tag = f"{IMAGE}:{tag}"
         LOG.info("Building %s...", tag)
         try:
             CLIENT.images.build(
@@ -262,7 +262,7 @@ def release(_c, debug=False):
     else:
         increment = "01"
 
-    new_version = date_info + "." + increment
+    new_version = f"{date_info}.{increment}"
 
     bumpversion(["--new-version", new_version, "unusedpart"])
 {%- endif %}
@@ -278,10 +278,10 @@ def publish(_c, tag, debug=False):
         LOG.error("Please provide a tag of either latest or release")
         sys.exit(1)
     elif tag == "release":
-        tag = "v" + __version__
+        tag = f"v{__version__}"
 
 {%- if cookiecutter.dockerhub == 'yes' %}
-    repository = IMAGE + ":" + tag
+    repository = f"{IMAGE}:{tag}"
     LOG.info("Pushing %s to docker hub...", repository)
     CLIENT.images.push(repository=repository)
     LOG.info("Done publishing the %s image", repository)
