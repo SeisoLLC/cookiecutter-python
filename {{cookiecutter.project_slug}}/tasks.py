@@ -14,6 +14,7 @@ from datetime import datetime
 {%- endif %}
 from logging import basicConfig, getLogger
 from pathlib import Path
+from typing import Union
 
 import docker
 import git
@@ -26,7 +27,7 @@ LOG = getLogger("{{ cookiecutter.project_slug }}.invoke")
 
 CWD = Path(".").absolute()
 try:
-    REPO = git.Repo(CWD)
+    REPO: Union[git.repo.base.Repo, None] = git.Repo(CWD)
 except git.InvalidGitRepositoryError:
     REPO = None
 CLIENT = docker.from_env()
