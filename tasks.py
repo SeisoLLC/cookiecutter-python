@@ -5,6 +5,7 @@ Task execution tool & library
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 from datetime import datetime
@@ -125,3 +126,22 @@ def update(_c, debug=False):
         working_dir=working_dir,
     )
     process_container(container=container)
+
+
+@task
+def clean(_c, debug=False):
+    """Clean up cookiecutter-python"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
+    cleanup_list = []
+    cleanup_list.extend(list(CWD.glob("**/.DS_Store")))
+    cleanup_list.extend(list(CWD.glob("**/.Thumbs.db")))
+    cleanup_list.extend(list(CWD.glob("**/.mypy_cache")))
+    cleanup_list.extend(list(CWD.glob("**/*.pyc")))
+
+    for item in cleanup_list:
+        if item.is_dir():
+            shutil.rmtree(item)
+        elif item.is_dir():
+            item.unlink()
