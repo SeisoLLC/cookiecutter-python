@@ -7,6 +7,7 @@ import os
 {%- if cookiecutter.versioning == 'CalVer' %}
 import re
 {%- endif %}
+import shutil
 import subprocess
 import sys
 {%- if cookiecutter.versioning == 'CalVer' %}
@@ -289,3 +290,22 @@ def publish(_c, tag, debug=False):
 {%- else %}
     raise NotImplementedError()
 {%- endif %}
+
+
+@task
+def clean(_c, debug=False):
+    """Clean up {{ cookiecutter.project_name }}"""
+    if debug:
+        getLogger().setLevel("DEBUG")
+
+    cleanup_list = []
+    cleanup_list.extend(list(CWD.glob("**/.DS_Store")))
+    cleanup_list.extend(list(CWD.glob("**/.Thumbs.db")))
+    cleanup_list.extend(list(CWD.glob("**/.mypy_cache")))
+    cleanup_list.extend(list(CWD.glob("**/*.pyc")))
+
+    for item in cleanup_list:
+        if item.is_dir():
+            shutil.rmtree(item)
+        elif item.is_dir():
+            item.unlink()
