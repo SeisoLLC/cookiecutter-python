@@ -1,5 +1,11 @@
 # {{ cookiecutter.project_name }} Development Notes
 
+## Environmental setup
+
+```bash
+pipenv install --deploy --ignore-pipfile --dev
+```
+
 ## Linting locally
 
 ```bash

@@ -10,7 +10,7 @@ Then, you can setup your local environment via:
 
 ```bash
 # Install the dependencies
-pipenv install --dev
+pipenv install --deploy --ignore-pipfile --dev
 
 # Build the image
 pipenv run invoke build
