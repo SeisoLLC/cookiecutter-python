@@ -12,4 +12,5 @@ and comply with the below requirements:
 - [ ] Rebase your branch against the latest commit of the target branch
 - [ ] If you are adding a dependency, please explain how it was chosen
 - [ ] If manual testing is needed in order to validate the changes, provide a testing plan and the expected results
-- [ ] If there is an issue associated with your Pull Request, align your PR title with [this documentation](https://help.github.com/en/articles/closing-issues-using-keywords)
+- [ ] If there is an issue associated with your Pull Request, align your PR title with [this
+  documentation](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue)
