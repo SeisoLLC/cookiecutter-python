@@ -307,5 +307,5 @@ def clean(_c, debug=False):
     for item in cleanup_list:
         if item.is_dir():
             shutil.rmtree(item)
-        elif item.is_dir():
+        elif item.is_file():
             item.unlink()
