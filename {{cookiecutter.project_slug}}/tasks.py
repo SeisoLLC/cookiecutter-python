@@ -13,7 +13,7 @@ import sys
 {%- if cookiecutter.versioning == 'CalVer' %}
 from datetime import datetime
 {%- endif %}
-from logging import basicConfig, getLogger
+from logging import basicConfig, getLogger, WARNING
 from pathlib import Path
 from typing import Union
 
@@ -25,6 +25,7 @@ from {{ cookiecutter.project_slug }} import __version__, constants
 
 basicConfig(level="INFO", format=constants.LOG_FORMAT)
 LOG = getLogger("{{ cookiecutter.project_slug }}.invoke")
+getLogger("urllib3").setLevel(WARNING)
 
 CWD = Path(".").absolute()
 try:
