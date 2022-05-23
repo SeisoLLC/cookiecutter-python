@@ -9,7 +9,7 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime
-from logging import basicConfig, getLogger
+from logging import basicConfig, getLogger, WARNING
 from pathlib import Path
 
 import docker
@@ -27,6 +27,7 @@ LOG_FORMAT = json.dumps(
 )
 basicConfig(level="INFO", format=LOG_FORMAT)
 LOG = getLogger("cookiecutter-python")
+getLogger("urllib3").setLevel(WARNING)
 
 CWD = Path(".").absolute()
 REPO = git.Repo(CWD)
