@@ -58,7 +58,7 @@ pipenv run invoke update
 
 ## FAQs
 
-Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?
+Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?                                                       
 A: You customized the `project_slug` when answering the `cookiecutter` questions and included a capital letter. Don't do that!
 
 Q: What does `SemVer-ish` mean?
