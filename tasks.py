@@ -9,7 +9,7 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime
-from logging import basicConfig, getLogger, WARNING
+from logging import WARNING, basicConfig, getLogger
 from pathlib import Path
 
 import docker
