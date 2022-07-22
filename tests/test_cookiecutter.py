@@ -165,6 +165,15 @@ def test_default_project(cookies):
             check=True,
             cwd=project,
         )
+
+        # Do two releases to ensure they work
+        for i in range(2):
+            subprocess.run(
+                ["pipenv", "run", "invoke", "release"],
+                capture_output=True,
+                check=True,
+                cwd=project,
+            )
     except subprocess.CalledProcessError as error:
         pytest.fail(error.stderr.decode("utf-8"))
 
