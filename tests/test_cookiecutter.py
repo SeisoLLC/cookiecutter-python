@@ -167,7 +167,7 @@ def test_default_project(cookies):
         )
 
         # Do two releases to ensure they work
-        for i in range(2):
+        for _ in range(2):
             subprocess.run(
                 ["pipenv", "run", "invoke", "release"],
                 capture_output=True,
