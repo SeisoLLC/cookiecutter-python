@@ -17,7 +17,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
       - name: Setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install the dependencies
@@ -26,8 +26,8 @@ jobs:
           pipenv install --python ${{ matrix.python-version }} --deploy --ignore-pipfile --dev
           echo "CODEQL_PYTHON=$(pipenv run which python)" >> "${GITHUB_ENV}"
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
         with:
           setup-python-dependencies: false
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
