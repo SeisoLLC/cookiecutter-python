@@ -5,12 +5,13 @@ on:
   schedule:
     - cron: '{{ range(0, 59) | random }} {{ range(2, 4) | random }} * * 1,4'
 
+env:
+  python_version: "{{ cookiecutter.python_version }}"
+
 jobs:
   update:
     name: Update
     runs-on: ubuntu-20.04
-    env:
-      python_version: "{{ cookiecutter.python_version }}"
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2

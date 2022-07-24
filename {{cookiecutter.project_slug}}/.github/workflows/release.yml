@@ -12,12 +12,13 @@ on:
       - 'v2[0-1][0-9][0-9].1[0-2].[0-9][0-9]'
 {%- endif %}
 
+env:
+  python_version: "{{ cookiecutter.python_version }}"
+
 jobs:
   distribute:
     name: Distribute
     runs-on: ubuntu-20.04
-    env:
-      python_version: "{{ cookiecutter.python_version }}"
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2

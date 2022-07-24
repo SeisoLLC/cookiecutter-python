@@ -15,12 +15,13 @@ on:
   - workflow_dispatch
 {%- endif %}
 
+env:
+  python_version: "{{ cookiecutter.python_version }}"
+
 jobs:
   analyze:
     name: CodeQL
     runs-on: ubuntu-latest
-    env:
-      python_version: "{{ cookiecutter.python_version }}"
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2

@@ -9,6 +9,9 @@ on:
     branches:
       - main
 
+env:
+  python_version: "{{ cookiecutter.python_version }}"
+
 jobs:
   lint:
     name: Lint
@@ -23,8 +26,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-20.04
-    env:
-      python_version: "{{ cookiecutter.python_version }}"
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -55,8 +56,6 @@ jobs:
       - lint
       - test
     if: ${{ "{{ github.event_name == 'push' }}" }}
-    env:
-      python_version: "{{ cookiecutter.python_version }}"
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
