@@ -23,7 +23,7 @@ cd $(ls -td * | head -1)
 grep -r NotImplementedError *
 
 # Add your code and tests
-pipenv install --dev
+pipenv install --deploy --ignore-pipfile --dev
 # ...
 
 # Commit and test your work
