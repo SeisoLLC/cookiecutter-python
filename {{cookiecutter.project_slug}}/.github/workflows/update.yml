@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '{{ range(0, 59) | random }} {{ range(2, 4) | random }} * * 1,4'
 
+env:
+  python_version: "{{ cookiecutter.python_version }}"
+
 jobs:
   update:
     name: Update
@@ -16,7 +19,14 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: "{{ cookiecutter.python_versions[0] }}"
+          python-version: ${{ "{{ env.python_version }}" }}
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-${{ "{{ hashFiles('Pipfile.lock') }}" }}
+          restore-keys: |
+            ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
+            ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
         run: |
           python -m pip install --upgrade pipenv

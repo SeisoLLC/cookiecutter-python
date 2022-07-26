@@ -16,4 +16,4 @@ pytest-cov = "*"
 pytest-mock = "*"
 
 [requires]
-python_version = "{{ cookiecutter.python_versions[0] }}"
+python_version = "{{ cookiecutter.python_version }}"

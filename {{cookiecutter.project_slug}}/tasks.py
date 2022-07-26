@@ -207,7 +207,7 @@ def update(_c, debug=False):
         getLogger().setLevel("DEBUG")
 
     # Update the CI dependencies
-    image = "python:{{ cookiecutter.python_versions[0] }}"
+    image = "python:{{ cookiecutter.python_version }}"
     working_dir = "/usr/src/app/"
     volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
     CLIENT.images.pull(repository=image)
