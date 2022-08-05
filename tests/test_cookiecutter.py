@@ -174,12 +174,25 @@ def test_default_project(cookies):
                 check=True,
                 cwd=project,
             )
+
+        # Ensure the project.yml is generated, and is valid YAML
+        with open(project.joinpath('.github/project.yml'), "r", encoding="utf-8") as yaml_data:
+            project_context = yaml.safe_load(yaml_data)
+            assert project_context['origin']['generated']
     except subprocess.CalledProcessError as error:
         pytest.fail(error.stderr.decode("utf-8"))
+    except (
+        yaml.YAMLError,
+        FileNotFoundError,
+        PermissionError,
+        IsADirectoryError,
+        OSError,
+    ) as exception:
+        pytest.fail(exception)
 
     # Validate CI
     for filename in ["ci.yml"]:
-        with open(f"{result.project}/.github/workflows/{filename}", "r") as file:
+        with open(project.joinpath(f".github/workflows/{filename}"), "r", encoding="utf-8") as file:
             try:
                 github_config = yaml.safe_load(file)
                 compliant = False
