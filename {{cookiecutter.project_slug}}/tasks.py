@@ -13,7 +13,7 @@ import sys
 {%- if cookiecutter.versioning == 'CalVer' %}
 from datetime import datetime
 {%- endif %}
-from logging import basicConfig, getLogger, WARNING
+from logging import WARNING, basicConfig, getLogger
 from pathlib import Path
 from typing import Union
 

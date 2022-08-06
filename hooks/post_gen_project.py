@@ -9,8 +9,9 @@ import os
 import pprint
 import subprocess
 import sys
+
 # Used indirectly in the below Jinja2 block
-from collections import OrderedDict # pylint: disable=unused-import
+from collections import OrderedDict  # pylint: disable=unused-import
 from logging import basicConfig, getLogger
 from pathlib import Path
 from typing import Union
@@ -28,7 +29,7 @@ LOG_FORMAT = json.dumps(
 
 basicConfig(level="INFO", format=LOG_FORMAT)
 LOG = getLogger("{{ cookiecutter.project_slug }}.post_generation_hook")
-PROJECT_CONTEXT = Path('.github/project.yml')
+PROJECT_CONTEXT = Path(".github/project.yml")
 
 if (
     os.environ.get("GITHUB_ACTIONS") == "true"
@@ -43,15 +44,21 @@ def get_context() -> dict:
     import git
 
     cookiecutter = None
-    timestamp = datetime.datetime.utcnow().isoformat(timespec='seconds')
+    timestamp = datetime.datetime.utcnow().isoformat(timespec="seconds")
 
     ##############
     # This section leverages cookiecutter's jinja interpolation
-    cookiecutter_context: OrderedDict[str, str] = {{ cookiecutter | pprint }} # type: ignore
+    cookiecutter_context: OrderedDict[str, str] = {{cookiecutter | pprint}}  # type: ignore
 
-    project_name = cookiecutter_context["project_slug"] # pylint: disable=unsubscriptable-object
-    project_description = cookiecutter_context['project_short_description'] # pylint: disable=unsubscriptable-object
-    template = cookiecutter_context['_template'] # pylint: disable=unsubscriptable-object
+    project_name = cookiecutter_context[
+        "project_slug"
+    ]  # pylint: disable=unsubscriptable-object
+    project_description = cookiecutter_context[
+        "project_short_description"
+    ]  # pylint: disable=unsubscriptable-object
+    template = cookiecutter_context[
+        "_template"
+    ]  # pylint: disable=unsubscriptable-object
     ##############
 
     try:
@@ -72,28 +79,28 @@ def get_context() -> dict:
         template_commit_hash = git.cmd.Git().ls_remote(template, "main")[:40]
 
     context: dict[str, Union[str, dict[str, Union[str, bool, dict[str, str]]]]] = {}
-    context['name'] = project_name
-    context['description'] = project_description
-    context['origin'] = {}
-    context['origin']['timestamp'] = timestamp
-    context['origin']['generated'] = True
-    context['origin']['template'] = {}
-    context['origin']['template']['branch'] = branch
-    context['origin']['template']['commit hash'] = template_commit_hash
-    context['origin']['template']['dirty'] = dirty
-    context['origin']['template']['location'] = template
-    context['origin']['template']['cookiecutter'] = {}
-    context['origin']['template']['cookiecutter'] = cookiecutter_context
+    context["name"] = project_name
+    context["description"] = project_description
+    context["origin"] = {}
+    context["origin"]["timestamp"] = timestamp
+    context["origin"]["generated"] = True
+    context["origin"]["template"] = {}
+    context["origin"]["template"]["branch"] = branch
+    context["origin"]["template"]["commit hash"] = template_commit_hash
+    context["origin"]["template"]["dirty"] = dirty
+    context["origin"]["template"]["location"] = template
+    context["origin"]["template"]["cookiecutter"] = {}
+    context["origin"]["template"]["cookiecutter"] = cookiecutter_context
 
     # Filter out unwanted cookiecutter context
-    del cookiecutter_context['_output_dir'] # pylint: disable=unsubscriptable-object
+    del cookiecutter_context["_output_dir"]  # pylint: disable=unsubscriptable-object
 
     return context
 
 
 def write_context(*, context: dict) -> None:
     """Write the context dict to the config file"""
-    with open(PROJECT_CONTEXT, "w", encoding='utf-8') as file:
+    with open(PROJECT_CONTEXT, "w", encoding="utf-8") as file:
         yaml.dump(context, file)
 
 
@@ -146,5 +153,5 @@ def run_post_gen_hook():
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_post_gen_hook()

@@ -6,7 +6,12 @@ Configuration management for {{ cookiecutter.project_name }}
 import logging
 from argparse import ArgumentParser
 
-from {{ cookiecutter.project_slug }} import __project_name__, __version__, constants
+from {{ cookiecutter.project_slug }} import (
+    __project_name__,
+    __version__,
+    constants,
+)
+
 LOG = logging.getLogger(__name__)
 
 
