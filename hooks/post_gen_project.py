@@ -66,7 +66,7 @@ def get_context() -> dict:
         repo = git.Repo(template)
 
         # Expect this is a local template
-        branch = repo.active_branch
+        branch = repo.active_branch  # TODO: This is failing in CI with TypeError: HEAD is a detached symbolic reference as it points to '8b1f7ee3967b8ce969debd753714d46b412b8666'
         dirty = repo.is_dirty(untracked_files=True)
         template_commit_hash = git.cmd.Git().ls_remote(template, "HEAD")[:40]
     except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
