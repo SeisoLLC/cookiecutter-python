@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Union
 
 import yaml
+import git
 
 LOG_FORMAT = json.dumps(
     {
@@ -40,9 +41,6 @@ if (
 
 def get_context() -> dict:
     """Return the context as a dict"""
-    # TODO: This is failing with a module import error
-    import git
-
     cookiecutter = None
     timestamp = datetime.datetime.utcnow().isoformat(timespec="seconds")
 
