@@ -59,6 +59,7 @@ dependencies for.  Set the `PIPX_DEFAULT_PYTHON` env var like the following:
 PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/versions/$(pyenv version | cut -f1 -d\ )/bin/python3"
 export PIPX_DEFAULT_PYTHON
 ```
+
 You may also want to consider storing this in your .zshrc or similar if it fixes your issue.
 
 ## Updating the dependencies
