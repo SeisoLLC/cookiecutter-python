@@ -46,7 +46,8 @@ def get_context() -> dict:
 
     ##############
     # This section leverages cookiecutter's jinja interpolation
-    cookiecutter_context: OrderedDict[str, str] = {{cookiecutter | pprint}}  # type: ignore
+    cookiecutter_context_ordered: OrderedDict[str, str] = {{cookiecutter | pprint}}  # type: ignore
+    cookiecutter_context: dict[str, str] = dict(cookiecutter_context_ordered)
 
     project_name = cookiecutter_context[
         "project_slug"
@@ -57,24 +58,32 @@ def get_context() -> dict:
     template = cookiecutter_context[
         "_template"
     ]  # pylint: disable=unsubscriptable-object
+    output = cookiecutter_context[
+        "_output_dir"
+    ]  # pylint: disable=unsubscriptable-object
     ##############
 
     try:
-        # TODO: Is this the right location?
-        repo = git.Repo(template)
+        if Path(template).is_absolute():
+            template_path = Path(template).resolve()
+        else:
+            output_path = Path(output).resolve()
+            template_path = output_path.joinpath(template)
+
+        repo = git.Repo(template_path)
 
         # Expect this is a local template
-        branch = repo.active_branch  # TODO: This is failing in CI with TypeError: HEAD is a detached symbolic reference as it points to '8b1f7ee3967b8ce969debd753714d46b412b8666'
+        branch = str(repo.active_branch)
         dirty = repo.is_dirty(untracked_files=True)
-        template_commit_hash = git.cmd.Git().ls_remote(template, "HEAD")[:40]
+        template_commit_hash = git.cmd.Git().ls_remote(template_path, "HEAD")[:40]
     except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
         # Expect this is a remote template
         # I would like this to be able to be more robust instead of assuming 'main'. However, this is pending
         # https://github.com/cookiecutter/cookiecutter/issues/1759
-        # TODO: Can I pull this from wherever it clones the template?
+        template_repo = template
         branch = "main"
         dirty = False
-        template_commit_hash = git.cmd.Git().ls_remote(template, "main")[:40]
+        template_commit_hash = git.cmd.Git().ls_remote(template_repo, "main")[:40]
 
     context: dict[str, Union[str, dict[str, Union[str, bool, dict[str, str]]]]] = {}
     context["name"] = project_name
@@ -122,8 +131,6 @@ def run_post_gen_hook():
         subprocess.run(["pipenv", "install", "--dev"], capture_output=True, check=True)
 
         # Write the context to the project.yml
-        # TODO: Remove
-        print(sys.path)
         context = get_context()
         write_context(context=context)
 
