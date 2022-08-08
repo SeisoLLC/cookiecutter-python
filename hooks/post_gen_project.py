@@ -16,8 +16,8 @@ from logging import basicConfig, getLogger
 from pathlib import Path
 from typing import Union
 
-import yaml
 import git
+import yaml
 
 LOG_FORMAT = json.dumps(
     {
@@ -78,14 +78,19 @@ def get_context() -> dict:
         template_commit_hash = git.cmd.Git().ls_remote(template_path, "HEAD")[:40]
     except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
         # Expect this is a remote template
-        # I would like this to be able to be more robust instead of assuming 'main'. However, this is pending
-        # https://github.com/cookiecutter/cookiecutter/issues/1759
         template_repo = template
+        # This currently assumes main until https://github.com/cookiecutter/cookiecutter/issues/1759 is resolved
         branch = "main"
         dirty = False
-        template_commit_hash = git.cmd.Git().ls_remote(template_repo, "main")[:40]
+        template_commit_hash = git.cmd.Git().ls_remote(template_repo, branch)[:40]
 
-    context: dict[str, Union[str, dict[str, Union[str, bool, dict[str, str]]]]] = {}
+    context: dict[
+        str,
+        Union[
+            str,
+            dict[str, Union[str, bool, dict[str, Union[str, bool, dict[str, str]]]]],
+        ],
+    ] = {}
     context["name"] = project_name
     context["description"] = project_description
     context["origin"] = {}
