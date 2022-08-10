@@ -14,7 +14,6 @@ import sys
 from collections import OrderedDict  # pylint: disable=unused-import
 from logging import basicConfig, getLogger
 from pathlib import Path
-from typing import Union
 
 import git
 import yaml
@@ -84,13 +83,7 @@ def get_context() -> dict:
         dirty = False
         template_commit_hash = git.cmd.Git().ls_remote(template_repo, branch)[:40]
 
-    context: dict[
-        str,
-        Union[
-            str,
-            dict[str, Union[str, bool, dict[str, Union[str, bool, dict[str, str]]]]],
-        ],
-    ] = {}
+    context: dict[str, str | dict[str, str | bool | dict[str, str | bool | dict[str, str]]]] = {}
     context["name"] = project_name
     context["description"] = project_description
     context["origin"] = {}
