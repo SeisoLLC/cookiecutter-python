@@ -83,7 +83,9 @@ def get_context() -> dict:
         dirty = False
         template_commit_hash = git.cmd.Git().ls_remote(template_repo, branch)[:40]
 
-    context: dict[str, str | dict[str, str | bool | dict[str, str | bool | dict[str, str]]]] = {}
+    context: dict[
+        str, str | dict[str, str | bool | dict[str, str | bool | dict[str, str]]]
+    ] = {}
     context["name"] = project_name
     context["description"] = project_description
     context["origin"] = {}
