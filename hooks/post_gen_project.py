@@ -70,11 +70,10 @@ def get_context() -> dict:
             template_path = output_path.joinpath(template)
 
         repo = git.Repo(template_path)
-        print(repo)
 
         # Expect this is a local template
-        dirty = repo.is_dirty(untracked_files=True)
         branch = str(repo.active_branch)
+        dirty = repo.is_dirty(untracked_files=True)
         template_commit_hash = git.cmd.Git().ls_remote(template_path, "HEAD")[:40]
     except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
         # Expect this is a remote template
