@@ -33,9 +33,16 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
+        # Necessary for hooks to succeed during tests for commits/schedule
+        if: github.event_name != 'push_request'
         with:
-          # Necessary for the post generation hook to succeed during tests
-          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+        # Necessary for hooks to succeed during tests for PRs
+        if: github.event_name == 'pull_request'
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
       - name: Setup python
         uses: actions/setup-python@v4
