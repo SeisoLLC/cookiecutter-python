@@ -37,6 +37,10 @@ jobs:
           # Necessary for the post generation hook to succeed during tests
           ref: ${{ github.ref }}
           fetch-depth: 0
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
       - name: Setup python
         uses: actions/setup-python@v4
         with:
