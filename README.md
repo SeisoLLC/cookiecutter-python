@@ -73,7 +73,7 @@ pipenv run invoke update
 Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?  
 A: You customized the `project_slug` when answering the `cookiecutter` questions and included a capital letter. Don't do that!
 
-Q: What does `SemVer-ish` mean?
+Q: What does `SemVer-ish` mean?  
 A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in their tags (which are used by SemVer to indicate builds). As a workaround,
 we use `-`s instead (only for local builds, not official releases), which is not compliant with the official SemVer spec, but is easily human
 understandable. In order to keep the image tags in line with git tags, both use this SemVer-like notation.
