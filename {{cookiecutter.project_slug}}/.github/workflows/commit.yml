@@ -1,5 +1,5 @@
 ---
-name: "CI"
+name: "Commit"
 
 on:
   push:
@@ -48,13 +48,60 @@ jobs:
         run: pipenv run invoke build
       - name: Run the tests
         run: pipenv run invoke test
+{%- if cookiecutter.versioning == "CalVer" %}
+  bump-version:
+    name: Bump version
+    needs: [lint, test]
+    if: "${{ "{{ github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'Bump version: 2') }}" }}"
+    permissions:
+      contents: write
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ "{{ secrets.PERSONAL_ACCESS_TOKEN }}" }}
+          fetch-depth: 0
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ "{{ env.python_version }}" }}
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-${{ "{{ hashFiles('Pipfile.lock') }}" }}
+          restore-keys: |
+            ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
+            ${{ "{{ runner.os }}" }}-python-
+      - name: Install the dependencies
+        run: |
+          python -m pip install --upgrade pipenv
+          pipenv install --python ${{ "{{ env.python_version }}" }} --deploy --ignore-pipfile --dev
+      - name: Bump the version
+        id: bump-version
+        run: |
+          git config --global user.name 'Seiso Automation'
+          git config --global user.email 'automation@seisollc.com'
+          pipenv run invoke release
+          TAG="$(git describe --tags)"
+          BRANCH="$(git branch --show-current)"
+          git push --atomic origin "${BRANCH}" "${TAG}"
+          echo "TAG=${TAG}" >> "${GITHUB_ENV}"
+      - name: Publish the release to GitHub
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ "{{ secrets.GITHUB_TOKEN }}" }}
+        with:
+          name: ${{ "{{ env.TAG }}" }}
+          tag_name: ${{ "{{ env.TAG }}" }}
+          draft: false
+          prerelease: false
+{%- endif -%}
 {%- if cookiecutter.dockerhub == 'yes' %}
   distribute:
     name: Distribute
     runs-on: ubuntu-20.04
-    needs:
-      - lint
-      - test
+    needs: [lint, test]
     if: ${{ "{{ github.event_name == 'push' }}" }}
     steps:
       - name: Checkout the repository
