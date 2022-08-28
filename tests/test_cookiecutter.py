@@ -193,7 +193,7 @@ def test_default_project(cookies):
         pytest.fail(exception)
 
     # Validate CI
-    for filename in ["ci.yml"]:
+    for filename in ["commit.yml"]:
         with open(
             project.joinpath(f".github/workflows/{filename}"), "r", encoding="utf-8"
         ) as file:
