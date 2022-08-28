@@ -178,7 +178,7 @@ def test_default_project(cookies):
         pytest.fail(error.stderr.decode("utf-8"))
 
     # Validate CI
-    for filename in ["ci.yml"]:
+    for filename in ["commit.yml"]:
         with open(f"{result.project}/.github/workflows/{filename}", "r") as file:
             try:
                 github_config = yaml.safe_load(file)
