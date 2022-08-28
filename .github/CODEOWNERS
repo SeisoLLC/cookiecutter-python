@@ -1,5 +1,7 @@
 # Repository owner
 * @jonzeolla @seanctech
 
-# GitHub automation oversight
-.github/* @SeisoLLC/eyes
+# Sensitive files (covers both the cookiecutter and generated files in the repo)
+.github/** @SeisoLLC/eyes
+LICENSE @SeisoLLC/eyes
+SECURITY.md @SeisoLLC/eyes

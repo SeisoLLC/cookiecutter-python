@@ -2,7 +2,7 @@
 * @{{ cookiecutter.project_owner_github_username }}
 
 # GitHub automation oversight
-.github/* @SeisoLLC/eyes
+.github/** @SeisoLLC/eyes
 
 # Sensitive files
 LICENSE @SeisoLLC/eyes
