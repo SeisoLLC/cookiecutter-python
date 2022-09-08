@@ -14,3 +14,6 @@ pylint = "*"
 pytest = "*"
 pytest-cookies = "*"
 pyyaml = "*"
+
+[requires]
+python_version = "3.10"

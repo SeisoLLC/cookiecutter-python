@@ -6,15 +6,15 @@ This is Seiso's cookiecutter template for creating new python repositories.
 
 ```bash
 # Install the prerequisites
-python3 -m pip install pipx
+python3 -m pip install --upgrade pipx gitpython pyyaml
 python3 -m pipx ensurepath
 pipx install pipenv
 
 # Initialize your project either with HTTP or SSH
 # Uses HTTP
-pipx run cookiecutter gh:seisollc/cookiecutter-python
+pipx run --system-site-packages cookiecutter gh:seisollc/cookiecutter-python
 # Uses SSH
-pipx run cookiecutter git+ssh://git@github.com/seisollc/cookiecutter-python.git
+pipx run --system-site-packages cookiecutter git+ssh://git@github.com/seisollc/cookiecutter-python.git
 
 # Enter the project directory
 cd $(ls -td * | head -1)
@@ -49,6 +49,18 @@ If you're troubleshooting the results of any of the invoke tasks, you can add `-
 ```bash
 pipenv run invoke build --debug
 ```
+
+### Using pyenv
+
+If you use `pyenv` to manage your python environments, `pipx` won't be using the same `python` that your `python -m pip install`s are installing
+dependencies for.  Set the `PIPX_DEFAULT_PYTHON` env var like the following:
+
+```bash
+PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/versions/$(pyenv version | cut -f1 -d\ )/bin/python3"
+export PIPX_DEFAULT_PYTHON
+```
+
+You may also want to consider storing this in your .zshrc or similar if it fixes your issue.
 
 ## Updating the dependencies
 
