@@ -65,5 +65,5 @@ jobs:
           repository: seiso/{{ cookiecutter.project_slug }}
           short-description: {{ cookiecutter.project_short_description }}
       - name: Publish the release to Docker Hub
-        run: pipenv run invoke publish release
+        run: pipenv run invoke publish
 {%- endif -%}

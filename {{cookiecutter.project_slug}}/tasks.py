@@ -272,22 +272,19 @@ def release(_c, debug=False):
 
 
 @task
-def publish(_c, tag, debug=False):
+def publish(_c, debug=False):
     """Publish {{ cookiecutter.project_name }}"""
     if debug:
         getLogger().setLevel("DEBUG")
 
-    if tag not in ["latest", "release"]:
-        LOG.error("Please provide a tag of either latest or release")
-        sys.exit(1)
-    elif tag == "release":
-        tag = f"v{__version__}"
-
 {%- if cookiecutter.dockerhub == 'yes' %}
-    repository = f"{IMAGE}:{tag}"
-    LOG.info("Pushing %s to docker hub...", repository)
-    CLIENT.images.push(repository=repository)
-    LOG.info("Done publishing the %s image", repository)
+    tags = [f"v{__version__}", "latest"]
+
+    for tag in tags:
+        image_and_tag = f"{IMAGE}:{tag}"
+        LOG.info(f"Pushing {image_and_tag} to docker hub...")
+        CLIENT.images.push(repository=image_and_tag)
+        LOG.info(f"Done publishing the {image_and_tag} image")
 {%- else %}
     raise NotImplementedError()
 {%- endif %}
