@@ -101,7 +101,7 @@ jobs:
   distribute:
     name: Distribute
     runs-on: ubuntu-20.04
-    needs: [lint, test]
+    needs: [bump-version]
     if: ${{ "{{ github.event_name == 'push' }}" }}
     steps:
       - name: Checkout the repository
