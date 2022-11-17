@@ -45,6 +45,7 @@ def get_context() -> dict:
 
     ##############
     # This section leverages cookiecutter's jinja interpolation
+    # pylint: disable-next=unhashable-member
     cookiecutter_context_ordered: OrderedDict[str, str] = {{cookiecutter | pprint}}  # type: ignore
     cookiecutter_context: dict[str, str] = dict(cookiecutter_context_ordered)
 
