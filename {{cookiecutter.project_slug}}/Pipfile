@@ -7,13 +7,18 @@ name = "pypi"
 
 [dev-packages]
 bumpversion = "*"
+black = "*"
+coverage = "*"
 docker = "*"
+flake8 = "*"
 gitpython = "*"
 invoke = "*"
+mypy = "*"
 pylint = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-mock = "*"
+refurb = "*"
 
 [requires]
 python_version = "{{ cookiecutter.python_version }}"

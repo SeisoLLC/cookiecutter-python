@@ -7,13 +7,18 @@ name = "pypi"
 
 [dev-packages]
 bumpversion = "*"
+black = "*"
+coverage = "*"
 docker = "*"
+flake8 = "*"
 gitpython = "*"
 invoke = "*"
+mypy = "*"
 pylint = "*"
 pytest = "*"
 pytest-cookies = "*"
 pyyaml = "*"
+refurb = "*"
 
 [requires]
 python_version = "3.11"
