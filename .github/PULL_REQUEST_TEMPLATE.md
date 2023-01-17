@@ -4,7 +4,7 @@
 
 ## Pull Request Checklist
 
-Thank you for submitting a contribution to {{ cookiecutter.project_name }}!
+Thank you for submitting a contribution to cookiecutter-python!
 
 In order to streamline the review of your contribution we ask that you review
 and comply with the below requirements:
