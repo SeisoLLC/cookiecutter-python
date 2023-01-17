@@ -1,15 +1,16 @@
 # Contributor Comments
 
-[Please insert a description of the change here]
+[INSERT DESCRIPTION]
 
 ## Pull Request Checklist
 
-Thank you for submitting a contribution to cookiecutter-python
+Thank you for submitting a contribution to cookiecutter-python!
 
 In order to streamline the review of your contribution we ask that you review
 and comply with the below requirements:
 
-- [ ] Rebase your branch against the latest commit of the target branch
-- [ ] If you are adding a dependency, please explain how it was chosen
-- [ ] If manual testing is needed in order to validate the changes, provide a testing plan and the expected results
+- [ ] Rebase your branch against the latest commit of the target branch.
+- [ ] If you are adding a dependency, please explain how it was chosen.
+- [ ] If manual testing is needed in order to validate the changes, provide a testing plan and the expected results.
 - [ ] If there is an issue associated with your Pull Request, link the issue to the PR.
+- [ ] Validate that documentation is accurate and aligned to any project updates or additions.
