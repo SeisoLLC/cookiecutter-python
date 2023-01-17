@@ -13,3 +13,4 @@ and comply with the below requirements:
 - [ ] If you are adding a dependency, please explain how it was chosen
 - [ ] If manual testing is needed in order to validate the changes, provide a testing plan and the expected results
 - [ ] If there is an issue associated with your Pull Request, link the issue to the PR.
+- [ ] If a feature is being added, removed, or changed, code changes must be accompanied by the appropriate documentation updates or additions.
