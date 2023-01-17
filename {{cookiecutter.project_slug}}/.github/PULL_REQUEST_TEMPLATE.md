@@ -1,6 +1,6 @@
 # Contributor Comments
 
-[Please insert a description of the change here]
+[INSERT DESCRIPTION]
 
 ## Pull Request Checklist
 
