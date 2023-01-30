@@ -18,7 +18,7 @@ pylint = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-mock = "*"
-{%- if cookiecutter.python_version == '3.10' or cookiecutter.python_version == '3.10' %}
+{%- if cookiecutter.python_version != '3.9' %}
 refurb = "*"
 {%- endif %}
 
