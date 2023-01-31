@@ -19,6 +19,13 @@ pipx run --system-site-packages cookiecutter git+ssh://git@github.com/seisollc/c
 # Enter the project directory
 cd $(ls -td * | head -1)
 
+# Push the initial commit (IMPORTANT!)
+git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
+git push origin $(git branch --show-current)
+
+# Checkout a new branch for your initial content
+git checkout -b initial-content
+
 # Check for `NotImplementedError`s and address them
 grep -r NotImplementedError *
 
@@ -31,13 +38,11 @@ git add -A
 git commit -m "Initial content"
 pipenv run invoke build test
 
-# Make your first release
-git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
+# Push your branch
 git push origin $(git branch --show-current)
-if grep -q CalVer setup.cfg; then pipenv run invoke release; else pipenv run invoke release minor; fi
 
-# Ship it!
-git push --atomic origin $(git branch --show-current) $(git describe --tags)
+# If you chose SemVer-ish, then run a release
+if grep -q SemVer setup.cfg; then pipenv run invoke release minor; git push --atomic origin $(git branch --show-current) $(git describe --tags); fi
 
 # Finally, setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...)
 ```
@@ -70,10 +75,11 @@ pipenv run invoke update
 
 ## FAQs
 
-Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?  
+Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?<br />
 A: You customized the `project_slug` when answering the `cookiecutter` questions and included a capital letter. Don't do that!
 
-Q: What does `SemVer-ish` mean?  
-A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in their tags (which are used by SemVer to indicate builds). As a workaround,
+Q: What does `SemVer-ish` mean?<br />
+A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in their tags (which are used by SemVer to indicate builds). As a
+workaround,
 we use `-`s instead (only for local builds, not official releases), which is not compliant with the official SemVer spec, but is easily human
 understandable. In order to keep the image tags in line with git tags, both use this SemVer-like notation.
