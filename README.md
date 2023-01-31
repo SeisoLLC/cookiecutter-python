@@ -23,6 +23,9 @@ cd $(ls -td * | head -1)
 git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
 git push origin $(git branch --show-current)
 
+# Setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...).
+# Ask if you have questions; update this with a pointer to more clear documentation/automation when it exists
+
 # Checkout a new branch for your initial content
 git checkout -b initial-content
 
@@ -38,13 +41,12 @@ git add -A
 git commit -m "Initial content"
 pipenv run invoke build test
 
-# Push your branch
+# Push your branch and open a PR
 git push origin $(git branch --show-current)
+# Open a PR, setup a Wrike approval, follow the Seiso Software Development guidelines
 
-# If you chose SemVer-ish, then run a release
+# If you chose SemVer-ish, after the PR is merged, run a release
 if grep -q SemVer setup.cfg; then pipenv run invoke release minor; git push --atomic origin $(git branch --show-current) $(git describe --tags); fi
-
-# Finally, setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...)
 ```
 
 ## Troubleshooting
