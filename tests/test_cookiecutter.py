@@ -107,7 +107,7 @@ def test_supported_options(cookies, context_override):
 
     assert result.exit_code == 0
     assert result.exception is None
-    assert result.project.basename == context_override["project_slug"]
+    assert result.project.basename == context_override["project_name"]
     assert result.project.isdir()
 
     files = build_files_list(str(result.project))
