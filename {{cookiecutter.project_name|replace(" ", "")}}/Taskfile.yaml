@@ -1,0 +1,44 @@
+# https://taskfile.dev
+
+version: '3'
+
+includes:
+  py: 
+    taskfile: ./goat/Task/python
+    vars:
+      IMAGE_NAME: {{ cookiecutter.project_slug }}
+      VERSION:
+        sh: pipenv run python -c 'from {{ cookiecutter.project_slug }} import __version__; print (__version__)'
+      PYTHON_VERSION: {{ cookiecutter.python_version }}
+
+silent: true
+
+tasks:
+  init:
+    cmds:
+      - git submodule update --init --recursive
+      - pipenv install --deploy --ignore-pipfile --dev
+
+  lint:
+    cmds:
+      - task: py:lint
+
+  test:
+    cmds:
+      - task: py:test
+
+  build:
+    cmds:
+      - task: py:build
+
+  reformat:
+    cmds:
+      - task: py:reformat
+
+  update:
+    cmds:
+      - task: py:update
+
+  clean:
+    cmds:
+      - task: py:clean
