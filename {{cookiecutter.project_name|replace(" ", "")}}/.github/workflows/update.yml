@@ -4,6 +4,7 @@ name: "Update"
 on:
   schedule:
     - cron: '{{ range(0, 59) | random }} {{ range(2, 4) | random }} * * 1,4'
+  workflow_dispatch:
 
 env:
   python_version: "{{ cookiecutter.python_version }}"
