@@ -5,11 +5,20 @@ version: '3'
 includes:
   py: 
     taskfile: ./goat/Task/python
+    internal: true
     vars:
-      IMAGE_NAME: {{ cookiecutter.project_slug }}
+      IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
       VERSION:
-        sh: pipenv run python -c 'from {{ cookiecutter.project_slug }} import __version__; print (__version__)'
+        sh: pipenv run python -c 'from {{ cookiecutter.project_slug }} import __version__; print(__version__)'
       PYTHON_VERSION: {{ cookiecutter.python_version }}
+      REPO_TAGS:
+        sh: git tag -l
+      TAG_COMMIT_HASH:
+        sh: git rev-list -1 v{{.VERSION}}
+      COMMIT_HASH:
+        sh: git rev-parse HEAD
+      COMMIT_HASH_SHORT:
+        sh: git rev-parse --short HEAD
 
 silent: true
 
@@ -42,3 +51,17 @@ tasks:
   clean:
     cmds:
       - task: py:clean
+
+  release:
+    cmds:
+{%- if cookiecutter.versioning == 'SemVer-ish' %}
+      - task: py:release-semver
+{%- elif cookiecutter.versioning == 'CalVer' %}
+      - task: py:release-calver
+{&- endif %}
+{%- if cookiecutter.dockerhub == 'yes' %}
+
+  publish:
+    cmds:
+      - task: py:publish
+{&- endif %}
