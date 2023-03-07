@@ -119,7 +119,7 @@ def run_post_gen_hook():
             ["git", "init", "--initial-branch=main"], capture_output=True, check=True
         )
         subprocess.run(
-            ["git", "submodule", "add", "https://github.com/SeisoLLC/goat"],
+            ["git", "submodule", "add", "-b", "main", "https://github.com/SeisoLLC/goat"],
             capture_output=True,
             check=True,
         )
