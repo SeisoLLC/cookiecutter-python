@@ -8,17 +8,8 @@ includes:
     internal: true
     vars:
       IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
-      VERSION:
-        sh: pipenv run python -c 'from {{ cookiecutter.project_slug }} import __version__; print(__version__)'
+      PROJECT_SLUG: {{ cookiecutter.project_slug }}
       PYTHON_VERSION: {{ cookiecutter.python_version }}
-      REPO_TAGS:
-        sh: git tag -l
-      TAG_COMMIT_HASH:
-        sh: git rev-list -1 v{{.VERSION}}
-      COMMIT_HASH:
-        sh: git rev-parse HEAD
-      COMMIT_HASH_SHORT:
-        sh: git rev-parse --short HEAD
 
 silent: true
 
@@ -58,10 +49,10 @@ tasks:
       - task: py:release-semver
 {%- elif cookiecutter.versioning == 'CalVer' %}
       - task: py:release-calver
-{&- endif %}
+{%- endif %}
 {%- if cookiecutter.dockerhub == 'yes' %}
 
   publish:
     cmds:
       - task: py:publish
-{&- endif %}
+{%- endif %}

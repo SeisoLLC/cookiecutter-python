@@ -175,6 +175,10 @@ def run_post_gen_hook():
             capture_output=True,
             check=True,
         )
+        {% if cookiecutter.versioning == 'SemVer-ish' -%}
+        subprocess.run(["git", "tag", "0.0.0"], capture_output=True, check=True)
+        {% elif cookiecutter.versioning == 'CalVer' -%}
+        subprocess.run(["git", "tag", "{% now 'local', '%Y.%m.00' %}"], capture_output=True, check=True)
     except subprocess.CalledProcessError as error:
         LOG.error(
             "stdout: %s, stderr: %s",
