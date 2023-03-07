@@ -20,8 +20,8 @@ pipenv run invoke lint
 ```bash
 pipenv run invoke update
 ```
-
 {%- if cookiecutter.versioning == "SemVer-ish" %}
+
 ## Creating a release
 
 ```bash
