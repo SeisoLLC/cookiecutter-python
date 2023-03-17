@@ -45,11 +45,7 @@ tasks:
 
   release:
     cmds:
-{%- if cookiecutter.versioning == 'SemVer-ish' %}
-      - task: py:release-semver
-{%- elif cookiecutter.versioning == 'CalVer' %}
-      - task: py:release-calver
-{%- endif %}
+      - task: py:release
 {%- if cookiecutter.dockerhub == 'yes' %}
 
   publish:
