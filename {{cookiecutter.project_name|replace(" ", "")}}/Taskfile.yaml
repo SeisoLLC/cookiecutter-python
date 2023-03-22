@@ -16,7 +16,7 @@ silent: true
 tasks:
   init:
     cmds:
-      - git submodule update --init --recursive
+      - git submodule init
       - pipenv install --deploy --ignore-pipfile --dev
 
   lint:
