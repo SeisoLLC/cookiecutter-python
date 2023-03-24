@@ -175,11 +175,16 @@ def run_post_gen_hook():
             capture_output=True,
             check=True,
         )
-        {% if cookiecutter.versioning == 'SemVer-ish' -%}
+        ##############
+        # This section leverages cookiecutter's jinja interpolation
+        # pylint: disable-next=unhashable-member
+        {% if cookiecutter.versioning == 'SemVer-ish' -%}  # type: ignore
         subprocess.run(["git", "tag", "v0.0.0"], capture_output=True, check=True)
-        {% elif cookiecutter.versioning == 'CalVer' -%}
+        # pylint: disable-next=unhashable-member
+        {% elif cookiecutter.versioning == 'CalVer' -%}  # type: ignore
         subprocess.run(["git", "tag", "v{% now 'local', '%Y.%m.00' %}"], capture_output=True, check=True)
-        {% endif %}
+        {% endif %} # type: ignore
+        ##############
     except subprocess.CalledProcessError as error:
         LOG.error(
             "stdout: %s, stderr: %s",
