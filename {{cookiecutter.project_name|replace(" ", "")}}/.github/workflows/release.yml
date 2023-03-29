@@ -5,12 +5,7 @@ on:
   push:
     tags:
       # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
-{%- if cookiecutter.versioning == "SemVer-ish" %}
       - 'v[0-9]+.[0-9]+.[0-9]+'
-{%- elif cookiecutter.versioning == "CalVer" %}
-      - 'v2[0-1][0-9][0-9].0[0-9].[0-9][0-9]'
-      - 'v2[0-1][0-9][0-9].1[0-2].[0-9][0-9]'
-{%- endif %}
 
 env:
   python_version: "{{ cookiecutter.python_version }}"
