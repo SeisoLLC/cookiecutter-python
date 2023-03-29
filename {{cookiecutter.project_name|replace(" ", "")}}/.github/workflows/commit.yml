@@ -94,8 +94,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ "{{ secrets.GITHUB_TOKEN }}" }}
         with:
-          name: ${{ "{{ env.TAG }}" }}
-          tag_name: ${{ "{{ env.TAG }}" }}
+          name: ${{ "{{ steps.bump-version.outputs.tag }}" }}
+          tag_name: ${{ "{{ steps.bump-version.outputs.tag }}" }}
           draft: false
           prerelease: false
 {%- endif -%}
