@@ -115,6 +115,9 @@ def write_context(*, context: dict) -> None:
 def run_post_gen_hook():
     """Run post generation hook"""
     try:
+        if "{{ cookiecutter.versioning }}" == "CalVer":
+            release_github_action: Path = Path("./.github/workflows/release.yml")
+            release_github_action.unlink()
         subprocess.run(
             ["git", "init", "--initial-branch=main"], capture_output=True, check=True
         )
