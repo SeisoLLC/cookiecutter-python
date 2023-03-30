@@ -118,6 +118,21 @@ def run_post_gen_hook():
         if "{{ cookiecutter.versioning }}" == "CalVer":
             release_github_action: Path = Path("./.github/workflows/release.yml")
             release_github_action.unlink()
+
+        # Sort and unique the generated dictionary.txt file
+        dictionary: Path = Path("./.github/etc/dictionary.txt")
+        sorted_uniqued_dictionary: list[str] = sorted(
+            set(dictionary.read_text("utf-8").split("\n"))
+        )
+
+        if "" in sorted_uniqued_dictionary:
+            sorted_uniqued_dictionary.remove("")
+
+        dictionary.write_text(
+            "\n".join(sorted_uniqued_dictionary),
+            encoding="utf-8",
+        )
+
         subprocess.run(
             ["git", "init", "--initial-branch=main"], capture_output=True, check=True
         )

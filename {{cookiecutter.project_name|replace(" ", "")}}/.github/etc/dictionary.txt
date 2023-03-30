@@ -1,1 +1,4 @@
-{{cookiecutter.project_slug}}
+{%- set fragments = cookiecutter.project_slug.split('_') -%}
+{%- for item in fragments -%}
+{{ item }}
+{% endfor -%}
