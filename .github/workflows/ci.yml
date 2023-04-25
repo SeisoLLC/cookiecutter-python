@@ -27,6 +27,7 @@ jobs:
           # Exclude anything that contains {{ and }} in the file name
           exclude: .*\{\{.*\}\}.*
           disable_mypy: true
+          options: -v /var/run/docker.sock:/var/run/docker.sock
   test:
     name: Test
     runs-on: ubuntu-20.04
