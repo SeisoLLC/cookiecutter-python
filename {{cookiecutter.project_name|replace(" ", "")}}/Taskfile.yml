@@ -4,7 +4,7 @@ version: '3'
 
 includes:
   py: 
-    taskfile: ./goat/Task/python
+    taskfile: ./goat/Task/python/Taskfile.yml
     internal: true
     vars:
       IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}

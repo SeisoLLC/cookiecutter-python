@@ -44,10 +44,12 @@ jobs:
         run: |
           python -m pip install --upgrade pipenv
           pipenv install --python ${{ "{{ env.python_version }}" }} --deploy --ignore-pipfile --dev
+      - name: Install Task
+        uses: arduino/setup-task@v1
       - name: Build the image(s)
-        run: pipenv run invoke build
+        run: task build
       - name: Run the tests
-        run: pipenv run invoke test
+        run: task test
 {%- if cookiecutter.versioning == "CalVer" %}
   bump-version:
     name: Bump version
@@ -125,13 +127,15 @@ jobs:
         run: |
           python -m pip install --upgrade pipenv
           pipenv install --deploy --ignore-pipfile --dev
+      - name: Install Task
+        uses: arduino/setup-task@v1
       - name: Build the image(s)
-        run: pipenv run invoke build
+        run: task build
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ "{{ secrets.DOCKERHUB_USERNAME }}" }}
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
       - name: Publish the latest image to Docker Hub
-        run: pipenv run invoke publish
+        run: task publish
 {%- endif -%}
