@@ -1,4 +1,5 @@
 super-linter.log
+.task/*
 
 # Created by https://www.toptal.com/developers/gitignore/api/vim,emacs,vscode,python,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,emacs,vscode,python,macos,windows
