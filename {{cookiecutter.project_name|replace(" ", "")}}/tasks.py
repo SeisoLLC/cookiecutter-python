@@ -140,7 +140,9 @@ def build(_c, debug=False):
                 path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
             )
         except docker.errors.BuildError as build_err:
-            LOG.exception("Failed to build, retrieving and logging the more detailed build error...")
+            LOG.exception(
+                "Failed to build, retrieving and logging the more detailed build error..."
+            )
             log_build_log(build_err=build_err)
             sys.exit(1)
 
@@ -168,36 +170,6 @@ def test(_c, debug=False):
             f"Testing failed with stdout of {error.stdout.decode('utf-8')} and stderr of {error.stderr.decode('utf-8')}"
         )
         sys.exit(1)
-
-
-@task
-def reformat(_c, debug=False):
-    """Reformat {{ cookiecutter.project_name }}"""
-    if debug:
-        getLogger().setLevel("DEBUG")
-
-    entrypoint_and_command = [
-        ("isort", ". --settings-file /etc/opt/goat/.isort.cfg"),
-        ("black", "."),
-    ]
-    image = "seiso/goat:latest"
-    working_dir = "/goat/"
-    volumes = {CWD: {"bind": working_dir, "mode": "rw"}}
-
-    LOG.info("Pulling %s...", image)
-    CLIENT.images.pull(image)
-    LOG.info("Reformatting the project...")
-    for entrypoint, command in entrypoint_and_command:
-        container = CLIENT.containers.run(
-            auto_remove=False,
-            command=command,
-            detach=True,
-            entrypoint=entrypoint,
-            image=image,
-            volumes=volumes,
-            working_dir=working_dir,
-        )
-        process_container(container=container)
 
 
 @task
