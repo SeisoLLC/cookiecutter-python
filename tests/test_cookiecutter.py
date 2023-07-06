@@ -115,16 +115,15 @@ def test_supported_options(cookies, context_override):
     check_files(files)
 
 
-def test_reformatting_hook(cookies, context):
+def test_autofix_hook(cookies, context):
     """
-    Test the post-generation reformatting hook of cookiecutter-python
+    Test the post-generation goat autofix hook of cookiecutter-python
     """
     # Allow the post generation hooks to run, which include git init activities
     if os.environ.get("GITHUB_ACTIONS") == "true":
         os.environ["RUN_POST_HOOK"] = "true"
 
-    # If both work, reformatting is expected (but not definitively proven) to
-    # be working
+    # If both work, autofix is expected (but not definitively proven) to be working
     for project_slug in ["aaaaaaaaaa", "zzzzzzzzzz"]:
         context["project_slug"] = project_slug
         result = cookies.bake(extra_context=context)
