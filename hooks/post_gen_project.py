@@ -161,7 +161,7 @@ def run_post_gen_hook():
         # This expects that the goat will perform a best effort autofix by default
         # We check=False because autofix will exit non-zero if it fixed something, but that's ok because we add/commit it after
         subprocess.run(
-            ["task", "reformat"], capture_output=True, check=False
+            ["task", "lint"], capture_output=True, check=False
         )
         subprocess.run(["git", "add", "-A"], capture_output=True, check=True)
         subprocess.run(
