@@ -140,7 +140,9 @@ def build(_c, debug=False):
                 path=str(CWD), target="final", rm=True, tag=tag, buildargs=buildargs
             )
         except docker.errors.BuildError as build_err:
-            LOG.exception("Failed to build, retrieving and logging the more detailed build error...")
+            LOG.exception(
+                "Failed to build, retrieving and logging the more detailed build error..."
+            )
             log_build_log(build_err=build_err)
             sys.exit(1)
 
@@ -168,6 +170,7 @@ def test(_c, debug=False):
             f"Testing failed with stdout of {error.stdout.decode('utf-8')} and stderr of {error.stderr.decode('utf-8')}"
         )
         sys.exit(1)
+
 
 @task
 def update(_c, debug=False):
