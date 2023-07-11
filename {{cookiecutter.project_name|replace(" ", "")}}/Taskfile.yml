@@ -30,6 +30,7 @@ tasks:
     cmds:
       - git submodule init
       - pipenv install --deploy --ignore-pipfile --dev
+      - pipenv run pre-commit install
 
   lint:
     cmds:
