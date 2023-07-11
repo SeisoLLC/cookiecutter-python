@@ -43,10 +43,6 @@ tasks:
     cmds:
       - task: py:build
 
-  reformat:
-    cmds:
-      - task: py:reformat
-
   update:
     cmds:
       - task: py:update
