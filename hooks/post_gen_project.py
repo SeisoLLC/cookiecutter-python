@@ -181,6 +181,7 @@ def run_post_gen_hook():
         subprocess.run(["git", "tag", "v0.0.0"], capture_output=True, check=True)
         {% elif cookiecutter.versioning == 'CalVer' -%}  # type: ignore
         subprocess.run(["git", "tag", "v{% now 'local', '%Y.%m.00' %}"], capture_output=True, check=True)
+        
         # fmt: on
         {% endif %} # type: ignore
         ##############

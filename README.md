@@ -19,10 +19,6 @@ pipx run --system-site-packages cookiecutter git+ssh://git@github.com/seisollc/c
 # Enter the project directory
 cd $(ls -td * | head -1)
 
-# Push the initial commit (IMPORTANT!)
-git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
-git push origin $(git branch --show-current)
-
 # Setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...).
 # Ask if you have questions; update this with a pointer to more clear documentation/automation when it exists
 
@@ -39,7 +35,7 @@ pipenv install --deploy --ignore-pipfile --dev
 # Commit and test your work
 git add -A
 git commit -m "Initial content"
-pipenv run invoke build test
+task test
 
 # Push your branch and open a PR
 git push origin $(git branch --show-current)
@@ -54,7 +50,7 @@ if grep -q SemVer setup.cfg; then pipenv run invoke release minor; git push --at
 If you're troubleshooting the results of any of the invoke tasks, you can add `--debug` to enable debug logging, for instance:
 
 ```bash
-pipenv run invoke build --debug
+task build
 ```
 
 ### Using pyenv
@@ -72,7 +68,7 @@ You may also want to consider storing this in your .zshrc or similar if it fixes
 ## Updating the dependencies
 
 ```bash
-pipenv run invoke update
+task update
 ```
 
 ## FAQs

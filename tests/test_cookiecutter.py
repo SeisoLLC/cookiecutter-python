@@ -131,7 +131,7 @@ def test_autofix_hook(cookies, context):
 
         try:
             subprocess.run(
-                ["pipenv", "run", "invoke", "lint"],
+                ["task", "lint"],
                 capture_output=True,
                 check=True,
                 cwd=project,
@@ -159,7 +159,7 @@ def test_default_project(cookies):
 
     try:
         subprocess.run(
-            ["pipenv", "run", "invoke", "lint", "build", "test"],
+            ["task", "lint", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
@@ -168,7 +168,7 @@ def test_default_project(cookies):
         # Do two releases to ensure they work
         for _ in range(2):
             subprocess.run(
-                ["pipenv", "run", "invoke", "release"],
+                ["task", "release"],
                 capture_output=True,
                 check=True,
                 cwd=project,

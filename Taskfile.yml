@@ -1,0 +1,54 @@
+# https://taskfile.dev
+
+version: '3'
+
+includes:
+  py: 
+    taskfile: ./goat/Task/python/Taskfile.yml
+    internal: true
+    vars:
+      PYTHON_VERSION: 3.11
+      PROJECT_SLUG: cookiecutter-python
+      INPUT_DISABLE_MYPY: "true"
+      INPUT_EXCLUDE: .*\{\{.*\}\}.*
+
+silent: true
+
+tasks:
+  lock:
+    internal: true
+    sources:
+      - Pipfile
+    generates:
+      - Pipfile.lock
+    cmds:
+      - pipenv lock
+
+  init:
+    deps: [lock]
+    sources:
+      - Pipfile.lock
+    cmds:
+      - git submodule init
+      - pipenv install --deploy --ignore-pipfile --dev
+      - pipenv run pre-commit install
+
+  lint:
+    cmds:
+      - task: py:lint
+
+  test:
+    cmds:
+      - task: py:test
+
+  update:
+    cmds:
+      - task: py:update
+
+  clean:
+    cmds:
+      - task: py:clean
+
+  release:
+    cmds:
+      - task: py:release

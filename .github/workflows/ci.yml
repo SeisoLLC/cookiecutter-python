@@ -60,4 +60,4 @@ jobs:
           python -m pip install --upgrade pipenv
           pipenv install --deploy --ignore-pipfile --dev
       - name: Run the tests
-        run: pipenv run invoke test
+        run: task test
