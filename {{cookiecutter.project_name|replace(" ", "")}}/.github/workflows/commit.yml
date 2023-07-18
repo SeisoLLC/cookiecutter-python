@@ -41,11 +41,11 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
-        run: |
-          python -m pip install --upgrade pipenv
-          pipenv install --python ${{ "{{ env.python_version }}" }} --deploy --ignore-pipfile --dev
+        run: python -m pip install --upgrade pipenv
       - name: Install Task
         uses: arduino/setup-task@v1
+      - name: Initialize the repo
+        run: task init
       - name: Build the image(s)
         run: task build
       - name: Run the tests
@@ -78,9 +78,9 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
-        run: |
-          python -m pip install --upgrade pipenv
-          pipenv install --python ${{ "{{ env.python_version }}" }} --deploy --ignore-pipfile --dev
+        run: python -m pip install --upgrade pipenv
+      - name: Initialize the repo
+        run: task init
       - name: Bump the version
         id: bump-version
         run: |
@@ -124,11 +124,11 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
-        run: |
-          python -m pip install --upgrade pipenv
-          pipenv install --deploy --ignore-pipfile --dev
+        run: python -m pip install --upgrade pipenv
       - name: Install Task
         uses: arduino/setup-task@v1
+      - name: Initialize the repo
+        run: task init
       - name: Build the image(s)
         run: task build
       - name: Log in to Docker Hub
