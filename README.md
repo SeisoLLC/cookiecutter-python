@@ -39,14 +39,14 @@ pipenv install --deploy --ignore-pipfile --dev
 # Commit and test your work
 git add -A
 git commit -m "Initial content"
-task build test
+task test
 
 # Push your branch and open a PR
 git push origin $(git branch --show-current)
 # Open a PR, setup a Wrike approval, follow the Seiso Software Development guidelines
 
 # If you chose SemVer-ish, after the PR is merged, run a release
-if grep -q SemVer setup.cfg; then task release minor; git push --atomic origin $(git branch --show-current) $(git describe --tags); fi
+if grep -q SemVer setup.cfg; then task release -- minor; git push --atomic origin $(git branch --show-current) $(git describe --tags); fi
 ```
 
 ## Troubleshooting
