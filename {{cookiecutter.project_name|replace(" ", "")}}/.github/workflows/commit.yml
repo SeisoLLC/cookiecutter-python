@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
+        with:
+          submodules: 'true'
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -41,13 +43,15 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
-        run: |
-          python -m pip install --upgrade pipenv
-          pipenv install --python ${{ "{{ env.python_version }}" }} --deploy --ignore-pipfile --dev
+        run: python -m pip install --upgrade pipenv
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - name: Initialize the repo
+        run: task init
       - name: Build the image(s)
-        run: pipenv run invoke build
+        run: task build
       - name: Run the tests
-        run: pipenv run invoke test
+        run: task test
 {%- if cookiecutter.versioning == "CalVer" %}
   bump-version:
     name: Bump version
@@ -64,6 +68,7 @@ jobs:
         with:
           token: ${{ "{{ secrets.PERSONAL_ACCESS_TOKEN }}" }}
           fetch-depth: 0
+          submodules: 'true'
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -76,15 +81,15 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
-        run: |
-          python -m pip install --upgrade pipenv
-          pipenv install --python ${{ "{{ env.python_version }}" }} --deploy --ignore-pipfile --dev
+        run: python -m pip install --upgrade pipenv
+      - name: Initialize the repo
+        run: task init
       - name: Bump the version
         id: bump-version
         run: |
           git config --global user.name 'Seiso Automation'
           git config --global user.email 'automation@seisollc.com'
-          pipenv run invoke release
+          task release
           TAG="$(git describe --tags)"
           BRANCH="$(git branch --show-current)"
           git push --atomic origin "${BRANCH}" "${TAG}"
@@ -110,6 +115,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ "{{ needs.bump-version.outputs.tag }}" }}
+          submodules: 'true'
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -122,16 +128,18 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
-        run: |
-          python -m pip install --upgrade pipenv
-          pipenv install --deploy --ignore-pipfile --dev
+        run: python -m pip install --upgrade pipenv
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - name: Initialize the repo
+        run: task init
       - name: Build the image(s)
-        run: pipenv run invoke build
+        run: task build
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ "{{ secrets.DOCKERHUB_USERNAME }}" }}
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
       - name: Publish the latest image to Docker Hub
-        run: pipenv run invoke publish
+        run: task publish
 {%- endif -%}

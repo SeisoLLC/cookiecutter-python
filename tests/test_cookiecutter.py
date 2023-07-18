@@ -131,7 +131,7 @@ def test_autofix_hook(cookies, context):
 
         try:
             subprocess.run(
-                ["pipenv", "run", "invoke", "lint"],
+                ["task", "init", "lint"],
                 capture_output=True,
                 check=True,
                 cwd=project,
@@ -159,7 +159,7 @@ def test_default_project(cookies):
 
     try:
         subprocess.run(
-            ["pipenv", "run", "invoke", "lint", "build", "test"],
+            ["task", "init", "lint", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
@@ -168,11 +168,19 @@ def test_default_project(cookies):
         # Do two releases to ensure they work
         for _ in range(2):
             subprocess.run(
-                ["pipenv", "run", "invoke", "release"],
+                ["task", "release"],
                 capture_output=True,
                 check=True,
                 cwd=project,
             )
+
+        # Ensure that --help exits 0
+        subprocess.run(
+            ["docker", "run", "--rm", "seiso/todo:latest", "--help"],
+            capture_output=True,
+            check=True,
+            cwd=project,
+        )
 
         # Ensure the project.yml is generated, and is valid YAML
         with open(

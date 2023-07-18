@@ -136,6 +136,18 @@ def run_post_gen_hook():
         subprocess.run(
             ["git", "init", "--initial-branch=main"], capture_output=True, check=True
         )
+        subprocess.run(
+            [
+                "git",
+                "submodule",
+                "add",
+                "-b",
+                "main",
+                "https://github.com/SeisoLLC/goat",
+            ],
+            capture_output=True,
+            check=True,
+        )
         if os.environ.get("GITHUB_ACTIONS") == "true":
             subprocess.run(
                 ["git", "config", "--global", "user.name", "Seiso Automation"],
@@ -153,11 +165,12 @@ def run_post_gen_hook():
         context = get_context()
         write_context(context=context)
 
+        # This inits the project and ensures that the pre-commit hook is up to date
+        subprocess.run(["task", "init", "update"], capture_output=True, check=False)
+
         # This expects that the goat will perform a best effort autofix by default
         # We check=False because autofix will exit non-zero if it fixed something, but that's ok because we add/commit it after
-        subprocess.run(
-            ["pipenv", "run", "invoke", "lint"], capture_output=True, check=False
-        )
+        subprocess.run(["task", "lint"], capture_output=True, check=False)
         subprocess.run(["git", "add", "-A"], capture_output=True, check=True)
         subprocess.run(
             [
@@ -170,6 +183,17 @@ def run_post_gen_hook():
             capture_output=True,
             check=True,
         )
+        ##############
+        # fmt: off
+        # The cookiecutter lines are wrapped in quotes to avoid parsing issues
+        # with certain linters.
+        "{% if cookiecutter.versioning == 'SemVer-ish' -%}"  # type: ignore
+        subprocess.run(["git", "tag", "v0.0.0"], capture_output=True, check=True)
+        "{% elif cookiecutter.versioning == 'CalVer' -%}"  # type: ignore
+        subprocess.run(["git", "tag", "v{% now 'local', '%Y.%m.00' %}"], capture_output=True, check=True)
+        "{% endif %}" # type: ignore
+        # fmt: on
+        ##############
     except subprocess.CalledProcessError as error:
         LOG.error(
             "stdout: %s, stderr: %s",

@@ -6,13 +6,13 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+pre-commit = "*"
 bumpversion = "*"
 black = "*"
 coverage = "*"
 docker = "*"
 flake8 = "*"
 gitpython = "*"
-invoke = "*"
 mypy = "*"
 pylint = "*"
 pytest = "*"

@@ -4,8 +4,8 @@
   "project_short_description": "TODO",
   "project_owner_github_username": "jonzeolla",
   "python_version": ["3.11", "3.10", "3.9"],
-  "docker_base": ["ubuntu:20.04", "ubuntu:20.10", "ubuntu:21.04"],
-  "dockerhub": ["yes", "no"],
+  "docker_base": ["ubuntu:20.04", "ubuntu:22.04", "ubuntu:23.04"],
+  "dockerhub": ["no", "yes"],
   "versioning": ["CalVer", "SemVer-ish"],
   "public": ["no", "yes"],
   "license": ["NONE", "MIT", "BSD-3-Clause"]
