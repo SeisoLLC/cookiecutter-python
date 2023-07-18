@@ -37,6 +37,7 @@ jobs:
         if: github.event_name != 'push_request'
         with:
           fetch-depth: 0
+          submodules: 'true'
       - name: Checkout the repository
         uses: actions/checkout@v3
         # Necessary for hooks to succeed during tests for PRs
@@ -44,6 +45,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
+          submodules: 'true'
       - name: Setup python
         uses: actions/setup-python@v4
         with:
