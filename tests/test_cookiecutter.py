@@ -131,7 +131,7 @@ def test_autofix_hook(cookies, context):
 
         try:
             subprocess.run(
-                ["task", "lint"],
+                ["task", "init", "lint"],
                 capture_output=True,
                 check=True,
                 cwd=project,
@@ -159,7 +159,7 @@ def test_default_project(cookies):
 
     try:
         subprocess.run(
-            ["task", "lint", "build", "test"],
+            ["task", "init", "lint", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
