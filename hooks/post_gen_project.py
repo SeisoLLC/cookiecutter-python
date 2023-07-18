@@ -137,7 +137,14 @@ def run_post_gen_hook():
             ["git", "init", "--initial-branch=main"], capture_output=True, check=True
         )
         subprocess.run(
-            ["git", "submodule", "add", "-b", "main", "https://github.com/SeisoLLC/goat"],
+            [
+                "git",
+                "submodule",
+                "add",
+                "-b",
+                "main",
+                "https://github.com/SeisoLLC/goat",
+            ],
             capture_output=True,
             check=True,
         )
@@ -160,9 +167,7 @@ def run_post_gen_hook():
 
         # This expects that the goat will perform a best effort autofix by default
         # We check=False because autofix will exit non-zero if it fixed something, but that's ok because we add/commit it after
-        subprocess.run(
-            ["task", "lint"], capture_output=True, check=False
-        )
+        subprocess.run(["task", "lint"], capture_output=True, check=False)
         subprocess.run(["git", "add", "-A"], capture_output=True, check=True)
         subprocess.run(
             [
@@ -177,11 +182,11 @@ def run_post_gen_hook():
         )
         ##############
         # fmt: off
-        {% if cookiecutter.versioning == 'SemVer-ish' -%}  # type: ignore
+        "{% if cookiecutter.versioning == 'SemVer-ish' -%}"  # type: ignore
         subprocess.run(["git", "tag", "v0.0.0"], capture_output=True, check=True)
-        {% elif cookiecutter.versioning == 'CalVer' -%}  # type: ignore
+        "{% elif cookiecutter.versioning == 'CalVer' -%}"  # type: ignore
         subprocess.run(["git", "tag", "v{% now 'local', '%Y.%m.00' %}"], capture_output=True, check=True)
-        {% endif %} # type: ignore
+        "{% endif %}" # type: ignore
         # fmt: on
         ##############
     except subprocess.CalledProcessError as error:
