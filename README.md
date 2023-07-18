@@ -19,6 +19,10 @@ pipx run --system-site-packages cookiecutter git+ssh://git@github.com/seisollc/c
 # Enter the project directory
 cd $(ls -td * | head -1)
 
+# Push the initial commit (IMPORTANT!)
+git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
+git push origin $(git branch --show-current)
+
 # Setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...).
 # Ask if you have questions; update this with a pointer to more clear documentation/automation when it exists
 
