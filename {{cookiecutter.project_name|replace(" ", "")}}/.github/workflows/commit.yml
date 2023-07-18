@@ -86,7 +86,7 @@ jobs:
         run: |
           git config --global user.name 'Seiso Automation'
           git config --global user.email 'automation@seisollc.com'
-          pipenv run invoke release
+          task release
           TAG="$(git describe --tags)"
           BRANCH="$(git branch --show-current)"
           git push --atomic origin "${BRANCH}" "${TAG}"

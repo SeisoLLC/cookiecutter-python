@@ -12,13 +12,13 @@ pipenv install --deploy --ignore-pipfile --dev
 ## Linting locally
 
 ```bash
-pipenv run invoke lint
+task lint
 ```
 
 ## Updating the dependencies
 
 ```bash
-pipenv run invoke update
+task update
 ```
 {%- if cookiecutter.versioning == "SemVer-ish" %}
 
@@ -26,7 +26,7 @@ pipenv run invoke update
 
 ```bash
 # Create the release
-pipenv run invoke release minor # or major, or patch
+task release minor # or major, or patch
 
 # Push it!  (Subject to branch policies)
 git push --atomic origin $(git branch --show-current) $(git describe --tags)

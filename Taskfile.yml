@@ -1,16 +1,17 @@
+---
 # https://taskfile.dev
 
 version: '3'
 
 includes:
-  py: 
+  py:
     taskfile: ./goat/Task/python/Taskfile.yml
     internal: true
     vars:
-      PYTHON_VERSION: 3.11
-      PROJECT_SLUG: cookiecutter-python
       INPUT_DISABLE_MYPY: "true"
       INPUT_EXCLUDE: .*\{\{.*\}\}.*
+      PROJECT_SLUG: cookiecutter-python
+      PYTHON_VERSION: 3.11
 
 silent: true
 
@@ -39,7 +40,7 @@ tasks:
 
   test:
     cmds:
-      - task: py:test
+      - pipenv run pytest --keep-baked-projects tests
 
   update:
     cmds:
@@ -50,5 +51,6 @@ tasks:
       - task: py:clean
 
   release:
+    deps: [test]
     cmds:
       - task: py:release
