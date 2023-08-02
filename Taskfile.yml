@@ -14,7 +14,6 @@ includes:
     internal: true
     optional: true
     vars:
-      INPUT_DISABLE_MYPY: "true"
       INPUT_EXCLUDE: .*\{\{.*\}\}.*
       PROJECT_SLUG: cookiecutter-python
       PYTHON_VERSION: 3.11
@@ -58,7 +57,6 @@ tasks:
     cmds:
       - task: py:lint
         vars:
-          INPUT_DISABLE_MYPY: '{{.INPUT_DISABLE_MYPY}}'
           INPUT_LOG_LEVEL: "{{.CLI_ARGS}}"
 
   test:
