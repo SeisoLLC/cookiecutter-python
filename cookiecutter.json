@@ -8,5 +8,6 @@
   "dockerhub": ["no", "yes"],
   "versioning": ["CalVer", "SemVer-ish"],
   "public": ["no", "yes"],
-  "license": ["NONE", "MIT", "BSD-3-Clause"]
+  "license": ["NONE", "MIT", "BSD-3-Clause"],
+  "_copy_without_render": []
 }

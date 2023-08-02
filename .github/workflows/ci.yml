@@ -14,10 +14,14 @@ on:
 env:
   python_version: "3.11"
 
+defaults:
+  run:
+    shell: 'bash --noprofile --norc -Eeuo pipefail {0}'
+
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -29,7 +33,7 @@ jobs:
           disable_mypy: true
   test:
     name: Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -62,6 +66,6 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
-        run: task init
+        run: task -v init
       - name: Run the tests
-        run: task test
+        run: task -v test

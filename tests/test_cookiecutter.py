@@ -55,8 +55,14 @@ def get_supported_combinations() -> list:
             combinations[key] = [value]
 
     # Return all combinations of the config
-    supported_combinations = [
+    all_combinations: list[dict[str, list[str]]] = [
         dict(zip(combinations, v)) for v in itertools.product(*combinations.values())
+    ]
+
+    # Remove unwanted keys
+    supported_combinations: list[dict[str, list[str]]] = [
+        {k: v for k, v in d.items() if k != "_copy_without_render"}
+        for d in all_combinations
     ]
     return supported_combinations
 

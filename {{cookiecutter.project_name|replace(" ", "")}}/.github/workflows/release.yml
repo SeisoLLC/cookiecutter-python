@@ -10,10 +10,14 @@ on:
 env:
   python_version: "{{ cookiecutter.python_version }}"
 
+defaults:
+  run:
+    shell: 'bash --noprofile --norc -Eeuo pipefail {0}'
+
 jobs:
   distribute:
     name: Distribute
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     steps:
@@ -33,13 +37,13 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
-        run: |
-          python -m pip install --upgrade pipenv
-          pipenv install --deploy --ignore-pipfile --dev
+        run: python -m pip install --upgrade pipenv
       - name: Install Task
         uses: arduino/setup-task@v1
+      - name: Initialize the repo
+        run: task -v init
       - name: Build the image(s)
-        run: task build
+        run: task -v build
       - name: Publish the release to GitHub
         uses: softprops/action-gh-release@v1
         env:
@@ -61,8 +65,8 @@ jobs:
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
           repository: seiso/{{ cookiecutter.project_slug }}
           short-description: {{ cookiecutter.project_short_description }}
-      - name: Install Task
-        uses: arduino/setup-task@v1
       - name: Publish the release to Docker Hub
-        run: task publish
+        run: task -v publish
+        env:
+          PLATFORM: all
 {%- endif -%}

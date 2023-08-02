@@ -51,10 +51,17 @@ if grep -q SemVer setup.cfg; then task release -- minor; git push --atomic origi
 
 ## Troubleshooting
 
-If you're troubleshooting the results of any of the tasks, you can add `-v` to enable debug logging, for instance:
+If you're troubleshooting the results of any of the tasks, you can add `-v` to enable debug `task` logging, for instance:
 
 ```bash
 task -v build
+```
+
+If you're troubleshooting a `goat` failure (you aren't the first one), you can pass one of the log levels as defined
+[here](https://github.com/SeisoLLC/goat#debugging):
+
+```bash
+task lint -- debug
 ```
 
 ### Using pyenv

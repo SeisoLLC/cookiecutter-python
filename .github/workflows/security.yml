@@ -7,6 +7,10 @@ on:
 env:
   python_version: "3.11"
 
+defaults:
+  run:
+    shell: 'bash --noprofile --norc -Eeuo pipefail {0}'
+
 jobs:
   analyze:
     name: CodeQL
@@ -28,8 +32,11 @@ jobs:
       - name: Install the dependencies
         run: |
           python -m pip install --upgrade pipenv
-          pipenv install --python ${{ env.python_version }} --deploy --ignore-pipfile --dev
           echo "CODEQL_PYTHON=$(pipenv run which python)" >> "${GITHUB_ENV}"
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - name: Initialize the repo
+        run: task init
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
