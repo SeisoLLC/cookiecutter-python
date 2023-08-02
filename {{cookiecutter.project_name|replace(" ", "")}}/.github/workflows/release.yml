@@ -65,6 +65,8 @@ jobs:
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
           repository: seiso/{{ cookiecutter.project_slug }}
           short-description: {{ cookiecutter.project_short_description }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       - name: Publish the release to Docker Hub
         run: task -v publish
         env:
