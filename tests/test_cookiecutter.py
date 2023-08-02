@@ -164,12 +164,24 @@ def test_default_project(cookies):
         pytest.fail("Something went wrong with the project's post-generation hook")
 
     try:
+        # Build and test all supported architectures
         subprocess.run(
             ["task", "init", "lint", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
+            env={"PLATFORM": "all"},
         )
+
+        # Build and test each supported architecture individually (should be mostly cached)
+        for platform in ["linux/arm64", "linux/amd64"]:
+            subprocess.run(
+                ["task", "build", "test"],
+                capture_output=True,
+                check=True,
+                cwd=project,
+                env={"PLATFORM": platform},
+            )
 
         # Do two releases to ensure they work
         for _ in range(2):
