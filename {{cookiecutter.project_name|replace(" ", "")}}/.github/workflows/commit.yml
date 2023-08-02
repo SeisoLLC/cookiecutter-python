@@ -56,7 +56,7 @@ jobs:
         uses: arduino/setup-task@v1
       - name: Initialize the repo
         run: task -v init
-      - name: Set up QEMU
+      - name: Set up QEMU for cross-platform emulation
         uses: docker/setup-qemu-action@v2
       - name: Build the image(s)
         run: task -v build
@@ -157,7 +157,7 @@ jobs:
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
           repository: seiso/{{ cookiecutter.project_slug }}
           short-description: {{ cookiecutter.project_short_description }}
-      - name: Set up QEMU
+      - name: Set up QEMU for cross-platform emulation
         uses: docker/setup-qemu-action@v2
       - name: Build and publish all the supported images to Docker Hub
         run: task publish
