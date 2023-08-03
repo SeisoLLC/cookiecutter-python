@@ -14,9 +14,9 @@ includes:
     internal: true
     optional: true
     vars:
-      IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
-      PROJECT_SLUG: {{ cookiecutter.project_slug }}
-      PYTHON_VERSION: {{ cookiecutter.python_version }}
+      IMAGE_NAME: "{{ '{{.IMAGE_NAME}}' }}"
+      PROJECT_SLUG: "{{ '{{.PROJECT_SLUG}}' }}"
+      PYTHON_VERSION: "{{ '{{.PYTHON_VERSION}}' }}"
 
 vars:
   IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
