@@ -38,9 +38,9 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
-        run: task init
+        run: task -v init
       - name: Update the repository
-        run: task update
+        run: task -v update
       - name: Create or update a pull request
         uses: peter-evans/create-pull-request@v4
         with:

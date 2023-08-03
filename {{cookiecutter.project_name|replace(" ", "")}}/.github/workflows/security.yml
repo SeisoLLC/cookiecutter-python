@@ -47,7 +47,7 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
-        run: task init
+        run: task -v init
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
