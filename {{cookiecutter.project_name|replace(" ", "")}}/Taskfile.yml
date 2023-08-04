@@ -14,9 +14,10 @@ includes:
     internal: true
     optional: true
     vars:
-      IMAGE_NAME: "{{ '{{.IMAGE_NAME}}' }}"
-      PROJECT_SLUG: "{{ '{{.PROJECT_SLUG}}' }}"
-      PYTHON_VERSION: "{{ '{{.PYTHON_VERSION}}' }}"
+      # Unable to make these global due to https://taskfile.dev/usage/#variables see https://github.com/go-task/task/issues/1295
+      IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
+      PROJECT_SLUG: {{ cookiecutter.project_slug }}
+      PYTHON_VERSION: {{ cookiecutter.python_version }}
 
 vars:
   IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
@@ -85,12 +86,17 @@ tasks:
     cmds:
       - task: py:build
         vars:
+          # Unable to make these global due to https://taskfile.dev/usage/#variables see https://github.com/go-task/task/issues/1295
           PLATFORM: '{{ "{{" }}if eq .PLATFORM "all"{{ "}}{{" }}.SUPPORTED_PLATFORMS{{ "}}{{" }}else if .PLATFORM{{ "}}{{" }}.PLATFORM{{ "}}{{" }}else{{ "}}{{" }}.LOCAL_PLATFORM{{ "}}{{" }}end{{ "}}" }}'
+          PROJECT_SLUG: '{{ cookiecutter.project_slug }}'
 
   test:
     desc: Run the project tests
     cmds:
       - task: py:test
+        vars:
+          # Unable to make this global due to https://taskfile.dev/usage/#variables see https://github.com/go-task/task/issues/1295
+          PROJECT_SLUG: '{{ cookiecutter.project_slug }}'
 
   update:
     desc: Update the project dev and runtime dependencies, and other misc components
@@ -114,6 +120,8 @@ tasks:
     cmds:
       # We call into the py:publish instead of across to build to simplify centralized policy assessments (i.e. "is the project using a goat-provided task?")
       - task: py:publish
+          # Unable to make these global due to https://taskfile.dev/usage/#variables see https://github.com/go-task/task/issues/1295
         vars:
           PLATFORM: '{{ "{{" }}if eq .PLATFORM "all"{{ "}}{{" }}.SUPPORTED_PLATFORMS{{ "}}{{" }}else if .PLATFORM{{ "}}{{" }}.PLATFORM{{ "}}{{" }}else{{ "}}{{" }}.LOCAL_PLATFORM{{ "}}{{" }}end{{ "}}" }}'
+          PROJECT_SLUG: '{{ cookiecutter.project_slug }}'
 {%- endif %}
