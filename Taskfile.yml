@@ -8,6 +8,11 @@ set:
   - errexit
   - pipefail
 
+vars:
+  PROJECT_SLUG: cookiecutter_python
+  VERSION:
+    sh: pipenv run python -c 'from {{.PROJECT_SLUG}} import __version__; print(__version__)'
+
 includes:
   py:
     taskfile: ./goat/Task/python/Taskfile.yml
@@ -16,8 +21,8 @@ includes:
     vars:
       # Unable to make these global due to https://taskfile.dev/usage/#variables see https://github.com/go-task/task/issues/1295
       INPUT_EXCLUDE: .*\{\{.*\}\}.*
-      PROJECT_SLUG: cookiecutter-python
       PYTHON_VERSION: 3.11
+      VERSION: '{{.VERSION}}'
 
 silent: true
 
