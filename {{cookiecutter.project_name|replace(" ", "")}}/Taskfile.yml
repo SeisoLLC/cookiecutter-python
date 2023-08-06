@@ -70,6 +70,8 @@ tasks:
     status:
       # Don't run this in pipelines
       - '{{ "{{" }}if eq .GITHUB_ACTIONS "true"{{ "}}exit 1{{end}}" }}'
+      # Don't install the pre-commit hooks if you aren't in a git repository
+      - git rev-parse --is-inside-work-tree
     cmds:
       - pipenv run pre-commit install
 

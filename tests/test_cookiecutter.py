@@ -59,7 +59,7 @@ def get_supported_combinations() -> list:
         dict(zip(combinations, v)) for v in itertools.product(*combinations.values())
     ]
 
-    # Remove unwanted keys
+    # Remove unwanted keys (_copy_without_render is not currently used but may be in the future)
     supported_combinations: list[dict[str, list[str]]] = [
         {k: v for k, v in d.items() if k != "_copy_without_render"}
         for d in all_combinations
