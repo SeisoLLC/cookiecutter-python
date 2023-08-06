@@ -165,12 +165,14 @@ def test_default_project(cookies):
 
     try:
         # Build and test all supported architectures
+        env = os.environ.copy()
+        env["PLATFORM"] = "all"
         subprocess.run(
             ["task", "init", "lint", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
-            env={"PLATFORM": "all"},
+            env=env,
         )
 
         # Build and test each supported architecture individually (should be mostly cached)
