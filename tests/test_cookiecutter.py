@@ -176,13 +176,13 @@ def test_default_project(cookies):
         )
 
         # Build and test each supported architecture individually (should be mostly cached)
-        for platform in ["linux/arm64", "linux/amd64"]:
+        for platform in ("linux/arm64", "linux/amd64"):
             subprocess.run(
                 ["task", "build", "test"],
                 capture_output=True,
                 check=True,
                 cwd=project,
-                env={"PLATFORM": platform},
+                env=env,
             )
 
         # Do two releases to ensure they work
