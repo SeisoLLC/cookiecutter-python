@@ -166,7 +166,7 @@ def test_default_project(cookies):
         env = os.environ.copy()
         env["PLATFORM"] = "all"
         subprocess.run(
-            ["task", "init", "lint", "build", "test"],
+            ["task", "init", "lint", "validate", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,

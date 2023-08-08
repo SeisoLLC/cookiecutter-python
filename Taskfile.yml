@@ -75,6 +75,11 @@ tasks:
         vars:
           INPUT_LOG_LEVEL: "{{.CLI_ARGS}}"
 
+  validate:
+    desc: Validate the pre-commit config and hooks files
+    cmds:
+      - task: py:validate
+
   test:
     desc: Run the project tests
     cmds:

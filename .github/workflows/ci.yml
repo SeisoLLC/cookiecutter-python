@@ -67,6 +67,8 @@ jobs:
         uses: arduino/setup-task@v1
       - name: Initialize the repo
         run: task -v init
+      - name: Validate the repo
+        run: task -v validate
       - name: Set up QEMU for cross-platform emulation
         uses: docker/setup-qemu-action@v2
       - name: Run the tests
