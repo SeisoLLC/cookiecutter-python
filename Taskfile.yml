@@ -10,6 +10,8 @@ set:
 
 vars:
   PROJECT_SLUG: cookiecutter_python
+  INPUT_EXCLUDE: .*\{\{.*\}\}.*
+  PYTHON_VERSION: 3.11
   VERSION:
     sh: pipenv run python -c 'from {{.PROJECT_SLUG}} import __version__; print(__version__)'
 
@@ -19,9 +21,8 @@ includes:
     internal: true
     optional: true
     vars:
-      # Unable to make these global due to https://taskfile.dev/usage/#variables see https://github.com/go-task/task/issues/1295
-      INPUT_EXCLUDE: .*\{\{.*\}\}.*
-      PYTHON_VERSION: 3.11
+      INPUT_EXCLUDE: '{{.INPUT_EXCLUDE}}'
+      PYTHON_VERSION: '{{.PYTHON_VERSION}}'
       VERSION: '{{.VERSION}}'
 
 silent: true

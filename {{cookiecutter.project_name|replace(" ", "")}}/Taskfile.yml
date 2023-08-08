@@ -14,10 +14,9 @@ includes:
     internal: true
     optional: true
     vars:
-      # Unable to make these global due to https://taskfile.dev/usage/#variables see https://github.com/go-task/task/issues/1295
-      IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
-      PROJECT_SLUG: {{ cookiecutter.project_slug }}
-      PYTHON_VERSION: {{ cookiecutter.python_version }}
+      IMAGE_NAME: '{{ "{{.IMAGE_NAME}}" }}'
+      PROJECT_SLUG: '{{ "{{.PROJECT_SLUG}}" }}'
+      PYTHON_VERSION: '{{ "{{.PYTHON_VERSION}}" }}'
       VERSION: '{{ "{{.VERSION}}" }}'
 
 vars:

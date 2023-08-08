@@ -88,7 +88,6 @@ export PIPX_DEFAULT_PYTHON
 
 You may also want to consider storing this in your .zshrc or similar if it fixes your issue.
 
-
 ## FAQs
 
 Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?<br />
