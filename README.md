@@ -49,6 +49,18 @@ git push origin $(git branch --show-current)
 if grep -q SemVer setup.cfg; then task release -- minor; git push --atomic origin $(git branch --show-current) $(git describe --tags); fi
 ```
 
+## Updating the dependencies
+
+```bash
+task update
+```
+
+## Running the tests
+
+```bash
+task test
+```
+
 ## Troubleshooting
 
 If you're troubleshooting the results of any of the tasks, you can add `-v` to enable debug `task` logging, for instance:
@@ -76,11 +88,6 @@ export PIPX_DEFAULT_PYTHON
 
 You may also want to consider storing this in your .zshrc or similar if it fixes your issue.
 
-## Updating the dependencies
-
-```bash
-task update
-```
 
 ## FAQs
 
