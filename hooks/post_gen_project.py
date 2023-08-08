@@ -31,10 +31,7 @@ basicConfig(level="INFO", format=LOG_FORMAT)
 LOG = getLogger("{{ cookiecutter.project_slug }}.post_generation_hook")
 PROJECT_CONTEXT = Path(".github/project.yml")
 
-if (
-    os.environ.get("GITHUB_ACTIONS") == "true"
-    and os.environ.get("RUN_POST_HOOK") != "true"
-):
+if os.environ.get("RUN_POST_HOOK") != "true":
     sys.exit(0)
 
 
