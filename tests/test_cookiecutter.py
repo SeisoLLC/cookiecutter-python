@@ -177,6 +177,7 @@ def test_default_project(cookies):
 
         # Build and test each supported architecture individually (should be mostly cached)
         for platform in ("linux/arm64", "linux/amd64"):
+            env["PLATFORM"] = platform
             subprocess.run(
                 ["task", "build", "test"],
                 capture_output=True,
@@ -201,6 +202,26 @@ def test_default_project(cookies):
             check=True,
             cwd=project,
         )
+
+        # Ensure that --debug --verbose (mutually exclusive arguments) exits 2
+        command: list[str] = [
+            "docker",
+            "run",
+            "--rm",
+            "seiso/todo:latest",
+            "--debug",
+            "--verbose",
+        ]
+        expected_exit: int = 2
+        process = subprocess.run(
+            command,
+            capture_output=True,
+            cwd=project,
+        )
+        if process.returncode != expected_exit:
+            pytest.fail(
+                f"Unexpected exit code when running {command}; expected {expected_exit}, received {process.returncode}"
+            )
 
         # Ensure the project.yml is generated, and is valid YAML
         with open(
