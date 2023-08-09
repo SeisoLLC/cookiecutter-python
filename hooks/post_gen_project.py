@@ -199,7 +199,7 @@ def run_post_gen_hook():
 
 
 if __name__ == "__main__":
-    if os.environ.get("RUN_POST_HOOK") == "true" or platform.system() == "Darwin":
-        run_post_gen_hook()
-    else:
+    if os.environ.get("RUN_POST_HOOK") == "false":
         LOG.warning("Skipping the post_gen_project.py hook...")
+    else:
+        run_post_gen_hook()

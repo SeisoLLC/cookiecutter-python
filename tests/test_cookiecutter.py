@@ -109,6 +109,9 @@ def test_supported_options(cookies, context_override):
     """
     Test all supported cookiecutter-python answer combinations
     """
+    # Turn off the post generation hooks
+    os.environ["RUN_POST_HOOK"] = "false"
+
     result = cookies.bake(extra_context=context_override)
 
     assert result.exit_code == 0
@@ -125,9 +128,6 @@ def test_autofix_hook(cookies, context):
     """
     Test the post-generation goat autofix hook of cookiecutter-python
     """
-    # Allow the post generation hooks to run, which include git init activities
-    os.environ["RUN_POST_HOOK"] = "true"
-
     # If both work, autofix is expected (but not definitively proven) to be working
     for project_slug in ["aaaaaaaaaa", "zzzzzzzzzz"]:
         context["project_slug"] = project_slug
@@ -151,9 +151,6 @@ def test_default_project(cookies):
     """
     Test a default cookiecutter-python project thoroughly
     """
-    # Allow the post generation hooks to run, which include git init activities
-    os.environ["RUN_POST_HOOK"] = "true"
-
     result = cookies.bake()
     project = Path(result.project)
 
