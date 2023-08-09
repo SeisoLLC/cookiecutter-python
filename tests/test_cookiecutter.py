@@ -128,6 +128,9 @@ def test_autofix_hook(cookies, context):
     """
     Test the post-generation goat autofix hook of cookiecutter-python
     """
+    # Turn on the post generation hooks (default)
+    os.environ["RUN_POST_HOOK"] = "true"
+
     # If both work, autofix is expected (but not definitively proven) to be working
     for project_slug in ["aaaaaaaaaa", "zzzzzzzzzz"]:
         context["project_slug"] = project_slug
@@ -151,6 +154,9 @@ def test_default_project(cookies):
     """
     Test a default cookiecutter-python project thoroughly
     """
+    # Turn on the post generation hooks (default)
+    os.environ["RUN_POST_HOOK"] = "true"
+
     result = cookies.bake()
     project = Path(result.project)
 
