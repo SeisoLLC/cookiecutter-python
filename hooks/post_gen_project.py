@@ -6,7 +6,6 @@ Post-project generation hook
 import datetime
 import json
 import os
-import platform
 import pprint
 import subprocess
 import sys
