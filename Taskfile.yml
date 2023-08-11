@@ -3,54 +3,100 @@
 
 version: '3'
 
+set:
+  - nounset
+  - errexit
+  - pipefail
+
+vars:
+  PROJECT_SLUG: cookiecutter_python
+  INPUT_EXCLUDE: .*\{\{.*\}\}.*
+  PYTHON_VERSION: 3.11
+  VERSION:
+    sh: pipenv run python -c 'from {{.PROJECT_SLUG}} import __version__; print(__version__)'
+
 includes:
   py:
     taskfile: ./goat/Task/python/Taskfile.yml
     internal: true
+    optional: true
     vars:
-      INPUT_DISABLE_MYPY: "true"
-      INPUT_EXCLUDE: .*\{\{.*\}\}.*
-      PROJECT_SLUG: cookiecutter-python
-      PYTHON_VERSION: 3.11
+      INPUT_EXCLUDE: '{{.INPUT_EXCLUDE}}'
+      PYTHON_VERSION: '{{.PYTHON_VERSION}}'
+      VERSION: '{{.VERSION}}'
 
 silent: true
 
 tasks:
-  lock:
+  init-pipenv:
+    desc: Initializes the pipenv virtual environment if Pipfile.lock changes
     internal: true
     sources:
-      - Pipfile
-    generates:
       - Pipfile.lock
     cmds:
-      - pipenv lock
+      - pipenv install --deploy --ignore-pipfile --dev
+
+  init-submodules:
+    desc: >
+      Initializes git submodules; paved road projects include the Seiso goat 🐐
+      for its shared configs, etc.
+    internal: true
+    status:
+      # don't update submodules if you aren't in a git repository; quote to avoid yaml intrepretering the ! as a node tag
+      # https://yaml.org/spec/1.2.2/#691-node-tags
+      - '! test -d .git'
+    cmds:
+      - git submodule update --init
+
+  init-pre-commit:
+    desc: Install the pre-commit hooks
+    internal: true
+    sources:
+      - .pre-commit-config.yaml
+    status:
+      # Don't install the pre-commit hooks if you aren't in a git repository; quote to avoid yaml intrepretering the ! as a node tag
+      # https://yaml.org/spec/1.2.2/#691-node-tags
+      - '! test -d .git'
+    cmds:
+      # Don't run this in pipelines
+      - '{{if ne .GITHUB_ACTIONS "true"}}pipenv run pre-commit install{{end}}'
 
   init:
-    deps: [lock]
-    sources:
-      - Pipfile.lock
+    desc: Initialize the repo for local use; intended to be run after git clone
     cmds:
-      - git submodule init
-      - pipenv install --deploy --ignore-pipfile --dev
-      - pipenv run pre-commit install
+      - task: init-pipenv
+      - task: init-submodules
+      - task: init-pre-commit
 
   lint:
+    desc: Run the linter(s); paved road projects use the Seiso goat 🐐
     cmds:
       - task: py:lint
+        vars:
+          INPUT_LOG_LEVEL: "{{.CLI_ARGS}}"
+
+  validate:
+    desc: Validate the pre-commit config and hooks files
+    cmds:
+      - task: py:validate
 
   test:
+    desc: Run the project tests
     cmds:
       - pipenv run pytest --keep-baked-projects tests
 
   update:
+    desc: Update the project dev and runtime dependencies, and other misc components
     cmds:
       - task: py:update
 
   clean:
+    desc: Clean up build artifacts, cache files/directories, temp files, etc.
     cmds:
       - task: py:clean
 
   release:
+    desc: Cut a project release
     deps: [test]
     cmds:
       - task: py:release

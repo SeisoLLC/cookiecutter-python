@@ -1,4 +1,8 @@
-FROM {{ cookiecutter.docker_base }} AS base
+# syntax=docker/dockerfile:1
+
+# TARGETPLATFORM is special cased by docker and doesn't need an inital ARG; if you plan to use it repeatedly you must add ARG TARGETPLATFORM between uses
+# https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
+FROM --platform=$TARGETPLATFORM {{ cookiecutter.docker_base }} AS base
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8

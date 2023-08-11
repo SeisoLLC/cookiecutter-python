@@ -31,12 +31,6 @@ basicConfig(level="INFO", format=LOG_FORMAT)
 LOG = getLogger("{{ cookiecutter.project_slug }}.post_generation_hook")
 PROJECT_CONTEXT = Path(".github/project.yml")
 
-if (
-    os.environ.get("GITHUB_ACTIONS") == "true"
-    and os.environ.get("RUN_POST_HOOK") != "true"
-):
-    sys.exit(0)
-
 
 def get_context() -> dict:
     """Return the context as a dict"""
@@ -204,4 +198,7 @@ def run_post_gen_hook():
 
 
 if __name__ == "__main__":
-    run_post_gen_hook()
+    if os.environ.get("RUN_POST_HOOK") == "false":
+        LOG.warning("Skipping the post_gen_project.py hook...")
+    else:
+        run_post_gen_hook()

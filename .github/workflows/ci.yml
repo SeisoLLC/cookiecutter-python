@@ -14,10 +14,14 @@ on:
 env:
   python_version: "3.11"
 
+defaults:
+  run:
+    shell: 'bash --noprofile --norc -Eeuo pipefail {0}'
+
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -29,7 +33,7 @@ jobs:
           disable_mypy: true
   test:
     name: Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -62,6 +66,59 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
-        run: task init
+        run: task -v init
+      - name: Validate the repo
+        run: task -v validate
+      - name: Set up QEMU for cross-platform emulation
+        uses: docker/setup-qemu-action@v2
       - name: Run the tests
-        run: task test
+        run: task -v test
+  bump-version:
+    name: Bump version
+    needs: [lint, test]
+    if: "${{ github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'Bump version: 2') }}"
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    outputs:
+      tag: ${{ steps.bump-version.outputs.tag }}
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SEISO_AUTOMATION_PAT }}
+          fetch-depth: 0
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.python_version }}
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-python-${{ env.python_version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-python-${{ env.python_version }}-pipenv-
+            ${{ runner.os }}-python-
+      - name: Install the dependencies
+        run: python -m pip install --upgrade pipenv
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - name: Initialize the repo
+        run: task -v init
+      - name: Bump the version
+        id: bump-version
+        run: |
+          task -v release
+          TAG="$(git describe --tags)"
+          BRANCH="$(git branch --show-current)"
+          git push --atomic origin "${BRANCH}" "${TAG}"
+          echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
+      - name: Publish the release to GitHub
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ steps.bump-version.outputs.tag }}
+          tag_name: ${{ steps.bump-version.outputs.tag }}
+          draft: false
+          prerelease: false

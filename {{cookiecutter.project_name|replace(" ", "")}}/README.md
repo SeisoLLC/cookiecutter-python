@@ -22,3 +22,26 @@ docker run seiso/{{ cookiecutter.project_slug }}:0.0.0 --help
 docker run seiso/{{ cookiecutter.project_slug }}:{% now 'local', '%Y.%m.00' %} --help
 {%- endif %}
 ```
+
+If you'd like to build all of the supported docker images, you can set the `PLATFORM` env var to `all` like this:
+
+```bash
+PLATFORM=all task build
+```
+
+You can also specify a single platform of either `linux/arm64` or `linux/amd64.
+
+## Troubleshooting
+
+If you're troubleshooting the results of any of the tasks, you can add `-v` to enable debug `task` logging, for instance:
+
+```bash
+task -v build
+```
+
+If you're troubleshooting a `goat` failure (you aren't the first one), you can pass one of the log levels as defined
+[here](https://github.com/SeisoLLC/goat#debugging):
+
+```bash
+task lint -- debug
+```

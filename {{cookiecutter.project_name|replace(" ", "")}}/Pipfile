@@ -6,15 +6,9 @@ name = "pypi"
 [packages]
 
 [dev-packages]
-pre-commit = "*"
 bumpversion = "*"
-black = "*"
 coverage = "*"
-docker = "*"
-flake8 = "*"
-gitpython = "*"
-mypy = "*"
-pylint = "*"
+pre-commit = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-mock = "*"

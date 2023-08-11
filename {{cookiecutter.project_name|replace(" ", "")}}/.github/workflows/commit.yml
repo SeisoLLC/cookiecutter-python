@@ -12,10 +12,14 @@ on:
 env:
   python_version: "{{ cookiecutter.python_version }}"
 
+defaults:
+  run:
+    shell: 'bash --noprofile --norc -Eeuo pipefail {0}'
+
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -25,12 +29,16 @@ jobs:
           disable_mypy: true
   test:
     name: Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
-        with:
-          submodules: 'true'
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -47,11 +55,19 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
-        run: task init
+        run: task -v init
+      - name: Validate the repo
+        run: task -v validate
+      - name: Set up QEMU for cross-platform emulation
+        uses: docker/setup-qemu-action@v2
       - name: Build the image(s)
-        run: task build
+        run: task -v build
+        env:
+          PLATFORM: ${{ "{{ matrix.platform }}" }}
       - name: Run the tests
-        run: task test
+        run: task -v test
+        env:
+          PLATFORM: ${{ "{{ matrix.platform }}" }}
 {%- if cookiecutter.versioning == "CalVer" %}
   bump-version:
     name: Bump version
@@ -59,16 +75,15 @@ jobs:
     if: "${{ "{{ github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'Bump version: 2') }}" }}"
     permissions:
       contents: write
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       tag: ${{ "{{ steps.bump-version.outputs.tag }}" }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
         with:
-          token: ${{ "{{ secrets.PERSONAL_ACCESS_TOKEN }}" }}
+          token: ${{ "{{ secrets.SEISO_AUTOMATION_PAT }}" }}
           fetch-depth: 0
-          submodules: 'true'
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -82,14 +97,14 @@ jobs:
             ${{ "{{ runner.os }}" }}-python-
       - name: Install the dependencies
         run: python -m pip install --upgrade pipenv
+      - name: Install Task
+        uses: arduino/setup-task@v1
       - name: Initialize the repo
-        run: task init
+        run: task -v init
       - name: Bump the version
         id: bump-version
         run: |
-          git config --global user.name 'Seiso Automation'
-          git config --global user.email 'automation@seisollc.com'
-          task release
+          task -v release
           TAG="$(git describe --tags)"
           BRANCH="$(git branch --show-current)"
           git push --atomic origin "${BRANCH}" "${TAG}"
@@ -107,7 +122,7 @@ jobs:
 {%- if cookiecutter.dockerhub == 'yes' %}
   distribute:
     name: Distribute
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [bump-version]
     if: ${{ "{{ github.event_name == 'push' }}" }}
     steps:
@@ -115,7 +130,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ "{{ needs.bump-version.outputs.tag }}" }}
-          submodules: 'true'
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -132,14 +146,23 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
-        run: task init
-      - name: Build the image(s)
-        run: task build
+        run: task -v init
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ "{{ secrets.DOCKERHUB_USERNAME }}" }}
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
-      - name: Publish the latest image to Docker Hub
-        run: task publish
+      - name: Publish the release README to Docker Hub
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ "{{ secrets.DOCKERHUB_USERNAME }}" }}
+          password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
+          repository: seiso/{{ cookiecutter.project_slug }}
+          short-description: {{ cookiecutter.project_short_description }}
+      - name: Set up QEMU for cross-platform emulation
+        uses: docker/setup-qemu-action@v2
+      - name: Build and publish all the supported images to Docker Hub
+        run: task -v publish
+        env:
+          PLATFORM: all
 {%- endif -%}

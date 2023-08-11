@@ -55,8 +55,14 @@ def get_supported_combinations() -> list:
             combinations[key] = [value]
 
     # Return all combinations of the config
-    supported_combinations = [
+    all_combinations: list[dict[str, list[str]]] = [
         dict(zip(combinations, v)) for v in itertools.product(*combinations.values())
+    ]
+
+    # Remove unwanted keys (_copy_without_render is not currently used but may be in the future)
+    supported_combinations: list[dict[str, list[str]]] = [
+        {k: v for k, v in d.items() if k != "_copy_without_render"}
+        for d in all_combinations
     ]
     return supported_combinations
 
@@ -103,6 +109,9 @@ def test_supported_options(cookies, context_override):
     """
     Test all supported cookiecutter-python answer combinations
     """
+    # Turn off the post generation hooks
+    os.environ["RUN_POST_HOOK"] = "false"
+
     result = cookies.bake(extra_context=context_override)
 
     assert result.exit_code == 0
@@ -119,9 +128,8 @@ def test_autofix_hook(cookies, context):
     """
     Test the post-generation goat autofix hook of cookiecutter-python
     """
-    # Allow the post generation hooks to run, which include git init activities
-    if os.environ.get("GITHUB_ACTIONS") == "true":
-        os.environ["RUN_POST_HOOK"] = "true"
+    # Turn on the post generation hooks (default)
+    os.environ["RUN_POST_HOOK"] = "true"
 
     # If both work, autofix is expected (but not definitively proven) to be working
     for project_slug in ["aaaaaaaaaa", "zzzzzzzzzz"]:
@@ -146,9 +154,8 @@ def test_default_project(cookies):
     """
     Test a default cookiecutter-python project thoroughly
     """
-    # Allow the post generation hooks to run, which include git init activities
-    if os.environ.get("GITHUB_ACTIONS") == "true":
-        os.environ["RUN_POST_HOOK"] = "true"
+    # Turn on the post generation hooks (default)
+    os.environ["RUN_POST_HOOK"] = "true"
 
     result = cookies.bake()
     project = Path(result.project)
@@ -158,12 +165,27 @@ def test_default_project(cookies):
         pytest.fail("Something went wrong with the project's post-generation hook")
 
     try:
+        # Build and test all supported architectures
+        env = os.environ.copy()
+        env["PLATFORM"] = "all"
         subprocess.run(
-            ["task", "init", "lint", "build", "test"],
+            ["task", "init", "lint", "validate", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
+            env=env,
         )
+
+        # Build and test each supported architecture individually (should be mostly cached)
+        for platform in ("linux/arm64", "linux/amd64"):
+            env["PLATFORM"] = platform
+            subprocess.run(
+                ["task", "build", "test"],
+                capture_output=True,
+                check=True,
+                cwd=project,
+                env=env,
+            )
 
         # Do two releases to ensure they work
         for _ in range(2):
@@ -181,6 +203,26 @@ def test_default_project(cookies):
             check=True,
             cwd=project,
         )
+
+        # Ensure that --debug --verbose (mutually exclusive arguments) exits 2
+        command: list[str] = [
+            "docker",
+            "run",
+            "--rm",
+            "seiso/todo:latest",
+            "--debug",
+            "--verbose",
+        ]
+        expected_exit: int = 2
+        process = subprocess.run(
+            command,
+            capture_output=True,
+            cwd=project,
+        )
+        if process.returncode != expected_exit:
+            pytest.fail(
+                f"Unexpected exit code when running {command}; expected {expected_exit}, received {process.returncode}"
+            )
 
         # Ensure the project.yml is generated, and is valid YAML
         with open(
