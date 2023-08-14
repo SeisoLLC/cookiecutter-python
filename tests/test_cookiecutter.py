@@ -7,7 +7,7 @@ import copy
 import itertools
 import json
 import os
-import platform
+import platform as plat
 import re
 import subprocess
 import sys
@@ -18,6 +18,8 @@ import git
 import pytest
 import yaml
 from jinja2 import Template
+
+LOCAL_PLATFORM = f"{plat.system().lower()}/{plat.machine()}"
 
 
 def get_config() -> dict:
@@ -190,8 +192,7 @@ def test_default_project(cookies):
             )
 
             # This is because only the build for the local platform is loaded into the docker daemon
-            local_platform = f"{platform.system().lower()}/{platform.machine()}"
-            if platform == local_platform:
+            if platform == LOCAL_PLATFORM:
                 subprocess.run(
                     ["task", "sbom", "vulnscan"],
                     capture_output=True,
