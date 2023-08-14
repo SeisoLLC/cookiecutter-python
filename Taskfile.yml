@@ -99,3 +99,13 @@ tasks:
     desc: Cut a project release
     cmds:
       - task: py:release
+
+  sbom:
+    desc: Generate project SBOMs
+    cmds:
+      - task: bash:sbom
+
+  vulnscan:
+    desc: Vuln scan the SBOM
+    cmds:
+      - task: bash:vulnscan
