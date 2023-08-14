@@ -7,6 +7,7 @@ import copy
 import itertools
 import json
 import os
+import platform
 import re
 import subprocess
 import sys
@@ -168,8 +169,9 @@ def test_default_project(cookies):
         # Build and test all supported architectures
         env = os.environ.copy()
         env["PLATFORM"] = "all"
+        # We don't test sbom or vulnscan here because multiplatform builds aren't loaded into the local docker daemon
         subprocess.run(
-            ["task", "init", "lint", "validate", "build", "test", "sbom", "vulnscan"],
+            ["task", "init", "lint", "validate", "build", "test"],
             capture_output=True,
             check=True,
             cwd=project,
@@ -186,6 +188,17 @@ def test_default_project(cookies):
                 cwd=project,
                 env=env,
             )
+
+            # This is because only the build for the local platform is loaded into the docker daemon
+            local_platform = f"{platform.system().lower()}/{platform.machine()}"
+            if platform == local_platform:
+                subprocess.run(
+                    ["task", "sbom", "vulnscan"],
+                    capture_output=True,
+                    check=True,
+                    cwd=project,
+                    env=env,
+                )
 
         # Do two releases to ensure they work
         for _ in range(2):
