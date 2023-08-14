@@ -125,12 +125,13 @@ jobs:
       - name: Initialize the repo
         run: task -v init
       - name: Bump the version
+        id: bump-version
         run: |
           task -v release
           TAG="$(git describe --tags)"
           BRANCH="$(git branch --show-current)"
           git push --atomic origin "${BRANCH}" "${TAG}"
-          echo "tag=${TAG}" >> "${GITHUB_ENV}"
+          echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
       - name: Download the SBOMs and Vuln scan results
         uses: actions/download-artifact@v3
         with:
@@ -140,8 +141,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ env.TAG }}
-          tag_name: ${{ env.TAG }}
+          name: ${{ steps.bump-version.outputs.tag }}
+          tag_name: ${{ steps.bump-version.outputs.tag }}
           generate_release_notes: true
           files: |
             ${{ runner.temp }}/Vulns/vulns.*.json
