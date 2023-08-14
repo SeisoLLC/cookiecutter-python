@@ -139,7 +139,7 @@ jobs:
       - name: Download the SBOMs and Vuln scan results
         uses: actions/download-artifact@v3
         with:
-          path: ${{ runner.temp }}
+          path: ${{ "{{ runner.temp }}" }}
       - name: Publish the release to GitHub
         uses: softprops/action-gh-release@v1
         env:
