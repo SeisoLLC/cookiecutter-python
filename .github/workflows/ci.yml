@@ -62,17 +62,38 @@ jobs:
             ${{ runner.os }}-python-${{ env.python_version }}-pipenv-
             ${{ runner.os }}-python-
       - name: Install the dependencies
-        run: python -m pip install --upgrade pipenv
+        run: |
+          python -m pip install --upgrade pipenv
+          mkdir "${RUNNER_TEMP}/bin"
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b "${RUNNER_TEMP}/bin"
+          chmod +x "${RUNNER_TEMP}/bin/syft"
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b "${RUNNER_TEMP}/bin"
+          chmod +x "${RUNNER_TEMP}/bin/grype"
+          echo "${RUNNER_TEMP}/bin" >> "${GITHUB_PATH}"
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
         run: task -v init
       - name: Validate the repo
         run: task -v validate
-      - name: Set up QEMU for cross-platform emulation
-        uses: docker/setup-qemu-action@v2
       - name: Run the tests
         run: task -v test
+      - name: Generate the SBOMs
+        run: task -v sbom
+      - name: Upload the SBOMs
+        uses: actions/upload-artifact@v3
+        with:
+          name: SBOM
+          path: sbom.*.json
+          if-no-files-found: error
+      - name: Generate vuln scan results
+        run: task -v vulnscan
+      - name: Upload the vuln scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Vulns
+          path: vulns.*.json
+          if-no-files-found: error
   bump-version:
     name: Bump version
     needs: [lint, test]
@@ -80,8 +101,6 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-22.04
-    outputs:
-      tag: ${{ steps.bump-version.outputs.tag }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -106,19 +125,26 @@ jobs:
       - name: Initialize the repo
         run: task -v init
       - name: Bump the version
-        id: bump-version
         run: |
           task -v release
           TAG="$(git describe --tags)"
           BRANCH="$(git branch --show-current)"
           git push --atomic origin "${BRANCH}" "${TAG}"
-          echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
+          echo "tag=${TAG}" >> "${GITHUB_ENV}"
+      - name: Download the SBOMs and Vuln scan results
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ runner.temp }}
       - name: Publish the release to GitHub
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ steps.bump-version.outputs.tag }}
-          tag_name: ${{ steps.bump-version.outputs.tag }}
+          name: ${{ env.TAG }}
+          tag_name: ${{ env.TAG }}
+          generate_release_notes: true
+          files: |
+            ${{ runner.temp }}/Vulns/vulns.*.json
+            ${{ runner.temp }}/SBOM/sbom.*.json
           draft: false
           prerelease: false

@@ -11,9 +11,8 @@ on:
       - main
   schedule:
     - cron: '{{ range(0, 59) | random }} {{ range(2, 4) | random }} * * *'
-{%- elif cookiecutter.public == 'no' %}
-  - workflow_dispatch
 {%- endif %}
+  workflow_dispatch:
 
 env:
   python_version: "{{ cookiecutter.python_version }}"

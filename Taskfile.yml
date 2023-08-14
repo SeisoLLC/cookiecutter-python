@@ -97,6 +97,5 @@ tasks:
 
   release:
     desc: Cut a project release
-    deps: [test]
     cmds:
       - task: py:release
