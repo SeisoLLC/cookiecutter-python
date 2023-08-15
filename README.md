@@ -1,6 +1,6 @@
-# Seiso's python project template
+# Seiso's Python Paved Road
 
-This is Seiso's cookiecutter template for creating new python repositories.
+This is Seiso's paved road for creating new python repositories.
 
 ## Getting Started
 
@@ -18,13 +18,28 @@ pipx run --system-site-packages cookiecutter git+ssh://git@github.com/seisollc/c
 
 # Enter the project directory
 cd $(ls -td * | head -1)
+```
 
+At this point you need to ensure that there is an empty remote git repository that aligns with the naming of the generated project. If it doesn't yet exist, you
+need to create it. Once it exists, you can continue.
+
+```bash
 # Push the initial commit (IMPORTANT!)
 git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
 git push origin $(git branch --show-current)
+```
 
-# Setup your repo settings (setup a branch policy, enable dependabot, add docker hub secrets, etc...).
-# Ask if you have questions; update this with a pointer to more clear documentation/automation when it exists
+After you've pushed the initial commit, you should setup your repository settings - such as setting a branch policy, enabling dependabot, adding docker hub
+secrets, etc.
+
+This can be done via Infrastructure as Code (IaC) or manually, but ostensibly at this point your repository is aligned with your organizational practices. If
+you perform this step manually, consider a tool like OpenSSF [allstar](https://github.com/ossf/allstar) to monitor and alert or mitigate on your behalf.
+
+Continue on if you're ready to add business logic to your new repository.
+
+```bash
+# Initialize the repository
+task init
 
 # Checkout a new branch for your initial content
 git checkout -b initial-content
@@ -33,60 +48,24 @@ git checkout -b initial-content
 grep -r NotImplementedError *
 
 # Add your code and tests
-pipenv install --deploy --ignore-pipfile --dev
-# ...
 
-# Commit and test your work
+# Commit and build/test your work
 git add -A
 git commit -m "Initial content"
-task test
+task build test
 
-# Push your branch and open a PR
+# Push your branch
 git push origin $(git branch --show-current)
-# Open a PR, setup a Wrike approval, follow the Seiso Software Development guidelines
 
-# If you chose SemVer-ish, after the PR is merged, run a release
+# Open a Pull Request
+
+# (Optional) If you chose SemVer-ish as your versioning, run a release after your PR is merged
 if grep -q SemVer setup.cfg; then task release -- minor; git push --atomic origin $(git branch --show-current) $(git describe --tags); fi
 ```
 
-## Updating the dependencies
+## Version Control System support
 
-```bash
-task update
-```
-
-## Running the tests
-
-```bash
-task test
-```
-
-## Troubleshooting
-
-If you're troubleshooting the results of any of the tasks, you can add `-v` to enable debug `task` logging, for instance:
-
-```bash
-task -v build
-```
-
-If you're troubleshooting a `goat` failure (you aren't the first one), you can pass one of the log levels as defined
-[here](https://github.com/SeisoLLC/goat#debugging):
-
-```bash
-task lint -- debug
-```
-
-### Using pyenv
-
-If you use `pyenv` to manage your python environments, `pipx` won't be using the same `python` that your `python -m pip install`s are installing
-dependencies for.  Set the `PIPX_DEFAULT_PYTHON` env var like the following:
-
-```bash
-PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/versions/$(pyenv version | cut -f1 -d\ )/bin/python3"
-export PIPX_DEFAULT_PYTHON
-```
-
-You may also want to consider storing this in your .zshrc or similar if it fixes your issue.
+Currently this project only supports projects hosted on GitHub.
 
 ## FAQs
 
@@ -98,3 +77,16 @@ A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in their
 workaround,
 we use `-`s instead (only for local builds, not official releases), which is not compliant with the official SemVer spec, but is easily human
 understandable. In order to keep the image tags in line with git tags, both use this SemVer-like notation.
+
+Q: I use `pyenv`; how do I keep `pipx` aligned with my activated python version and package installations?<br />
+A: Set the `PIPX_DEFAULT_PYTHON` env var like the following:
+
+```bash
+PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/versions/$(pyenv version | cut -f1 -d\ )/bin/python3"
+export PIPX_DEFAULT_PYTHON
+```
+
+You may also want to consider storing this in your .zshrc or similar if it fixes your issue.
+
+Q: How do I contribute?<br />
+A: See our [contributing docs](./CONTRIBUTING.md)
