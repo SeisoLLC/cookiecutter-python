@@ -78,22 +78,6 @@ jobs:
         run: task -v validate
       - name: Run the tests
         run: task -v test
-      - name: Generate the SBOMs
-        run: task -v sbom
-      - name: Upload the SBOMs
-        uses: actions/upload-artifact@v3
-        with:
-          name: SBOM
-          path: sbom.*.json
-          if-no-files-found: error
-      - name: Generate vuln scan results
-        run: task -v vulnscan
-      - name: Upload the vuln scan results
-        uses: actions/upload-artifact@v3
-        with:
-          name: Vulns
-          path: vulns.*.json
-          if-no-files-found: error
   bump-version:
     name: Bump version
     needs: [lint, test]
@@ -132,10 +116,6 @@ jobs:
           BRANCH="$(git branch --show-current)"
           git push --atomic origin "${BRANCH}" "${TAG}"
           echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
-      - name: Download the SBOMs and Vuln scan results
-        uses: actions/download-artifact@v3
-        with:
-          path: ${{ runner.temp }}
       - name: Publish the release to GitHub
         uses: softprops/action-gh-release@v1
         env:
@@ -144,8 +124,5 @@ jobs:
           name: ${{ steps.bump-version.outputs.tag }}
           tag_name: ${{ steps.bump-version.outputs.tag }}
           generate_release_notes: true
-          files: |
-            ${{ runner.temp }}/Vulns/vulns.*.json
-            ${{ runner.temp }}/SBOM/sbom.*.json
           draft: false
           prerelease: false
