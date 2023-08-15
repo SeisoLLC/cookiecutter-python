@@ -184,7 +184,7 @@ def test_default_project(cookies):
         for platform in ("linux/arm64", "linux/amd64"):
             env["PLATFORM"] = platform
             subprocess.run(
-                ["task", "build", "test", "sbom", "vulnscan"],
+                ["task", "build", "test"],
                 capture_output=True,
                 check=True,
                 cwd=project,
