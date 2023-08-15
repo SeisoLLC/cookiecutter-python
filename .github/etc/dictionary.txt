@@ -1,3 +1,4 @@
+allstar
 cookiecutter
 dependabot
 ensurepath
