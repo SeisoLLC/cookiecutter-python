@@ -125,6 +125,16 @@ tasks:
     cmds:
       - task: py:release
 
+  sbom:
+    desc: Generate project SBOMs
+    cmds:
+      - task: py:sbom
+
+  vulnscan:
+    desc: Vuln scan the SBOM
+    cmds:
+      - task: py:vulnscan
+
 {%- if cookiecutter.dockerhub == 'yes' %}
 
   publish:

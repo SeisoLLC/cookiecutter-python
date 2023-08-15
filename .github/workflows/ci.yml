@@ -69,8 +69,6 @@ jobs:
         run: task -v init
       - name: Validate the repo
         run: task -v validate
-      - name: Set up QEMU for cross-platform emulation
-        uses: docker/setup-qemu-action@v2
       - name: Run the tests
         run: task -v test
   bump-version:
@@ -80,8 +78,6 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-22.04
-    outputs:
-      tag: ${{ steps.bump-version.outputs.tag }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -120,5 +116,6 @@ jobs:
         with:
           name: ${{ steps.bump-version.outputs.tag }}
           tag_name: ${{ steps.bump-version.outputs.tag }}
+          generate_release_notes: true
           draft: false
           prerelease: false

@@ -7,6 +7,7 @@ import copy
 import itertools
 import json
 import os
+import platform as plat
 import re
 import subprocess
 import sys
@@ -17,6 +18,8 @@ import git
 import pytest
 import yaml
 from jinja2 import Template
+
+LOCAL_PLATFORM = f"{plat.system().lower()}/{plat.machine()}"
 
 
 def get_config() -> dict:
@@ -168,6 +171,7 @@ def test_default_project(cookies):
         # Build and test all supported architectures
         env = os.environ.copy()
         env["PLATFORM"] = "all"
+        # We don't test sbom or vulnscan here because multiplatform builds aren't loaded into the local docker daemon
         subprocess.run(
             ["task", "init", "lint", "validate", "build", "test"],
             capture_output=True,
@@ -186,6 +190,16 @@ def test_default_project(cookies):
                 cwd=project,
                 env=env,
             )
+
+            # This is because only the build for the local platform is loaded into the docker daemon
+            if platform == LOCAL_PLATFORM:
+                subprocess.run(
+                    ["task", "sbom", "vulnscan"],
+                    capture_output=True,
+                    check=True,
+                    cwd=project,
+                    env=env,
+                )
 
         # Do two releases to ensure they work
         for _ in range(2):

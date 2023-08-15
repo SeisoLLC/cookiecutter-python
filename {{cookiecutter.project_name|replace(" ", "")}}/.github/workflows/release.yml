@@ -18,6 +18,12 @@ jobs:
   distribute:
     name: Distribute
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
     permissions:
       contents: write
     steps:
@@ -42,14 +48,41 @@ jobs:
         uses: arduino/setup-task@v1
       - name: Initialize the repo
         run: task -v init
+      - name: Set up QEMU for cross-platform emulation
+        uses: docker/setup-qemu-action@v2
       - name: Build the image(s)
         run: task -v build
+      - name: Generate the SBOMs
+        run: task -v sbom
+        env:
+          PLATFORM: ${{ "{{ matrix.platform }}" }}
+      - name: Upload the SBOMs
+        uses: actions/upload-artifact@v3
+        with:
+          name: SBOM
+          path: sbom.*.json
+          if-no-files-found: error
+      - name: Generate vuln scan results
+        run: task -v vulnscan
+        env:
+          PLATFORM: ${{ "{{ matrix.platform }}" }}
+      - name: Upload the vuln scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Vulns
+          path: vulns.*.json
+          if-no-files-found: error
       - name: Publish the release to GitHub
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ "{{ secrets.GITHUB_TOKEN }}" }}
         with:
           name: ${{ "{{ env.TAG }}" }}
+          tag_name: ${{ "{{ env.TAG }}" }}
+          generate_release_notes: true
+          files: |
+            vulns.*.json
+            sbom.*.json
           draft: false
           prerelease: false
 {%- if cookiecutter.dockerhub == 'yes' %}
@@ -65,8 +98,6 @@ jobs:
           password: ${{ "{{ secrets.DOCKERHUB_TOKEN }}" }}
           repository: seiso/{{ cookiecutter.project_slug }}
           short-description: {{ cookiecutter.project_short_description }}
-      - name: Set up QEMU for cross-platform emulation
-        uses: docker/setup-qemu-action@v2
       - name: Publish the release to Docker Hub
         run: task -v publish
         env:

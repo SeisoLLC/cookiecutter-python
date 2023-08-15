@@ -2,7 +2,7 @@
 name: "Security"
 
 on:
-  - workflow_dispatch
+  workflow_dispatch:
 
 env:
   python_version: "3.11"

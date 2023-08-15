@@ -1,4 +1,6 @@
 .task/*
+sbom.*.json
+vulns.*.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/vim,emacs,visualstudiocode,python,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,emacs,visualstudiocode,python,macos,windows
