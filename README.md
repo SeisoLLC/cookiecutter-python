@@ -10,10 +10,10 @@ python3 -m pip install --upgrade pipx gitpython pyyaml
 python3 -m pipx ensurepath
 pipx install pipenv
 
-# Initialize your project either with HTTP or SSH
-# Uses HTTP
+# Initialize your project with *either* HTTP or SSH
+# HTTP
 pipx run --system-site-packages cookiecutter gh:seisollc/cookiecutter-python
-# Uses SSH
+# SSH
 pipx run --system-site-packages cookiecutter git+ssh://git@github.com/seisollc/cookiecutter-python.git
 
 # Enter the project directory
@@ -26,7 +26,7 @@ need to create it. Once it exists, you can continue.
 ```bash
 # Push the initial commit (IMPORTANT!)
 git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
-git push origin $(git branch --show-current)
+git push origin $(git branch --show-current) --follow-tags
 ```
 
 After you've pushed the initial commit, you should setup your repository settings - such as setting a branch policy, enabling dependabot, adding docker hub

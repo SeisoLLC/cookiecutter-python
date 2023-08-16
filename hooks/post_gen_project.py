@@ -182,9 +182,9 @@ def run_post_gen_hook():
         # The cookiecutter lines are wrapped in quotes to avoid parsing issues
         # with certain linters.
         "{% if cookiecutter.versioning == 'SemVer-ish' -%}"  # type: ignore
-        subprocess.run(["git", "tag", "v0.0.0"], capture_output=True, check=True)
+        subprocess.run(["git", "tag", "-a", "v0.0.0", "-m", "Initial commit"], capture_output=True, check=True)
         "{% elif cookiecutter.versioning == 'CalVer' -%}"  # type: ignore
-        subprocess.run(["git", "tag", "v{% now 'local', '%Y.%m.00' %}"], capture_output=True, check=True)
+        subprocess.run(["git", "tag", "-a", "v{% now 'local', '%Y.%m.00' %}", "-m", "Initial commit"], capture_output=True, check=True)
         "{% endif %}" # type: ignore
         # fmt: on
         ##############
