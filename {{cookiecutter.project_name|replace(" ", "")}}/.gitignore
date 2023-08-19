@@ -1,7 +1,7 @@
 .task/*
 sbom.*.json
 vulns.*.json
-seiso_{{ cookiecutter.project_slug }}:*.tar
+seiso_{{ cookiecutter.project_slug }}_*.tar
 
 # Created by https://www.toptal.com/developers/gitignore/api/vim,emacs,visualstudiocode,python,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,emacs,visualstudiocode,python,macos,windows
