@@ -18,6 +18,7 @@ from pathlib import Path
 
 import git
 import yaml
+from cookiecutter.config import get_user_config
 from cookiecutter.repository import expand_abbreviations
 
 LOG_FORMAT = json.dumps(
@@ -76,13 +77,13 @@ def get_context() -> dict:
     except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
         # This exception handling occurs every time the template repo is remote
 
-        # Per https://cookiecutter.readthedocs.io/en/2.3.0/usage.html#works-directly-with-git-and-hg-mercurial-repos-too
-        prefixes: list[str] = ["gh:", "bb:", "gl:"]
-        if prefix := list(filter(template.startswith, prefixes))[0]:
-            # Use their logic for abbrevation expansion to ensure alignment
-            template_repo: str = expand_abbreviations(template, prefix)
-        else:
-            template_repo: str = template
+        # From https://github.com/cookiecutter/cookiecutter/blob/1b8520e7075175db4a3deae85e71081730ca7ad1/cookiecutter/config.py#L15
+        abbreviations: dict[str, str] = {
+            "gh": "https://github.com/{0}.git",
+            "gl": "https://gitlab.com/{0}.git",
+            "bb": "https://bitbucket.org/{0}",
+        }
+        template_repo: str = expand_abbreviations(template, abbreviations)
 
         # This currently assumes main until https://github.com/cookiecutter/cookiecutter/issues/1759 is resolved
         branch: str = "main"
