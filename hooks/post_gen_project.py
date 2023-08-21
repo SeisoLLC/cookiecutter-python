@@ -18,7 +18,6 @@ from pathlib import Path
 
 import git
 import yaml
-from cookiecutter.config import get_user_config
 from cookiecutter.repository import expand_abbreviations
 
 LOG_FORMAT = json.dumps(
