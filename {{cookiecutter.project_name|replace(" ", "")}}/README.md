@@ -29,7 +29,7 @@ If you'd like to build all of the supported docker images, you can set the `PLAT
 PLATFORM=all task build
 ```
 
-You can also specify a single platform of either `linux/arm64` or `linux/amd64.
+You can also specify a single platform of either `linux/arm64` or `linux/amd64`.
 
 ## Troubleshooting
 
