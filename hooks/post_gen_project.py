@@ -64,7 +64,7 @@ def get_context() -> dict:
         if prefix := list(filter(template.startswith, prefixes))[0]:
             output_path: Path = Path(output).resolve()
             sanitized_template = template.replace(prefix, "", 1)
-            template_path: Path = output_path.joinpath(sanitized_template))
+            template_path: Path = output_path.joinpath(sanitized_template)
         elif Path(template).is_absolute():
             template_path: Path = Path(template).resolve()
         else:
