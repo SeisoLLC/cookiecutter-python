@@ -58,11 +58,17 @@ def get_context() -> dict:
     ##############
 
     try:
-        if Path(template).is_absolute():
-            template_path = Path(template).resolve()
+        # Per https://cookiecutter.readthedocs.io/en/2.3.0/usage.html#works-directly-with-git-and-hg-mercurial-repos-too
+        prefixes: list[str] = ["gh:", "bb:", "gl:"]
+
+        if list(filter(template.startswith, prefixes)):
+            output_path: Path = Path(output).resolve()
+            template_path: Path = output_path.joinpath(template)
+        elif Path(template).is_absolute():
+            template_path: Path = Path(template).resolve()
         else:
-            output_path = Path(output).resolve()
-            template_path = output_path.joinpath(template)
+            output_path: Path = Path(output).resolve()
+            template_path: Path = output_path.joinpath(template)
 
         repo = git.Repo(template_path)
 
