@@ -7,6 +7,7 @@ import datetime
 import json
 import os
 import pprint
+import re
 import subprocess
 import sys
 
@@ -63,7 +64,8 @@ def get_context() -> dict:
 
         if prefix := list(filter(template.startswith, prefixes))[0]:
             output_path: Path = Path(output).resolve()
-            sanitized_template = template.replace(prefix, "", 1)
+            # Case insensitively remvoe the prefix and seisollc/
+            sanitized_template: str = re.sub(f"(?i){prefix}seisollc/", "", template)
             template_path: Path = output_path.joinpath(sanitized_template)
         elif Path(template).is_absolute():
             template_path: Path = Path(template).resolve()
