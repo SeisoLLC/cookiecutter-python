@@ -7,7 +7,6 @@ import datetime
 import json
 import os
 import pprint
-import re
 import subprocess
 import sys
 
