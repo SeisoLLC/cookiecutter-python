@@ -18,6 +18,7 @@ from pathlib import Path
 
 import git
 import yaml
+from cookiecutter.repository import expand_abbreviations
 
 LOG_FORMAT = json.dumps(
     {
@@ -59,32 +60,34 @@ def get_context() -> dict:
     ##############
 
     try:
-        # Per https://cookiecutter.readthedocs.io/en/2.3.0/usage.html#works-directly-with-git-and-hg-mercurial-repos-too
-        prefixes: list[str] = ["gh:", "bb:", "gl:"]
-
-        if prefix := list(filter(template.startswith, prefixes))[0]:
-            output_path: Path = Path(output).resolve()
-            # Case insensitively remvoe the prefix and seisollc/
-            sanitized_template: str = re.sub(f"(?i){prefix}seisollc/", "", template)
-            template_path: Path = output_path.joinpath(sanitized_template)
-        elif Path(template).is_absolute():
+        if Path(template).is_absolute():
             template_path: Path = Path(template).resolve()
         else:
             output_path: Path = Path(output).resolve()
             template_path: Path = output_path.joinpath(template)
 
-        repo = git.Repo(template_path)
+        # IMPORTANT: If the specified template is remote (http/git/ssh) this SHOULD raise an exception. The remote logic is in the except block
+        repo: git.Repo = git.Repo(template_path)
 
         # Expect this is a local template
-        branch = str(repo.active_branch)
-        dirty = repo.is_dirty(untracked_files=True)
+        branch: str = str(repo.active_branch)
+        dirty: bool = repo.is_dirty(untracked_files=True)
         template_commit_hash = git.cmd.Git().ls_remote(template_path, "HEAD")[:40]
     except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
-        # Expect this is a remote template
-        template_repo = template
+        # This exception handling occurs every time the template repo is remote
+
+        # Per https://cookiecutter.readthedocs.io/en/2.3.0/usage.html#works-directly-with-git-and-hg-mercurial-repos-too
+        prefixes: list[str] = ["gh:", "bb:", "gl:"]
+        if prefix := list(filter(template.startswith, prefixes))[0]:
+            # Use their logic for abbrevation expansion to ensure alignment
+            template_repo: str = expand_abbreviations(template, prefix)
+        else:
+            template_repo: str = template
+
         # This currently assumes main until https://github.com/cookiecutter/cookiecutter/issues/1759 is resolved
-        branch = "main"
-        dirty = False
+        branch: str = "main"
+        dirty: bool = False
+
         template_commit_hash = git.cmd.Git().ls_remote(template_repo, branch)[:40]
 
     context: dict[
