@@ -17,6 +17,7 @@ from pathlib import Path
 
 import git
 import yaml
+from cookiecutter.repository import expand_abbreviations
 
 LOG_FORMAT = json.dumps(
     {
@@ -59,23 +60,33 @@ def get_context() -> dict:
 
     try:
         if Path(template).is_absolute():
-            template_path = Path(template).resolve()
+            template_path: Path = Path(template).resolve()
         else:
-            output_path = Path(output).resolve()
-            template_path = output_path.joinpath(template)
+            output_path: Path = Path(output).resolve()
+            template_path: Path = output_path.joinpath(template)
 
-        repo = git.Repo(template_path)
+        # IMPORTANT: If the specified template is remote (http/git/ssh) this SHOULD raise an exception. The remote logic is in the except block
+        repo: git.Repo = git.Repo(template_path)
 
         # Expect this is a local template
-        branch = str(repo.active_branch)
-        dirty = repo.is_dirty(untracked_files=True)
+        branch: str = str(repo.active_branch)
+        dirty: bool = repo.is_dirty(untracked_files=True)
         template_commit_hash = git.cmd.Git().ls_remote(template_path, "HEAD")[:40]
     except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
-        # Expect this is a remote template
-        template_repo = template
+        # This exception handling occurs every time the template repo is remote
+
+        # From https://github.com/cookiecutter/cookiecutter/blob/1b8520e7075175db4a3deae85e71081730ca7ad1/cookiecutter/config.py#L15
+        abbreviations: dict[str, str] = {
+            "gh": "https://github.com/{0}.git",
+            "gl": "https://gitlab.com/{0}.git",
+            "bb": "https://bitbucket.org/{0}",
+        }
+        template_repo: str = expand_abbreviations(template, abbreviations)
+
         # This currently assumes main until https://github.com/cookiecutter/cookiecutter/issues/1759 is resolved
-        branch = "main"
-        dirty = False
+        branch: str = "main"
+        dirty: bool = False
+
         template_commit_hash = git.cmd.Git().ls_remote(template_repo, branch)[:40]
 
     context: dict[
