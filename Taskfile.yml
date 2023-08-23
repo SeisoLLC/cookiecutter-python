@@ -59,7 +59,7 @@ tasks:
       - '! test -d .git'
     cmds:
       # Don't run this in pipelines
-      - '{{if ne .GITHUB_ACTIONS "true"}}pipenv run pre-commit install{{end}}'
+      - '{{if ne .GITHUB_ACTIONS "true"}}pipenv run pre-commit install{{else}}echo "Detected a github actions pipeline; skipping the pre-commit install"{{end}}'
 
   init:
     desc: Initialize the repo for local use; intended to be run after git clone
