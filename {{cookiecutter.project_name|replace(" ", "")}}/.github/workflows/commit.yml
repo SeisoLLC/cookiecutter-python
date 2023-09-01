@@ -49,8 +49,6 @@ jobs:
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-${{ "{{ hashFiles('Pipfile.lock') }}" }}
-      - name: Install the dependencies
-        run: python -m pip install --upgrade pipenv
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
@@ -111,8 +109,6 @@ jobs:
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-${{ "{{ hashFiles('Pipfile.lock') }}" }}
-      - name: Install the dependencies
-        run: python -m pip install --upgrade pipenv
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
@@ -162,8 +158,6 @@ jobs:
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-${{ "{{ hashFiles('Pipfile.lock') }}" }}
-      - name: Install the dependencies
-        run: python -m pip install --upgrade pipenv
       - name: Install Task
         uses: arduino/setup-task@v1
       - name: Initialize the repo
