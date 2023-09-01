@@ -19,13 +19,19 @@ includes:
       PYTHON_VERSION: '{{ "{{.PYTHON_VERSION}}" }}'
       VERSION: '{{ "{{.VERSION}}" }}'
 
+  base:
+    taskfile: ./goat/Task/Taskfile.yml
+    internal: true
+    optional: true
+
 vars:
   IMAGE_NAME: seiso/{{ cookiecutter.project_slug }}
   PROJECT_SLUG: {{ cookiecutter.project_slug }}
   PYTHON_VERSION: {{ cookiecutter.python_version }}
   SUPPORTED_PLATFORMS: 'linux/amd64,linux/arm64'
   VERSION:
-    sh: pipenv run python -c 'from {{ "{{" }}.PROJECT_SLUG{{ "}}" }} import __version__; print(__version__)'
+    # Does not use pipenv to avoid pipenv as a project bootstrapping requirement
+    sh: python -c 'from {{ "{{" }}.PROJECT_SLUG{{ "}}" }} import __version__; print(__version__)'
   LOCAL_PLATFORM:
     # Inspired by https://github.com/containerd/containerd/blob/e0912c068b131b33798ae45fd447a1624a6faf0a/platforms/database.go#L76
     sh: |
@@ -50,6 +56,9 @@ tasks:
     internal: true
     sources:
       - Pipfile.lock
+    preconditions:
+      - which pipenv || python3 -m pip install --upgrade pipx gitpython pyyaml && python3 -m pipx ensurepath && pipx install pipenv
+
     cmds:
       - pipenv install --deploy --ignore-pipfile --dev
 
@@ -78,12 +87,29 @@ tasks:
       # Don't run this in pipelines
       - '{{ "{{" }}if ne .GITHUB_ACTIONS "true"{{ "}}pipenv run pre-commit install{{else}}echo \"Detected a github actions pipeline; skipping the pre-commit install\"{{end}}" }}'
 
+  init-install-tools:
+    desc: Install required tools
+    internal: true
+    cmds:
+      - task: base:mac-brew-install
+        vars:
+          TOOLS: syft,grype
+      - task: base:runner-curl-install
+        vars:
+          INSTALL_URL: https://raw.githubusercontent.com/anchore/syft/main/install.sh
+          TOOL: syft
+      - task: base:runner-curl-install
+        vars:
+          INSTALL_URL: https://raw.githubusercontent.com/anchore/grype/main/install.sh
+          TOOL: grype
+
   init:
     desc: Initialize the repo for local use; intended to be run after git clone
     cmds:
       - task: init-pipenv
       - task: init-submodules
       - task: init-pre-commit
+      - task: init-install-tools
 
   lint:
     desc: Run the linter(s); paved road projects use the Seiso goat 🐐

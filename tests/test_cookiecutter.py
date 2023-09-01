@@ -176,6 +176,17 @@ def test_default_project(cookies):
                 "task",
                 "-v",
                 "init",
+            ],
+            capture_output=True,
+            check=True,
+            cwd=project,
+            env=env,
+        )
+
+        subprocess.run(
+            [
+                "task",
+                "-v",
                 "lint",
                 "validate",
                 "build",

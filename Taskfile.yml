@@ -13,7 +13,8 @@ vars:
   INPUT_EXCLUDE: .*\{\{.*\}\}.*
   PYTHON_VERSION: 3.11
   VERSION:
-    sh: pipenv run python -c 'from {{.PROJECT_SLUG}} import __version__; print(__version__)'
+    # Does not use pipenv to avoid pipenv as a project bootstrapping requirement
+    sh: python -c 'from {{.PROJECT_SLUG}} import __version__; print(__version__)'
 
 includes:
   py:
@@ -33,6 +34,8 @@ tasks:
     internal: true
     sources:
       - Pipfile.lock
+    preconditions:
+      - which pipenv || python -m pip install --upgrade pipenv
     cmds:
       - pipenv install --deploy --ignore-pipfile --dev
 
