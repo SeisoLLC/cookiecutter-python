@@ -29,6 +29,6 @@ task update
 task release minor # or major, or patch
 
 # Push it!  (Subject to branch policies)
-git push --atomic origin $(git branch --show-current) $(git describe --tags)
+git push --atomic origin $(git branch --show-current) --follow-tags
 ```
 {%- endif %}
