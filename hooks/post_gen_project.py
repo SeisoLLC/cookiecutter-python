@@ -36,7 +36,7 @@ PROJECT_CONTEXT = Path(".github/project.yml")
 def get_context() -> dict:
     """Return the context as a dict"""
     cookiecutter = None
-    timestamp = datetime.datetime.utcnow().isoformat(timespec="seconds")
+    timestamp = datetime.datetime.now(datetime.UTC).isoformat(timespec="seconds")
 
     ##############
     # This section leverages cookiecutter's jinja interpolation
