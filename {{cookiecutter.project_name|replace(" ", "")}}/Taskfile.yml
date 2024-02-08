@@ -51,7 +51,7 @@ tasks:
     sources:
       - Pipfile.lock
     preconditions:
-      - which pipenv || python3 -m pip install --upgrade pipx gitpython pyyaml && python3 -m pipx ensurepath && pipx install pipenv
+      - which pipenv
     cmds:
       - pipenv install --deploy --ignore-pipfile --dev
 
