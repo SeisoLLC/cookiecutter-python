@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  python_version: "3.11"
+  python_version: "3.12"
 
 defaults:
   run:
