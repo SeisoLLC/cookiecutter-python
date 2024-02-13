@@ -34,6 +34,8 @@ tasks:
     sources:
       - Pipfile.lock
     cmds:
+      # Clean up any existing pipenv; useful when doing upgrades over time
+      - pipenv --rm || true
       - pipenv install --deploy --ignore-pipfile --dev
 
   init-submodules:
