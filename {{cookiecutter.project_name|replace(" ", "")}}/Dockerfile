@@ -24,8 +24,8 @@ LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 # hadolint ignore=DL3008,DL3013
 RUN apt-get update \
  && apt-get install -y --no-install-recommends software-properties-common \
+                                               gpg-agent \
  && add-apt-repository ppa:deadsnakes/ppa \
- && apt-get update \
  && apt-get install -y --no-install-recommends python{{ cookiecutter.python_version }} \
                                                python{{ cookiecutter.python_version }}-venv \
  && ln -sf /usr/bin/python{{ cookiecutter.python_version }} /usr/bin/python3 \
