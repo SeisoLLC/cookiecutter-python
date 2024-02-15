@@ -21,9 +21,12 @@ LABEL org.opencontainers.image.source="https://github.com/SeisoLLC/{{ cookiecutt
 LABEL org.opencontainers.image.revision="${COMMIT_HASH}"
 LABEL org.opencontainers.image.licenses="{{ cookiecutter.license }}"
 
+# Set noninteractive as an arg so it's only available at build time
+ARG DEBIAN_FRONTEND=noninteractive
 # hadolint ignore=DL3008,DL3013
 RUN apt-get update \
  && apt-get install -y --no-install-recommends software-properties-common \
+                                               gpg-agent \
  && add-apt-repository ppa:deadsnakes/ppa \
  && apt-get install -y --no-install-recommends python{{ cookiecutter.python_version }} \
                                                python{{ cookiecutter.python_version }}-venv \
