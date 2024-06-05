@@ -79,11 +79,11 @@ jobs:
         env:
           PLATFORM: ${{ "{{ matrix.platform }}" }}
       - name: Set env var for unique artifact uploads
-        run: echo SANITIZED_PLATFORM="$(echo "${{ matrix.platform }}" | sed 's/\//_/g')" >> $GITHUB_ENV
+        run: echo SANITIZED_PLATFORM="$(echo "${{ "{{ matrix.platform }}" }} | sed 's/\//_/g')" >> $GITHUB_ENV
       - name: Upload the SBOMs
         uses: actions/upload-artifact@v4
         with:
-          name: SBOM-${{ env.SANITIZED_PLATFORM }}
+          name: SBOM-${{ "{{ env.SANITIZED_PLATFORM }}" }}
           path: sbom.*.json
           if-no-files-found: error
       - name: Generate vuln scan results
@@ -93,7 +93,7 @@ jobs:
       - name: Upload the vuln scan results
         uses: actions/upload-artifact@v4
         with:
-          name: Vulns
+          name: Vulns-${{ "{{ env.SANITIZED_PLATFORM }}" }}
           path: vulns.*.json
           if-no-files-found: error
 {%- if cookiecutter.versioning == "CalVer" %}
