@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run the goat
         uses: seisollc/goat@main
         with:
@@ -36,14 +36,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         # Necessary for hooks to succeed during tests for commits/schedule
         if: github.event_name != 'push_request'
         with:
           fetch-depth: 0
           submodules: 'true'
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         # Necessary for hooks to succeed during tests for PRs
         if: github.event_name == 'pull_request'
         with:
@@ -51,10 +51,10 @@ jobs:
           fetch-depth: 0
           submodules: 'true'
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.python_version }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-python-${{ env.python_version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
@@ -68,7 +68,7 @@ jobs:
           chmod +x "${RUNNER_TEMP}/bin/grype"
           echo "${RUNNER_TEMP}/bin" >> "${GITHUB_PATH}"
       - name: Install Task
-        uses: arduino/setup-task@v1
+        uses: arduino/setup-task@v2
       - name: Initialize the repo
         run: task -v init
       - name: Validate the repo
@@ -84,22 +84,22 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.SEISO_AUTOMATION_PAT }}
           fetch-depth: 0
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.python_version }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-python-${{ env.python_version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
       - name: Install the dependencies
         run: python -m pip install --upgrade pipenv
       - name: Install Task
-        uses: arduino/setup-task@v1
+        uses: arduino/setup-task@v2
       - name: Initialize the repo
         run: task -v init
       - name: Bump the version
@@ -111,7 +111,7 @@ jobs:
           git push --atomic origin "${BRANCH}" "${TAG}"
           echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
       - name: Publish the release to GitHub
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

@@ -27,12 +27,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ "{{ env.python_version }}" }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ "{{ runner.os }}" }}-python-${{ "{{ env.python_version }}" }}-pipenv-${{ "{{ hashFiles('Pipfile.lock') }}" }}
@@ -41,12 +41,12 @@ jobs:
           python -m pip install --upgrade pipenv
           echo "CODEQL_PYTHON=$(pipenv run which python)" >> "${GITHUB_ENV}"
       - name: Install Task
-        uses: arduino/setup-task@v1
+        uses: arduino/setup-task@v2
       - name: Initialize the repo
         run: task -v init
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           setup-python-dependencies: false
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
