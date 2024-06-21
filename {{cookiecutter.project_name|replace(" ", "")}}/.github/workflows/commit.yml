@@ -71,7 +71,7 @@ jobs:
         env:
           PLATFORM: ${{ "{{ matrix.platform }}" }}
       - name: Run the tests
-        run: task -v test -- debug
+        run: task -v test
         env:
           PLATFORM: ${{ "{{ matrix.platform }}" }}
       - name: Generate the SBOMs
@@ -174,7 +174,7 @@ jobs:
       - name: Install the dependencies
         run: python -m pip install --upgrade pipenv
       - name: Install Task
-        uses: arduino/setup-task@v3
+        uses: arduino/setup-task@v2
       - name: Initialize the repo
         run: task -v init
       - name: Log in to Docker Hub

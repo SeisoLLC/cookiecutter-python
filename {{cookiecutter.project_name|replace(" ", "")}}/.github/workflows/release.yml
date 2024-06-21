@@ -68,7 +68,7 @@ jobs:
       - name: Upload the vuln scan results
         uses: actions/upload-artifact@v4
         with:
-          name: Vulns-${{ "{{ eng.SANITITZED_PLATFORM }}" }}
+          name: Vulns-${{ "{{ env.SANITIZED_PLATFORM }}" }}
           path: vulns.*.json
           if-no-files-found: error
       - name: Publish the release to GitHub
