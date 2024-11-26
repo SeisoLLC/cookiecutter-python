@@ -20,7 +20,7 @@ pipx run --system-site-packages cookiecutter git+ssh://git@github.com/seisollc/c
 cd $(ls -td * | head -1)
 ```
 
-At this point you need to ensure that there is an empty remote git repository that aligns with the naming of the generated project. If it doesn't yet exist, you
+At this point you need to ensure that there is an empty remote Git repository that aligns with the naming of the generated project. If it doesn't yet exist, you
 need to create it. Once it exists, you can continue.
 
 ```bash
@@ -76,7 +76,7 @@ Q: What does `SemVer-ish` mean?<br />
 A: Docker isn't compatible with SemVer, as it doesn't allow `+` symbols in their tags (which are used by SemVer to indicate builds). As a
 workaround,
 we use `-`s instead (only for local builds, not official releases), which is not compliant with the official SemVer spec, but is easily human
-understandable. In order to keep the image tags in line with git tags, both use this SemVer-like notation.
+understandable. In order to keep the image tags in line with Git tags, both use this SemVer-like notation.
 
 Q: I use `pyenv`; how do I keep `pipx` aligned with my activated python version and package installations?<br />
 A: Set the `PIPX_DEFAULT_PYTHON` env var like the following:
