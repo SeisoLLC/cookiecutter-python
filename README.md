@@ -29,7 +29,7 @@ git remote add origin git@github.com:SeisoLLC/$(basename $(pwd)).git
 git push origin $(git branch --show-current) --follow-tags
 ```
 
-After you've pushed the initial commit, you should setup your repository settings - such as setting a branch policy, enabling dependabot, adding docker hub
+After you've pushed the initial commit, you should setup your repository settings - such as setting a branch policy, enabling dependabot, adding Docker Hub
 secrets, etc.
 
 This can be done via Infrastructure as Code (IaC) or manually, but ostensibly at this point your repository is aligned with your organizational practices. If
@@ -69,7 +69,7 @@ Currently this project only supports projects hosted on GitHub.
 
 ## FAQs
 
-Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my docker container?<br />
+Q: Why am I getting `invalid reference format: repository name must be lowercase` when I try to build my Docker container?<br />
 A: You customized the `project_slug` when answering the `cookiecutter` questions and included a capital letter. Don't do that!
 
 Q: What does `SemVer-ish` mean?<br />
