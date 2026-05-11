@@ -40,7 +40,7 @@ task -v build
 ```
 
 If you're troubleshooting a `goat` failure (you aren't the first one), you can pass one of the log levels as defined
-[here](https://github.com/SeisoLLC/goat#debugging):
+here: [https://github.com/SeisoLLC/goat#debugging](https://github.com/SeisoLLC/goat#debugging):
 
 ```bash
 task lint -- debug
