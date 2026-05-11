@@ -1,7 +1,7 @@
 ---
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 set:
   - nounset
@@ -21,9 +21,9 @@ includes:
     internal: true
     optional: true
     vars:
-      INPUT_EXCLUDE: '{{.INPUT_EXCLUDE}}'
-      PYTHON_VERSION: '{{.PYTHON_VERSION}}'
-      VERSION: '{{.VERSION}}'
+      INPUT_EXCLUDE: "{{.INPUT_EXCLUDE}}"
+      PYTHON_VERSION: "{{.PYTHON_VERSION}}"
+      VERSION: "{{.VERSION}}"
 
 silent: true
 
@@ -46,7 +46,7 @@ tasks:
     status:
       # don't update submodules if you aren't in a git repository; quote to avoid yaml intrepretering the ! as a node tag
       # https://yaml.org/spec/1.2.2/#691-node-tags
-      - '! test -d .git'
+      - "! test -d .git"
     cmds:
       - git submodule update --init
 
@@ -58,7 +58,7 @@ tasks:
     status:
       # Don't install the pre-commit hooks if you aren't in a git repository; quote to avoid yaml intrepretering the ! as a node tag
       # https://yaml.org/spec/1.2.2/#691-node-tags
-      - '! test -d .git'
+      - "! test -d .git"
     cmds:
       # Don't run this in pipelines
       - '{{if ne .GITHUB_ACTIONS "true"}}pipenv run pre-commit install{{else}}echo "Detected a github actions pipeline; skipping the pre-commit install"{{end}}'
